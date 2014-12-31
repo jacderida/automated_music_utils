@@ -10,6 +10,8 @@ def main():
 
 class CliDriver(object):
     def get_argument_parser(self):
+        """ Gets the standard argument parser. This is public because it will
+        be useful for unit testing the command parser. """
         parser = argparse.ArgumentParser()
         subparsers = parser.add_subparsers(dest='command')
         subparsers.add_parser('rip', help='rips the current CD to WAV')

@@ -1,7 +1,6 @@
 """ Test suite for the command parser. """
 import argparse
 import unittest
-
 from amu.clidriver import CliDriver
 from amu.clidriver import CommandParser
 
