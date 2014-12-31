@@ -3,6 +3,7 @@ import argparse
 import unittest
 from amu.clidriver import CliDriver
 from amu.clidriver import CommandParser
+from amu.commands.ripcdcommand import RipCdCommand
 
 class CommandParserTest(unittest.TestCase):
     """ Test suite for the command parser. """
@@ -12,4 +13,4 @@ class CommandParserTest(unittest.TestCase):
         args = arg_parser.parse_args(['rip'])
         parser = CommandParser()
         command = parser.from_args(args)
-        self.assertIsNotNone(command)
+        self.assertIsInstance(command, RipCdCommand)
