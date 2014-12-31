@@ -11,3 +11,8 @@ class Command(object):
     def execute(self):
         """ Executes the command. """
         pass
+
+class CommandValidationError(Exception):
+    def __init__(self, message):
+        super(CommandValidationError, self).__init__(message)
+        self.message = message
