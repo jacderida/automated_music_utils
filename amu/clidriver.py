@@ -42,7 +42,7 @@ class CommandParser(object):
         into a command object that can be executed.
     """
     def from_args(self, args):
-        return RipCdCommand()
+        return RipCdCommand(None)
 
 if __name__ == '__main__':
     sys.exit(main())

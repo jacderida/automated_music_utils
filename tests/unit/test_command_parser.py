@@ -5,6 +5,7 @@ from amu.clidriver import CliDriver
 from amu.clidriver import CommandParser
 from amu.commands.ripcdcommand import RipCdCommand
 
+
 class CommandParserTest(unittest.TestCase):
     """ Test suite for the command parser. """
     def test_command_parser_returns_rip_cd_command(self):
