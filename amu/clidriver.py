@@ -34,7 +34,9 @@ class CliDriver(object):
 
     def main(self):
         """ The main entry point for the CLI driver """
-        self._get_arguments()
+        parser = CommandParser()
+        command = parser.from_args(self._get_arguments())
+        command.execute()
         return 0
 
 class CommandParser(object):
