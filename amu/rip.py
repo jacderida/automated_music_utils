@@ -1,3 +1,4 @@
+import ConfigParser
 import os
 import subprocess
 
@@ -17,6 +18,12 @@ class RubyRipperCdRipper(object):
         path_from_env_variable = os.environ.get('RUBYRIPPER_CLI_PATH')
         if path_from_env_variable:
             self._rubyripper_path = path_from_env_variable
+            return True
+        config = ConfigParser.ConfigParser()
+        config.read('~/.amu_config')
+        path_from_config = config.get('ripper', 'path')
+        if path_from_config:
+            self._rubyripper_path = path_from_config
             return True
         return False
 
