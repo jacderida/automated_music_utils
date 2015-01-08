@@ -20,7 +20,8 @@ class RubyRipperCdRipper(object):
             self._rubyripper_path = path_from_env_variable
             return True
         config = ConfigParser.ConfigParser()
-        config.read('~/.amu_config')
+        config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
+        config.read(config_path)
         path_from_config = config.get('ripper', 'path')
         if path_from_config:
             self._rubyripper_path = path_from_config
