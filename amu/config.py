@@ -30,4 +30,9 @@ class ConfigurationProvider(object):
         config.read(config_path)
         path_from_config = config.get('ripper', 'path')
         if path_from_config:
+            if not os.path.exists(path_from_config):
+                raise ConfigurationError(
+                    """The path specified to ruby ripper in the .amu_config
+                    file is incorrect. Please provide a valid path for
+                    ruby ripper.""")
             return path_from_config

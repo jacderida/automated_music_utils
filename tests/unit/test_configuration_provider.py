@@ -82,3 +82,19 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
             config_provider.get_ruby_ripper_path()
+
+    @mock.patch('amu.rip.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.rip.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.rip.os.path.exists')
+    @mock.patch('amu.rip.os.path.expanduser')
+    @mock.patch('amu.rip.os.environ')
+    @mock.patch('amu.rip.subprocess.call')
+    def test__get_ruby_ripper_path__config_file_specifies_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
+        config_provider = ConfigurationProvider()
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = None
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.side_effect = [True, False]
+        config_get_mock.return_value = '/opt/rubyripper/rubyripper_cli.rb'
+        with self.assertRaises(ConfigurationError):
+            config_provider.get_ruby_ripper_path()
