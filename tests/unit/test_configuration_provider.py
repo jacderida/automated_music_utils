@@ -42,7 +42,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.rip.os.path.expanduser')
     @mock.patch('amu.rip.os.environ')
     @mock.patch('amu.rip.subprocess.call')
-    def test_is_installed_ruby_ripper_cli_is_in_config_file_correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, config_get_mock, config_read_mock):
+    def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, config_get_mock, config_read_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
