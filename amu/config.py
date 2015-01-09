@@ -14,12 +14,18 @@ class ConfigurationProvider(object):
             return 'rubyripper_cli'
         path_from_env_variable = os.environ.get('RUBYRIPPER_CLI_PATH')
         if path_from_env_variable:
-            if not os.path.exists(path_from_env_variable):
-                raise ConfigurationError(
-                    """The path specified by RUBYRIPPER_CLI_PATH
-                    is incorrect. Please provide a valid path for
-                    ruby ripper.""")
-            return path_from_env_variable
+            return self._get_verified_path_from_environment_variable(path_from_env_variable)
+        return self._get_verified_path_from_config_file()
+
+    def _get_verified_path_from_environment_variable(self, path_from_env_variable):
+        if not os.path.exists(path_from_env_variable):
+            raise ConfigurationError(
+                """The path specified by RUBYRIPPER_CLI_PATH
+                is incorrect. Please provide a valid path for
+                ruby ripper.""")
+        return path_from_env_variable
+
+    def _get_verified_path_from_config_file(self):
         config = ConfigParser.ConfigParser()
         config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
         if not os.path.exists(config_path):
