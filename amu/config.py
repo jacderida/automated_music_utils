@@ -19,6 +19,11 @@ class ConfigurationProvider(object):
 
     def get_ruby_ripper_config_file(self):
         path_from_env_variable = os.environ.get('RUBYRIPPER_CONFIG_PATH')
+        if not os.path.exists(path_from_env_variable):
+            raise ConfigurationError(
+                """The path specified by RUBYRIPPER_CONFIG_PATH
+                is incorrect. Please provide a valid path for
+                ruby ripper.""")
         return path_from_env_variable
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable):

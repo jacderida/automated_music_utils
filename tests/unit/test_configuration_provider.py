@@ -110,7 +110,16 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.rip.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__correct_variable_used(self, environ_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
-        environ_mock.get.return_value = '/opt/rubyripper/rubyripper_cli.rb'
+        environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider.get_ruby_ripper_config_file()
         environ_mock.get.assert_called_with('RUBYRIPPER_CONFIG_PATH')
+
+    @mock.patch('amu.rip.os.path.exists')
+    @mock.patch('amu.rip.os.environ')
+    def test__get_ruby_ripper_config_file__environment_variable_has_incorrect_path__throws_configuration_error(self, environ_mock, path_exists_mock):
+        config_provider = ConfigurationProvider()
+        environ_mock.get.return_value = '/home/user/ripper_config_file'
+        path_exists_mock.return_value = False
+        with self.assertRaises(ConfigurationError):
+            config_provider.get_ruby_ripper_config_file()
