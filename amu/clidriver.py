@@ -36,7 +36,8 @@ class CliDriver(object):
 
     def main(self):
         """ The main entry point for the CLI driver """
-        parser = CommandParser(ConfigurationProvider(), RubyRipperCdRipper())
+        config_provider = ConfigurationProvider()
+        parser = CommandParser(config_provider, RubyRipperCdRipper(config_provider))
         command = parser.from_args(self._get_arguments())
         command.execute()
         return 0
