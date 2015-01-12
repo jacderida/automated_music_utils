@@ -12,7 +12,7 @@ class CommandParserTest(unittest.TestCase):
     """ Test suite for the command parser. """
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.rip.RubyRipperCdRipper')
-    def test_command_parser_returns_rip_cd_command(self, config_mock, cd_ripper_mock):
+    def test__from_args__when_rip_cd_is_specified__command_parser_returns_rip_cd_command(self, config_mock, cd_ripper_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip'])
