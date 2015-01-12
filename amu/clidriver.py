@@ -2,6 +2,8 @@
 import argparse
 import sys
 from amu.commands.ripcdcommand import RipCdCommand
+from amu.config import ConfigurationProvider
+from amu.rip import RubyRipperCdRipper
 
 
 def main():
@@ -34,7 +36,7 @@ class CliDriver(object):
 
     def main(self):
         """ The main entry point for the CLI driver """
-        parser = CommandParser()
+        parser = CommandParser(ConfigurationProvider(), RubyRipperCdRipper())
         command = parser.from_args(self._get_arguments())
         command.execute()
         return 0
@@ -43,8 +45,12 @@ class CommandParser(object):
     """ Responsible for parsing the string based command from the command line
         into a command object that can be executed.
     """
+    def __init__(self, configuration_provider, cd_ripper):
+        self._configuration_provider = configuration_provider
+        self._cd_ripper = cd_ripper
+
     def from_args(self, args):
-        return RipCdCommand(None)
+        return RipCdCommand(self._configuration_provider, self._cd_ripper)
 
 if __name__ == '__main__':
     sys.exit(main())

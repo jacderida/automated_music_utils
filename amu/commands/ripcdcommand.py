@@ -4,7 +4,8 @@ from amu.rip import RubyRipperCdRipper
 
 
 class RipCdCommand(Command):
-    def __init__(self, cd_ripper):
+    def __init__(self, config_provider, cd_ripper):
+        super(RipCdCommand, self).__init__(config_provider)
         if cd_ripper is None:
             cd_ripper = RubyRipperCdRipper()
         self._cd_ripper = cd_ripper
