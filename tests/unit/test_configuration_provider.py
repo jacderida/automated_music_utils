@@ -98,3 +98,10 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_get_mock.return_value = '/opt/rubyripper/rubyripper_cli.rb'
         with self.assertRaises(ConfigurationError):
             config_provider.get_ruby_ripper_path()
+
+    def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__returns_correct_path(self):
+        with patch('amu.rip.os.environ') as environ_mock:
+            config_provider = ConfigurationProvider()
+            environ_mock.get.return_value = '/home/user/ripper_config_file'
+            result = config_provider.get_ruby_ripper_config_file()
+            self.assertEqual('/home/user/ripper_config_file', result)

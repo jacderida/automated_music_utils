@@ -17,6 +17,10 @@ class ConfigurationProvider(object):
             return self._get_verified_path_from_environment_variable(path_from_env_variable)
         return self._get_verified_path_from_config_file()
 
+    def get_ruby_ripper_config_file(self):
+        path_from_env_variable = os.environ.get('RUBYRIPPER_CONFIG_PATH')
+        return path_from_env_variable
+
     def _get_verified_path_from_environment_variable(self, path_from_env_variable):
         if not os.path.exists(path_from_env_variable):
             raise ConfigurationError(

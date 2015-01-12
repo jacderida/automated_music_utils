@@ -12,7 +12,8 @@ class RubyRipperCdRipper(object):
 
     def rip_cd(self):
         popen = subprocess.Popen(
-            [self._config_provider, '-d'], stdout=subprocess.PIPE)
+            [self._config_provider.get_ruby_ripper_path(), '-d'],
+            stdout=subprocess.PIPE)
         lines_iterator = iter(popen.stdout.readline, "")
         for line in lines_iterator:
             print line
