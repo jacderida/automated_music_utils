@@ -19,7 +19,8 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         ripper.rip_cd()
         subprocess_args = [
             '/opt/rubyripper/rubyripper_cli',
-            '-c',
+            '--defaults',
+            '--file',
             '/opt/rubyripper/config_file'
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE)

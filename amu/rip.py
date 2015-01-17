@@ -13,7 +13,8 @@ class RubyRipperCdRipper(object):
     def rip_cd(self):
         subprocess_args = [
             self._config_provider.get_ruby_ripper_path(),
-            '-c',
+            '--defaults',
+            '--file',
             self._config_provider.get_ruby_ripper_config_file()
         ]
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
