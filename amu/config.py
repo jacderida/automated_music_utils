@@ -28,7 +28,7 @@ class ConfigurationProvider(object):
                 ruby ripper.""")
         return path_from_env_variable
 
-    def get_temp_config_file_for_ripper(self):
+    def get_temp_config_file_for_ripper(self, destination_path):
         config_path = self.get_ruby_ripper_config_file()
         config = ConfigParser.ConfigParser()
         config.read(config_path)
@@ -38,7 +38,7 @@ class ConfigurationProvider(object):
             lines = config_file.readlines()
         with open(temp_path, 'w') as config_file:
             for line in lines:
-                config_file.write(re.sub('REPLACE_BASE_DIR', temp_path, line))
+                config_file.write(re.sub('REPLACE_BASE_DIR', destination_path, line))
         return temp_path
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable):

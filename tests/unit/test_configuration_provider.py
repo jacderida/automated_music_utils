@@ -138,7 +138,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider = ConfigurationProvider()
-        result = config_provider.get_temp_config_file_for_ripper()
+        result = config_provider.get_temp_config_file_for_ripper('/any/path')
         self.assertIn('/tmp/', result)
 
     @mock.patch('amu.config.open', create=True)
@@ -151,7 +151,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider = ConfigurationProvider()
-        result = config_provider.get_temp_config_file_for_ripper()
+        result = config_provider.get_temp_config_file_for_ripper('/any/path')
         parsed_uuid = result.split('/tmp/')[1]
         # Seems a reasonable assertion; UUID will throw if string is not valid.
         self.assertEqual(4, uuid.UUID(parsed_uuid).get_version())
@@ -174,8 +174,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         file_handle = open_mock.return_value.__enter__.return_value
         file_handle.readlines.return_value = sample_file_contents
         config_provider = ConfigurationProvider()
-        config_provider.get_temp_config_file_for_ripper()
-        sub_mock.assert_called_with('REPLACE_BASE_DIR', AnyStringWith('/tmp/'), 'basedir=REPLACE_BASE_DIR')
+        config_provider.get_temp_config_file_for_ripper('/any/path')
+        sub_mock.assert_called_with('REPLACE_BASE_DIR', '/any/path', 'basedir=REPLACE_BASE_DIR')
 
     @mock.patch('amu.config.open', create=True)
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -187,7 +187,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider = ConfigurationProvider()
-        config_provider.get_temp_config_file_for_ripper()
+        config_provider.get_temp_config_file_for_ripper('/any/path')
         open_mock.assert_called_with(AnyStringWith('/tmp/'), 'w')
 
 class AnyStringWith(str):
