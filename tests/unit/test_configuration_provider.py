@@ -169,6 +169,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         ]
         open_mock.return_value = MagicMock(spec=file)
         config_get_mock.return_value = '/tmp'
+        environ_mock.get.return_value = '/home/user/ripper_config_file'
+        path_exists_mock.return_value = True
         file_handle = open_mock.return_value.__enter__.return_value
         file_handle.readlines.return_value = sample_file_contents
         config_provider = ConfigurationProvider()
