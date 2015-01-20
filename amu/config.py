@@ -36,7 +36,7 @@ class ConfigurationProvider(object):
         temp_path = os.path.join(path_from_config, str(uuid.uuid4()))
         with open(config_path, 'r') as config_file:
             lines = config_file.readlines()
-        with open(config_path, 'w') as config_file:
+        with open(temp_path, 'w') as config_file:
             for line in lines:
                 config_file.write(re.sub('REPLACE_BASE_DIR', temp_path, line))
         return temp_path

@@ -177,6 +177,19 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_temp_config_file_for_ripper()
         sub_mock.assert_called_with('REPLACE_BASE_DIR', AnyStringWith('/tmp/'), 'basedir=REPLACE_BASE_DIR')
 
+    @mock.patch('amu.config.open', create=True)
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
+    def test__get_temp_config_file_for_ripper__write_temp_config_file__temp_config_file_is_written(self, environ_mock, path_exists_mock, config_get_mock, open_mock):
+        open_mock.return_value = MagicMock(spec=file)
+        config_get_mock.return_value = '/tmp'
+        environ_mock.get.return_value = '/home/user/ripper_config_file'
+        path_exists_mock.return_value = True
+        config_provider = ConfigurationProvider()
+        config_provider.get_temp_config_file_for_ripper()
+        open_mock.assert_called_with(AnyStringWith('/tmp/'), 'w')
+
 class AnyStringWith(str):
     def __eq__(self, other):
         return self in other
