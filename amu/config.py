@@ -1,5 +1,6 @@
 import ConfigParser
 import os
+import re
 import subprocess
 import uuid
 
@@ -27,12 +28,17 @@ class ConfigurationProvider(object):
                 ruby ripper.""")
         return path_from_env_variable
 
-    def get_temp_config_path_for_ripper(self):
+    def get_temp_config_file_for_ripper(self):
         config_path = self.get_ruby_ripper_config_file()
         config = ConfigParser.ConfigParser()
         config.read(config_path)
         path_from_config = config.get('ripper', 'temp_path')
         temp_path = os.path.join(path_from_config, str(uuid.uuid4()))
+        with open(config_path, 'r') as config_file:
+            lines = config_file.readlines()
+        with open(config_path, 'w') as config_file:
+            for line in lines:
+                config_file.write(re.sub('REPLACE_BASE_DIR', temp_path, line))
         return temp_path
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable):
