@@ -125,3 +125,15 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
             config_provider.get_ruby_ripper_config_file()
+
+    @mock.patch('amu.rip.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.rip.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.rip.os.path.exists')
+    @mock.patch('amu.rip.os.environ')
+    def test__get_temp_config_path_for_ripper__temp_path_defined_in_config_file__returned_path_contains_temp_path(self, environ_mock, path_exists_mock, config_get_mock, config_read_mock):
+        config_get_mock.return_value = '/tmp'
+        environ_mock.get.return_value = '/home/user/ripper_config_file'
+        path_exists_mock.return_value = True
+        config_provider = ConfigurationProvider()
+        result = config_provider.get_temp_config_path_for_ripper()
+        self.assertIn('/tmp/', result)
