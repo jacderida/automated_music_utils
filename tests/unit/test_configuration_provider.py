@@ -10,15 +10,15 @@ from amu.config import ConfigurationProvider
 class ConfigurationProviderTest(unittest.TestCase):
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_on_path__returns_ruby_ripper_command(self):
         config_provider = ConfigurationProvider()
-        with patch('amu.rip.subprocess.call') as mock:
+        with patch('amu.config.subprocess.call') as mock:
             mock.return_value = 0
             result = config_provider.get_ruby_ripper_path()
             self.assertEqual('rubyripper_cli', result)
             mock.assert_called_with(['which', 'rubyripper_cli'])
 
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.environ')
-    @mock.patch('amu.rip.subprocess.call')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_path_is_set_on_environment_variable__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
@@ -30,9 +30,9 @@ class ConfigurationProviderTest(unittest.TestCase):
             '/opt/rubyripper/rubyripper_cli.rb', result)
         environ_mock.get.assert_called_with('RUBYRIPPER_CLI_PATH')
 
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.environ')
-    @mock.patch('amu.rip.subprocess.call')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__environment_variable_has_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
@@ -42,10 +42,10 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             config_provider.get_ruby_ripper_path()
 
-    @mock.patch('amu.rip.ConfigParser.ConfigParser.get')
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.environ')
-    @mock.patch('amu.rip.subprocess.call')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock, config_get_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
@@ -56,12 +56,12 @@ class ConfigurationProviderTest(unittest.TestCase):
         self.assertEqual('/opt/rubyripper/rubyripper_cli.rb', result)
         config_get_mock.assert_called_with('ripper', 'path')
 
-    @mock.patch('amu.rip.ConfigParser.ConfigParser.read')
-    @mock.patch('amu.rip.ConfigParser.ConfigParser.get')
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.path.expanduser')
-    @mock.patch('amu.rip.os.environ')
-    @mock.patch('amu.rip.subprocess.call')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
@@ -72,10 +72,10 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_ruby_ripper_path()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.path.expanduser')
-    @mock.patch('amu.rip.os.environ')
-    @mock.patch('amu.rip.subprocess.call')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__invalid_config_file__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
@@ -85,12 +85,12 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             config_provider.get_ruby_ripper_path()
 
-    @mock.patch('amu.rip.ConfigParser.ConfigParser.read')
-    @mock.patch('amu.rip.ConfigParser.ConfigParser.get')
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.path.expanduser')
-    @mock.patch('amu.rip.os.environ')
-    @mock.patch('amu.rip.subprocess.call')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__config_file_specifies_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
         config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
@@ -101,8 +101,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             config_provider.get_ruby_ripper_path()
 
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.environ')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__returns_correct_path(self, environ_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
         environ_mock.get.return_value = '/home/user/ripper_config_file'
@@ -110,8 +110,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         result = config_provider.get_ruby_ripper_config_file()
         self.assertEqual('/home/user/ripper_config_file', result)
 
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.environ')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__correct_variable_used(self, environ_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
         environ_mock.get.return_value = '/home/user/ripper_config_file'
@@ -119,8 +119,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_ruby_ripper_config_file()
         environ_mock.get.assert_called_with('RUBYRIPPER_CONFIG_PATH')
 
-    @mock.patch('amu.rip.os.path.exists')
-    @mock.patch('amu.rip.os.environ')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__environment_variable_has_incorrect_path__throws_configuration_error(self, environ_mock, path_exists_mock):
         config_provider = ConfigurationProvider()
         environ_mock.get.return_value = '/home/user/ripper_config_file'
