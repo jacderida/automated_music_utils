@@ -2,6 +2,7 @@ import ConfigParser
 import os
 import re
 import subprocess
+import tempfile
 import uuid
 
 
@@ -30,10 +31,7 @@ class ConfigurationProvider(object):
 
     def get_temp_config_file_for_ripper(self, destination_path):
         config_path = self.get_ruby_ripper_config_file()
-        config = ConfigParser.ConfigParser()
-        config.read(config_path)
-        path_from_config = config.get('ripper', 'temp_path')
-        temp_path = os.path.join(path_from_config, str(uuid.uuid4()))
+        temp_path = tempfile.TemporaryFile()
         with open(config_path, 'r') as config_file:
             lines = config_file.readlines()
         with open(temp_path, 'w') as config_file:
