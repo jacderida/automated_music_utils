@@ -171,3 +171,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider = ConfigurationProvider()
         config_provider.get_temp_config_file_for_ripper('/any/path')
         tempfile_mock.assert_called_with()
+
+    def test__get_temp_config_file_for_ripper__empty_destination_path__throws_configuration_exception(self):
+        with self.assertRaises(ConfigurationError):
+            config_provider = ConfigurationProvider()
+            config_provider.get_temp_config_file_for_ripper('')

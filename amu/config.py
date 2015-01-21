@@ -30,6 +30,8 @@ class ConfigurationProvider(object):
         return path_from_env_variable
 
     def get_temp_config_file_for_ripper(self, destination_path):
+        if not destination_path:
+            raise ConfigurationError('A destination path must be specified for the CD rip.')
         config_path = self.get_ruby_ripper_config_file()
         temp_path = tempfile.TemporaryFile()
         with open(config_path, 'r') as config_file:
