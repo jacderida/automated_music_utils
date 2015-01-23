@@ -11,7 +11,7 @@ class RubyRipperCdRipper(object):
             config_provider = ConfigurationProvider()
         self._config_provider = config_provider
 
-    def rip_cd(self):
+    def rip_cd(self, destination):
         temp_path = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         os.mkdir(temp_path)
         subprocess_args = [

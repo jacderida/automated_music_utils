@@ -22,7 +22,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
-        ripper.rip_cd()
+        ripper.rip_cd('/some/path')
         subprocess_args = [
             '/opt/rubyripper/rubyripper_cli',
             '--defaults',
@@ -47,7 +47,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
-        ripper.rip_cd()
+        ripper.rip_cd('/some/path')
         mkdir_mock.assert_called_with(AnyStringWith('/tmp/'))
 
     @mock.patch('amu.rip.os.mkdir')
@@ -67,7 +67,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
-        ripper.rip_cd()
+        ripper.rip_cd('/some/path')
         temp_path = copy_mock.call_args[0][0]
         parsed_uuid = temp_path.split('/tmp/')[1]
         self.assertEqual(4, uuid.UUID(parsed_uuid).get_version())
@@ -87,7 +87,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
-        ripper.rip_cd()
+        ripper.rip_cd('/some/path')
         gettempdir_mock.assert_called_once_with()
 
     @mock.patch('amu.rip.os.mkdir')
@@ -107,7 +107,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
-        ripper.rip_cd()
+        ripper.rip_cd('/some/path')
         temp_path = copy_mock.call_args[0][0]
         config_mock.get_temp_config_file_for_ripper.assert_called_once_with(temp_path)
 
