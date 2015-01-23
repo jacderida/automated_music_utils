@@ -1,7 +1,6 @@
-import ConfigParser
 import os
-import re
 import subprocess
+import tempfile
 from amu.config import ConfigurationProvider
 
 
@@ -12,6 +11,8 @@ class RubyRipperCdRipper(object):
         self._config_provider = config_provider
 
     def rip_cd(self):
+        temp_path = os.path.join(tempfile.gettempdir(), 'random')
+        os.mkdir(temp_path)
         subprocess_args = [
             self._config_provider.get_ruby_ripper_path(),
             '--defaults',
