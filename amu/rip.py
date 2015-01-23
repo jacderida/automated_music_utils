@@ -2,6 +2,7 @@ import os
 import subprocess
 import tempfile
 import uuid
+from amu import utils
 from amu.config import ConfigurationProvider
 
 
@@ -24,3 +25,4 @@ class RubyRipperCdRipper(object):
         lines_iterator = iter(popen.stdout.readline, "")
         for line in lines_iterator:
             print line
+        utils.copy_content_to_directory(temp_path, destination)
