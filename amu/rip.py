@@ -18,7 +18,7 @@ class RubyRipperCdRipper(object):
             self._config_provider.get_ruby_ripper_path(),
             '--defaults',
             '--file',
-            self._config_provider.get_temp_config_file_for_ripper('destination')
+            self._config_provider.get_temp_config_file_for_ripper(temp_path)
         ]
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
         lines_iterator = iter(popen.stdout.readline, "")

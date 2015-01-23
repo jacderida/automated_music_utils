@@ -90,6 +90,27 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         ripper.rip_cd()
         gettempdir_mock.assert_called_once_with()
 
+    @mock.patch('amu.rip.os.mkdir')
+    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('amu.rip.open', create=True)
+    @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
+    @mock.patch('amu.rip.subprocess.Popen')
+    def test__rip_cd__ripper_should_use_temp_directory_as_destination__temp_directory_is_destination(self, subprocess_mock, config_mock, open_mock, gettempdir_mock, mkdir_mock):
+        copy_mock = self.copy_call_args(mkdir_mock)
+        gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
+        open_mock.return_value = MagicMock(spec=file)
+        config_mock.get_ruby_ripper_path.return_value = \
+            '/opt/rubyripper/rubyripper_cli'
+        config_mock.get_temp_config_file_for_ripper.return_value = \
+            '/opt/rubyripper/config_file'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        subprocess_mock.return_value = process_mock
+        ripper = RubyRipperCdRipper(config_mock)
+        ripper.rip_cd()
+        temp_path = copy_mock.call_args[0][0]
+        config_mock.get_temp_config_file_for_ripper.assert_called_once_with(temp_path)
+
     def copy_call_args(self, mock):
         new_mock = Mock()
         def side_effect(*args, **kwargs):
