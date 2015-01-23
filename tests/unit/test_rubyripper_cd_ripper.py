@@ -3,7 +3,7 @@ import subprocess
 import unittest
 import uuid
 from copy import deepcopy
-from mock import DEFAULT, MagicMock, Mock, patch
+from mock import DEFAULT, MagicMock, Mock
 from amu.rip import RubyRipperCdRipper
 
 
