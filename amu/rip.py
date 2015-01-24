@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import tempfile
 import uuid
@@ -26,3 +27,4 @@ class RubyRipperCdRipper(object):
         for line in lines_iterator:
             print line
         utils.copy_content_to_directory(temp_path, destination)
+        shutil.rmtree(temp_path)
