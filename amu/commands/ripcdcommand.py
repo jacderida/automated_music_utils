@@ -24,4 +24,4 @@ class RipCdCommand(Command):
             raise CommandValidationError('A destination must be supplied for the CD rip')
 
     def execute(self):
-        self._cd_ripper.rip_cd()
+        self._cd_ripper.rip_cd(self.destination)
