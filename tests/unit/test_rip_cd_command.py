@@ -1,6 +1,5 @@
 import mock
 import unittest
-from mock import patch
 from amu.commands.command import CommandValidationError
 from amu.commands.ripcdcommand import RipCdCommand
 
@@ -12,3 +11,10 @@ class RipCdCommandTest(unittest.TestCase):
         command = RipCdCommand(config_mock, cd_ripper_mock)
         command.execute()
         cd_ripper_mock.rip_cd.assert_called_once_with()
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__validate__destination_is_empty__throws_command_validation_exception(self, config_mock, cd_ripper_mock):
+        with self.assertRaises(CommandValidationError):
+            command = RipCdCommand(config_mock, cd_ripper_mock)
+            command.validate()
