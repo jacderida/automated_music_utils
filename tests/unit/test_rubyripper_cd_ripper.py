@@ -4,6 +4,7 @@ import unittest
 import uuid
 from copy import deepcopy
 from mock import DEFAULT, MagicMock, Mock
+from amu.config import ConfigurationError
 from amu.rip import RubyRipperCdRipper
 
 
@@ -166,6 +167,16 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         ripper.rip_cd('/some/path')
         temp_path = copy_mock.call_args[0][0]
         rm_mock.assert_called_once_with(temp_path)
+
+    @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
+    def test__rip_cd__empty_destination__throws_configuration_exception(self, config_mock):
+        config_mock.get_ruby_ripper_path.return_value = \
+            '/opt/rubyripper/rubyripper_cli'
+        config_mock.get_temp_config_file_for_ripper.return_value = \
+            '/opt/rubyripper/config_file'
+        with self.assertRaises(ConfigurationError):
+            ripper = RubyRipperCdRipper(config_mock)
+            ripper.rip_cd('')
 
     def copy_call_args(self, mock):
         new_mock = Mock()

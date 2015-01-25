@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import uuid
 from amu import utils
+from amu.config import ConfigurationError
 from amu.config import ConfigurationProvider
 
 
@@ -14,6 +15,8 @@ class RubyRipperCdRipper(object):
         self._config_provider = config_provider
 
     def rip_cd(self, destination):
+        if not destination:
+            raise ConfigurationError('A destination must be provided for the CD rip')
         temp_path = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         os.mkdir(temp_path)
         subprocess_args = [
