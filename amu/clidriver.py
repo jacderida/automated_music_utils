@@ -54,7 +54,10 @@ class CommandParser(object):
 
     def from_args(self, args):
         command = RipCdCommand(self._configuration_provider, self._cd_ripper)
-        command.destination = os.getcwd()
+        if args.destination:
+            command.destination = args.destination
+        else:
+            command.destination = os.getcwd()
         return command
 
 if __name__ == '__main__':

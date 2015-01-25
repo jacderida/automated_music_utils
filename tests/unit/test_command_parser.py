@@ -28,3 +28,13 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock)
         command = parser.from_args(args)
         self.assertEqual(os.getcwd(), command.destination)
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__from_args__rip_cd_command_optional_destination__destination_should_be_optional_destination(self, config_mock, cd_ripper_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['rip', '--destination=/some/path'])
+        parser = CommandParser(config_mock, cd_ripper_mock)
+        command = parser.from_args(args)
+        self.assertEqual('/some/path', command.destination)
