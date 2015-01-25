@@ -7,12 +7,17 @@ class RipCdCommand(Command):
     def __init__(self, config_provider, cd_ripper):
         super(RipCdCommand, self).__init__(config_provider)
         if cd_ripper is None:
-            cd_ripper = RubyRipperCdRipper()
+            cd_ripper = RubyRipperCdRipper(config_provider)
         self._cd_ripper = cd_ripper
+        self._destination = ''
 
-    def validate(self):
-        if not self._cd_ripper.is_installed():
-            raise CommandValidationError('A CD ripper has not been configured for on this system')
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
 
     def execute(self):
         self.validate()

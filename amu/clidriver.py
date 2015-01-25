@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 import sys
 from amu.commands.ripcdcommand import RipCdCommand
 from amu.config import ConfigurationProvider
@@ -16,7 +17,8 @@ class CliDriver(object):
         be useful for unit testing the command parser. """
         parser = argparse.ArgumentParser()
         subparsers = parser.add_subparsers(dest='command')
-        subparsers.add_parser('rip', help='rips the current CD to WAV')
+        rip_parser = subparsers.add_parser('rip', help='rips the current CD to WAV')
+        rip_parser.add_argument('--destination', help='optional destination for the CD rip')
         search_parser = subparsers.add_parser(
             'search',
             prog='search',
@@ -51,7 +53,9 @@ class CommandParser(object):
         self._cd_ripper = cd_ripper
 
     def from_args(self, args):
-        return RipCdCommand(self._configuration_provider, self._cd_ripper)
+        command = RipCdCommand(self._configuration_provider, self._cd_ripper)
+        command.destination = os.getcwd()
+        return command
 
 if __name__ == '__main__':
     sys.exit(main())
