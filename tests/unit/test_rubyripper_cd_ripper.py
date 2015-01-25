@@ -2,8 +2,8 @@ import mock
 import subprocess
 import unittest
 import uuid
-from copy import deepcopy
-from mock import call, DEFAULT, MagicMock, Mock
+from mock import call, MagicMock
+from amu import utils
 from amu.config import ConfigurationError
 from amu.rip import RubyRipperCdRipper
 
@@ -69,7 +69,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
     @mock.patch('amu.rip.subprocess.Popen')
     def test__rip_cd__temporary_directory_has_guid__temp_directory_created_with_guid(self, subprocess_mock, config_mock, open_mock, gettempdir_mock, mkdir_mock, path_exists_mock, copy_content_mock, rm_mock):
         path_exists_mock.return_value = True
-        copy_mock = self.copy_call_args(mkdir_mock)
+        stored_args_mock = utils.get_mock_with_stored_call_args(mkdir_mock)
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         open_mock.return_value = MagicMock(spec=file)
         config_mock.get_ruby_ripper_path.return_value = \
@@ -81,7 +81,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
         ripper.rip_cd('/some/path')
-        temp_path = copy_mock.call_args[0][0]
+        temp_path = stored_args_mock.call_args[0][0]
         parsed_uuid = temp_path.split('/tmp/')[1]
         self.assertEqual(4, uuid.UUID(parsed_uuid).get_version())
 
@@ -116,7 +116,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
     @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
     @mock.patch('amu.rip.subprocess.Popen')
     def test__rip_cd__ripper_should_use_temp_directory_as_destination__temp_directory_is_destination(self, subprocess_mock, config_mock, open_mock, gettempdir_mock, mkdir_mock, path_exists_mock, copy_content_mock, rm_mock):
-        copy_mock = self.copy_call_args(mkdir_mock)
+        stored_args_mock = utils.get_mock_with_stored_call_args(mkdir_mock)
         path_exists_mock.return_value = True
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         open_mock.return_value = MagicMock(spec=file)
@@ -129,7 +129,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
         ripper.rip_cd('/some/path')
-        temp_path = copy_mock.call_args[0][0]
+        temp_path = stored_args_mock.call_args[0][0]
         config_mock.get_temp_config_file_for_ripper.assert_called_once_with(temp_path)
 
     @mock.patch('amu.rip.shutil.rmtree')
@@ -141,7 +141,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
     @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
     @mock.patch('amu.rip.subprocess.Popen')
     def test__rip_cd__temp_output_should_be_copied_to_destination__temp_output_is_copied_to_destination(self, subprocess_mock, config_mock, open_mock, gettempdir_mock, mkdir_mock, path_exists_mock, copy_content_mock, rm_mock):
-        copy_mock = self.copy_call_args(mkdir_mock)
+        stored_args_mock = utils.get_mock_with_stored_call_args(mkdir_mock)
         path_exists_mock.return_value = True
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         open_mock.return_value = MagicMock(spec=file)
@@ -154,7 +154,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
         ripper.rip_cd('/some/path')
-        temp_path = copy_mock.call_args[0][0]
+        temp_path = stored_args_mock.call_args[0][0]
         copy_content_mock.assert_called_once_with(temp_path, '/some/path')
 
     @mock.patch('amu.rip.shutil.rmtree')
@@ -166,7 +166,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
     @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
     @mock.patch('amu.rip.subprocess.Popen')
     def test__rip_cd__temp_directory_should_be_removed__temp_directory_is_removed(self, subprocess_mock, config_mock, open_mock, gettempdir_mock, mkdir_mock, path_exists_mock, copy_content_mock, rm_mock):
-        copy_mock = self.copy_call_args(mkdir_mock)
+        stored_args_mock = utils.get_mock_with_stored_call_args(mkdir_mock)
         path_exists_mock.return_value = True
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         open_mock.return_value = MagicMock(spec=file)
@@ -179,7 +179,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
         ripper.rip_cd('/some/path')
-        temp_path = copy_mock.call_args[0][0]
+        temp_path = stored_args_mock.call_args[0][0]
         rm_mock.assert_called_once_with(temp_path)
 
     @mock.patch('amu.rip.shutil.rmtree')
@@ -191,7 +191,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
     @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
     @mock.patch('amu.rip.subprocess.Popen')
     def test__rip_cd__destination_does_not_exist__destination_should_be_created(self, subprocess_mock, config_mock, open_mock, gettempdir_mock, mkdir_mock, path_exists_mock, copy_content_mock, rm_mock):
-        copy_mock = self.copy_call_args(mkdir_mock)
+        stored_args_mock = utils.get_mock_with_stored_call_args(mkdir_mock)
         path_exists_mock.return_value = False
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         open_mock.return_value = MagicMock(spec=file)
@@ -204,8 +204,8 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
         ripper.rip_cd('/some/path')
-        temp_path = copy_mock.call_args[0][0]
-        copy_mock.assert_has_calls([call('/some/path'), call(temp_path)])
+        temp_path = stored_args_mock.call_args[0][0]
+        stored_args_mock.assert_has_calls([call('/some/path'), call(temp_path)])
 
     @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
     def test__rip_cd__empty_destination__throws_configuration_exception(self, config_mock):
@@ -216,16 +216,6 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             ripper = RubyRipperCdRipper(config_mock)
             ripper.rip_cd('')
-
-    def copy_call_args(self, mock):
-        new_mock = Mock()
-        def side_effect(*args, **kwargs):
-            args = deepcopy(args)
-            kwargs = deepcopy(kwargs)
-            new_mock(*args, **kwargs)
-            return DEFAULT
-        mock.side_effect = side_effect
-        return new_mock
 
 class AnyStringWith(str):
     def __eq__(self, other):

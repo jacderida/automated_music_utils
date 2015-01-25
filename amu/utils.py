@@ -2,6 +2,8 @@
 import re
 import os
 import shutil
+from copy import deepcopy
+from mock import DEFAULT, Mock
 
 
 def copy_content_to_directory(src, dest):
@@ -14,3 +16,13 @@ def copy_content_to_directory(src, dest):
             file_name = os.path.join(root, f)
             dest_file = re.sub(src, dest, file_name)
             shutil.copyfile(file_name, dest_file)
+
+def get_mock_with_stored_call_args(mock):
+    new_mock = Mock()
+    def side_effect(*args, **kwargs):
+        args = deepcopy(args)
+        kwargs = deepcopy(kwargs)
+        new_mock(*args, **kwargs)
+        return DEFAULT
+    mock.side_effect = side_effect
+    return new_mock
