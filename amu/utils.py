@@ -6,6 +6,10 @@ from copy import deepcopy
 from mock import DEFAULT, Mock
 
 
+class AnyStringWith(str):
+    def __eq__(self, other):
+        return self in other
+
 def copy_content_to_directory(src, dest):
     for root, directories, files in os.walk(src):
         for directory in directories:

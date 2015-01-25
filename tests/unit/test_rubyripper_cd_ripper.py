@@ -57,7 +57,7 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         subprocess_mock.return_value = process_mock
         ripper = RubyRipperCdRipper(config_mock)
         ripper.rip_cd('/some/path')
-        mkdir_mock.assert_called_with(AnyStringWith('/tmp/'))
+        mkdir_mock.assert_called_with(utils.AnyStringWith('/tmp/'))
 
     @mock.patch('amu.rip.shutil.rmtree')
     @mock.patch('amu.rip.utils.copy_content_to_directory')
@@ -216,7 +216,3 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             ripper = RubyRipperCdRipper(config_mock)
             ripper.rip_cd('')
-
-class AnyStringWith(str):
-    def __eq__(self, other):
-        return self in other
