@@ -1,8 +1,9 @@
 import mock
 import unittest
-import tempfile
+import uuid
 from mock import MagicMock
 from mock import patch
+from amu import utils
 from amu.config import ConfigurationError
 from amu.config import ConfigurationProvider
 
@@ -147,30 +148,46 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_temp_config_file_for_ripper('/any/path')
         sub_mock.assert_called_with('REPLACE_BASE_DIR', '/any/path', 'basedir=REPLACE_BASE_DIR')
 
-    @mock.patch('amu.config.tempfile.TemporaryFile', create=True)
+    @mock.patch('amu.rip.tempfile.gettempdir')
     @mock.patch('amu.config.open', create=True)
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
-    def test__get_temp_config_file_for_ripper__write_temp_config_file__temp_config_file_is_written(self, environ_mock, path_exists_mock, open_mock, tempfile_mock):
+    def test__get_temp_config_file_for_ripper__write_temp_config_file__temp_config_file_is_written(self, environ_mock, path_exists_mock, open_mock, gettempdir_mock):
         open_mock.return_value = MagicMock(spec=file)
-        tempfile_mock.return_value = '/some/random/path'
+        gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider = ConfigurationProvider()
         config_provider.get_temp_config_file_for_ripper('/any/path')
-        open_mock.assert_called_with('/some/random/path', 'w')
+        open_mock.assert_called_with(utils.AnyStringWith('/tmp'), 'w')
 
-    @mock.patch('amu.config.tempfile.TemporaryFile', create=True)
+    @mock.patch('amu.rip.tempfile.gettempdir')
     @mock.patch('amu.config.open', create=True)
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
-    def test__get_temp_config_file_for_ripper__use_os_to_generate_temp_file__temp_file_is_generated_by_os(self, environ_mock, path_exists_mock, open_mock, tempfile_mock):
+    def test__get_temp_config_file_for_ripper__the_os_should_be_used_to_get_temp_dir__os_temp_dir_is_used(self, environ_mock, path_exists_mock, open_mock, gettempdir_mock):
         open_mock.return_value = MagicMock(spec=file)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider = ConfigurationProvider()
         config_provider.get_temp_config_file_for_ripper('/any/path')
-        tempfile_mock.assert_called_with()
+        gettempdir_mock.assert_called_once_with()
+
+    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('amu.config.open', create=True)
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
+    def test__get_temp_config_file_for_ripper__the_file_name_should_be_a_guid__the_file_name_is_a_guid(self, environ_mock, path_exists_mock, open_mock, gettempdir_mock):
+        gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
+        open_mock.return_value = MagicMock(spec=file)
+        stored_args_mock = utils.get_mock_with_stored_call_args(open_mock)
+        environ_mock.get.return_value = '/home/user/ripper_config_file'
+        path_exists_mock.return_value = True
+        config_provider = ConfigurationProvider()
+        config_provider.get_temp_config_file_for_ripper('/any/path')
+        temp_path = stored_args_mock.call_args[0][0]
+        parsed_uuid = temp_path.split('/tmp/')[1]
+        self.assertEqual(4, uuid.UUID(parsed_uuid).get_version())
 
     def test__get_temp_config_file_for_ripper__empty_destination_path__throws_configuration_exception(self):
         with self.assertRaises(ConfigurationError):

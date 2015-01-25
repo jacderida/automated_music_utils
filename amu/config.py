@@ -33,7 +33,7 @@ class ConfigurationProvider(object):
         if not destination_path:
             raise ConfigurationError('A destination path must be specified for the CD rip.')
         config_path = self.get_ruby_ripper_config_file()
-        temp_path = tempfile.TemporaryFile()
+        temp_path = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         with open(config_path, 'r') as config_file:
             lines = config_file.readlines()
         with open(temp_path, 'w') as config_file:
