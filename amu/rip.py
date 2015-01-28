@@ -20,7 +20,6 @@ class RubyRipperCdRipper(object):
         if not os.path.exists(destination):
             os.mkdir(destination)
         temp_path = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-        os.mkdir(temp_path)
         temp_config_path = self._config_provider.get_temp_config_file_for_ripper(temp_path)
         subprocess_args = [
             self._config_provider.get_ruby_ripper_path(),
