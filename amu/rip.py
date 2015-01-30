@@ -28,10 +28,12 @@ class RubyRipperCdRipper(object):
             '--file',
             temp_config_path
         ]
+        print "[rip] Running rubyripper with {0}".format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
         lines_iterator = iter(popen.stdout.readline, "")
         for line in lines_iterator:
-            print line
+            if line:
+                print "[rip] {0}".format(line.strip())
         utils.copy_content_to_directory(temp_path, expanded_destination)
         shutil.rmtree(temp_path)
         os.remove(temp_config_path)
