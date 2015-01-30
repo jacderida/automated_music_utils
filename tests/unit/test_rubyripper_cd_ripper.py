@@ -2,7 +2,7 @@ import mock
 import subprocess
 import unittest
 import uuid
-from mock import call, MagicMock
+from mock import MagicMock
 from amu import utils
 from amu.config import ConfigurationError
 from amu.rip import RubyRipperCdRipper
