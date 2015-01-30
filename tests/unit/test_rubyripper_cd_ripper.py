@@ -36,6 +36,28 @@ class RubyRipperCdRipperTest(unittest.TestCase):
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE)
 
+    @mock.patch('amu.rip.os.path.expanduser')
+    @mock.patch('amu.rip.os.remove')
+    @mock.patch('amu.rip.shutil.rmtree')
+    @mock.patch('amu.rip.utils.copy_content_to_directory')
+    @mock.patch('amu.rip.os.path.exists')
+    @mock.patch('amu.rip.open', create=True)
+    @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
+    @mock.patch('amu.rip.subprocess.Popen')
+    def test__rip_cd__destination_contains_profile_path__path_is_expanded(self, subprocess_mock, config_mock, open_mock, path_exists_mock, copy_content_mock, rm_mock, remove_mock, expanduser_mock):
+        path_exists_mock.return_value = True
+        open_mock.return_value = MagicMock(spec=file)
+        config_mock.get_ruby_ripper_path.return_value = \
+            '/opt/rubyripper/rubyripper_cli'
+        config_mock.get_temp_config_file_for_ripper.return_value = \
+            '/opt/rubyripper/config_file'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        subprocess_mock.return_value = process_mock
+        ripper = RubyRipperCdRipper(config_mock)
+        ripper.rip_cd('~/some/path')
+        expanduser_mock.assert_called_once_with('~/some/path')
+
     @mock.patch('amu.rip.os.remove')
     @mock.patch('amu.rip.shutil.rmtree')
     @mock.patch('amu.rip.utils.copy_content_to_directory')
