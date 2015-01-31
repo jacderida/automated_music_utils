@@ -20,6 +20,9 @@ class ConfigurationProvider(object):
             return self._get_verified_path_from_environment_variable(path_from_env_variable)
         config = ConfigParser.ConfigParser()
         config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
+        if not os.path.exists(config_path):
+            raise ConfigurationError(
+                'The .amu_config file does not exist in your home directory.')
         config.read(config_path)
         path_from_config = config.get('encoder', 'path')
         return path_from_config
