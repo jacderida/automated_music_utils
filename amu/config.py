@@ -25,6 +25,11 @@ class ConfigurationProvider(object):
                 'The .amu_config file does not exist in your home directory.')
         config.read(config_path)
         path_from_config = config.get('encoder', 'path')
+        if not os.path.exists(path_from_config):
+            raise ConfigurationError(
+                """The path specified to ruby ripper in the .amu_config
+                file is incorrect. Please provide a valid path for
+                ruby ripper.""")
         return path_from_config
 
     def get_ruby_ripper_path(self):

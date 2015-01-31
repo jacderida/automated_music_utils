@@ -255,7 +255,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/some/path/to/lame'
-        config_provider.get_ruby_ripper_path()
+        config_provider.get_lame_path()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
     @mock.patch('amu.config.os.path.exists')
@@ -269,4 +269,20 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
             config_provider = ConfigurationProvider()
-            config_provider.get_ruby_ripper_path()
+            config_provider.get_lame_path()
+
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
+    def test__get_lame_path__config_file_specifies_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = None
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.side_effect = [True, False]
+        config_get_mock.return_value = '/some/path/to/lame'
+        with self.assertRaises(ConfigurationError):
+            config_provider = ConfigurationProvider()
+            config_provider.get_lame_path()
