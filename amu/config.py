@@ -12,6 +12,12 @@ class ConfigurationError(Exception):
         self.message = message
 
 class ConfigurationProvider(object):
+    def get_lame_path(self):
+        if not subprocess.call(['which', 'lame']):
+            return 'lame'
+        path_from_env_variable = os.environ.get('LAME_PATH')
+        return self._get_verified_path_from_environment_variable(path_from_env_variable)
+
     def get_ruby_ripper_path(self):
         if not subprocess.call(['which', 'rubyripper_cli']):
             return 'rubyripper_cli'
