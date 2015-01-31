@@ -241,3 +241,19 @@ class ConfigurationProviderTest(unittest.TestCase):
         result = config_provider.get_lame_path()
         self.assertEqual('/some/path/to/lame', result)
         config_get_mock.assert_called_with('encoder', 'path')
+
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
+    def test__get_lame_path__lame_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
+        config_provider = ConfigurationProvider()
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = None
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '/some/path/to/lame'
+        config_provider.get_ruby_ripper_path()
+        config_read_mock.assert_called_with('/home/user/.amu_config')
