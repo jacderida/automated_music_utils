@@ -16,7 +16,13 @@ class ConfigurationProvider(object):
         if not subprocess.call(['which', 'lame']):
             return 'lame'
         path_from_env_variable = os.environ.get('LAME_PATH')
-        return self._get_verified_path_from_environment_variable(path_from_env_variable)
+        if path_from_env_variable:
+            return self._get_verified_path_from_environment_variable(path_from_env_variable)
+        config = ConfigParser.ConfigParser()
+        config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
+        config.read(config_path)
+        path_from_config = config.get('encoder', 'path')
+        return path_from_config
 
     def get_ruby_ripper_path(self):
         if not subprocess.call(['which', 'rubyripper_cli']):

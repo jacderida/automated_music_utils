@@ -227,3 +227,17 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             config_provider = ConfigurationProvider()
             config_provider.get_lame_path()
+
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.environ')
+    @mock.patch('amu.config.subprocess.call')
+    def test__get_lame_path__lame_is_in_config_file__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock, config_get_mock):
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = None
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '/some/path/to/lame'
+        config_provider = ConfigurationProvider()
+        result = config_provider.get_lame_path()
+        self.assertEqual('/some/path/to/lame', result)
+        config_get_mock.assert_called_with('encoder', 'path')
