@@ -206,11 +206,11 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_lame_path__lame_path_is_set_on_environment_variable__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = \
             '/some/path/to/lame'
         path_exists_mock.return_value = True
+        config_provider = ConfigurationProvider()
         result = config_provider.get_lame_path()
         self.assertEqual(
             '/some/path/to/lame', result)
@@ -220,10 +220,10 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_lame_path__environment_variable_has_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = \
             '/some/incorrect/path/to/lame'
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
+            config_provider = ConfigurationProvider()
             config_provider.get_lame_path()
