@@ -74,7 +74,10 @@ class CommandParser(object):
         elif args.command == 'encode':
             if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
                 command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-                command.source = os.getcwd()
+                if args.source:
+                    command.source = args.source
+                else:
+                    command.source = os.getcwd()
                 return command
 
 if __name__ == '__main__':
