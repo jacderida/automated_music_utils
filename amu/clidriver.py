@@ -65,26 +65,33 @@ class CommandParser(object):
 
     def from_args(self, args):
         if args.command == 'rip':
-            command = RipCdCommand(self._configuration_provider, self._cd_ripper)
+            return self._get_rip_command(args)
+        elif args.command == 'encode':
+            return self._get_encode_command(args)
+
+    def _get_rip_command(self, args):
+        command = RipCdCommand(self._configuration_provider, self._cd_ripper)
+        if args.destination:
+            command.destination = args.destination
+        else:
+            command.destination = os.getcwd()
+        return command
+
+    def _get_encode_command(self, args):
+        if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
+            command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+            if args.source:
+                command.source = args.source
+            else:
+                command.source = os.getcwd()
             if args.destination:
                 command.destination = args.destination
             else:
                 command.destination = os.getcwd()
+            if args.keep_source:
+                command.keep_source = True
             return command
-        elif args.command == 'encode':
-            if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
-                command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-                if args.source:
-                    command.source = args.source
-                else:
-                    command.source = os.getcwd()
-                if args.destination:
-                    command.destination = args.destination
-                else:
-                    command.destination = os.getcwd()
-                if args.keep_source:
-                    command.keep_source = True
-                return command
+
 
 if __name__ == '__main__':
     sys.exit(main())
