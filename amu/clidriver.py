@@ -78,6 +78,7 @@ class CommandParser(object):
                     command.source = args.source
                 else:
                     command.source = os.getcwd()
+                command.destination = os.getcwd()
                 return command
 
 if __name__ == '__main__':
