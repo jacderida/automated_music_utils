@@ -34,6 +34,8 @@ class CliDriver(object):
             '--source', help='The destination of the source wav file. This can be a file or directory.')
         encode_parser.add_argument(
             '--destination', help='The destination of the resulting mp3 or flac. This can be a file or directory.')
+        encode_parser.add_argument(
+            '--keep-source', help='If encoding from wav, use this to keep the original wav being removed.')
         return parser
 
     def _get_arguments(self):
