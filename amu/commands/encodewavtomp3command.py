@@ -36,4 +36,4 @@ class EncodeWavToMp3Command(Command):
         self._keep_source = value
 
     def execute(self):
-        pass
+        self._encoder.encode_wav_to_mp3(self.source, self.destination)

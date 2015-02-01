@@ -92,6 +92,5 @@ class CommandParser(object):
                 command.keep_source = True
             return command
 
-
 if __name__ == '__main__':
     sys.exit(main())
