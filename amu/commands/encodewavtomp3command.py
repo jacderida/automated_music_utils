@@ -1,4 +1,5 @@
 from amu.commands.command import Command
+from amu.commands.command import CommandValidationError
 from amu.encode import LameEncoder
 
 class EncodeWavToMp3Command(Command):
@@ -34,6 +35,10 @@ class EncodeWavToMp3Command(Command):
     @keep_source.setter
     def keep_source(self, value):
         self._keep_source = value
+
+    def validate(self):
+        if not self.source:
+            raise CommandValidationError('A source must be specified for encoding a wav to mp3')
 
     def execute(self):
         self._encoder.encode_wav_to_mp3(self.source, self.destination)
