@@ -12,6 +12,7 @@ class LameEncoderTest(unittest.TestCase):
     def test__encode_wav_to_mp3__lame_is_used_as_encoder__lame_is_called_with_the_correct_args(self, subprocess_mock, config_mock, open_mock):
         open_mock.return_value = MagicMock(spec=file)
         config_mock.get_lame_path.return_value = '/opt/lame/lame'
+        config_mock.get_encoding_setting.return_value = '-V0'
         process_mock = mock.Mock()
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock

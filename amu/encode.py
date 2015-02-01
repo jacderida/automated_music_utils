@@ -11,7 +11,7 @@ class LameEncoder(object):
     def encode_wav_to_mp3(self, source, destination):
         subprocess_args = [
             self._config_provider.get_lame_path(),
-            '-V0',
+            self._config_provider.get_encoding_setting(),
             source,
             destination
         ]
