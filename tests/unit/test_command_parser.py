@@ -97,3 +97,14 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
         command = parser.from_args(args)
         self.assertEqual('/some/destination', command.destination)
+
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__from_args__encode_wav_to_mp3_command_with_keep_source_set__keep_source_should_be_true(self, config_mock, cd_ripper_mock, encoder_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--keep-source'])
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        command = parser.from_args(args)
+        self.assertTrue(command.keep_source)
