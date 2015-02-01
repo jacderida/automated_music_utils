@@ -1,4 +1,6 @@
+import os
 import subprocess
+from amu.config import ConfigurationError
 from amu.config import ConfigurationProvider
 
 
@@ -9,6 +11,8 @@ class LameEncoder(object):
         self._config_provider = config_provider
 
     def encode_wav_to_mp3(self, source, destination):
+        if os.path.isdir(source):
+            raise ConfigurationError('The source should not be a directory')
         subprocess_args = [
             self._config_provider.get_lame_path(),
             self._config_provider.get_encoding_setting(),

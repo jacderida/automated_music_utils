@@ -2,6 +2,7 @@ import mock
 import subprocess
 import unittest
 from mock import MagicMock
+from amu.config import ConfigurationError
 from amu.encode import LameEncoder
 
 
@@ -25,3 +26,15 @@ class LameEncoderTest(unittest.TestCase):
             '/some/path/destination'
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE)
+
+    @mock.patch('amu.encode.os.path.isdir')
+    @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
+    def test__encode_wav_to_mp3__source_is_directory__throws_configuration_exception(self, config_mock, isdir_mock):
+        isdir_mock.return_value = True
+        config_mock.get_lame_path.return_value = '/opt/lame/lame'
+        config_mock.get_encoding_setting.return_value = '-V0'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        with self.assertRaises(ConfigurationError):
+            encoder = LameEncoder(config_mock)
+            encoder.encode_wav_to_mp3('/some/path/source', '/some/path/destination')
