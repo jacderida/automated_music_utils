@@ -16,6 +16,15 @@ class EncodeWavToMp3CommandTest(unittest.TestCase):
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.encode.LameEncoder')
     def test__validate__source_is_empty__throws_command_validation_exception(self, config_mock, encoder_mock):
-        with self.assertRaises(CommandValidationError):
+        with self.assertRaisesRegexp(CommandValidationError, 'A source must be specified for encoding a wav to mp3'):
             command = EncodeWavToMp3Command(config_mock, encoder_mock)
+            command.destination = '/some/destination'
+            command.validate()
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.encode.LameEncoder')
+    def test__validate__destination_is_empty__throws_command_validation_exception(self, config_mock, encoder_mock):
+        with self.assertRaisesRegexp(CommandValidationError, 'A destination must be specified for encoding a wav to mp3'):
+            command = EncodeWavToMp3Command(config_mock, encoder_mock)
+            command.source = '/some/source'
             command.validate()

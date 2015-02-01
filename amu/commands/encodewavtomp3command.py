@@ -39,6 +39,8 @@ class EncodeWavToMp3Command(Command):
     def validate(self):
         if not self.source:
             raise CommandValidationError('A source must be specified for encoding a wav to mp3')
+        if not self.destination:
+            raise CommandValidationError('A destination must be specified for encoding a wav to mp3')
 
     def execute(self):
         self._encoder.encode_wav_to_mp3(self.source, self.destination)
