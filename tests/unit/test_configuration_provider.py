@@ -286,3 +286,11 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaises(ConfigurationError):
             config_provider = ConfigurationProvider()
             config_provider.get_lame_path()
+
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock):
+        config_get_mock.return_value = '-V0'
+        config_provider = ConfigurationProvider()
+        result = config_provider.get_encoding_setting()
+        self.assertEqual('-V0', result)
+        config_get_mock.assert_called_with('encoder', 'encoding_setting')

@@ -21,6 +21,12 @@ class ConfigurationProvider(object):
                 path_from_env_variable, 'LAME_PATH', 'lame')
         return self._get_verified_path_from_config_file('encoder', 'lame')
 
+    def get_encoding_setting(self):
+        config = ConfigParser.ConfigParser()
+        config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
+        config.read(config_path)
+        return config.get('encoder', 'encoding_setting')
+
     def get_ruby_ripper_path(self):
         if not subprocess.call(['which', 'rubyripper_cli']):
             return 'rubyripper_cli'
