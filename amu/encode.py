@@ -11,6 +11,8 @@ class LameEncoder(object):
         self._config_provider = config_provider
 
     def encode_wav_to_mp3(self, source, destination):
+        if not os.path.exists(source):
+            raise ConfigurationError('The source to encode does not exist')
         if os.path.isdir(source):
             raise ConfigurationError('The source should not be a directory')
         subprocess_args = [
