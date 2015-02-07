@@ -49,4 +49,7 @@ class EncodeWavToMp3Command(Command):
             raise CommandValidationError('A destination must be specified for encoding a wav to mp3')
 
     def execute(self):
+        directory_path = os.path.dirname(self.destination)
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path)
         self._encoder.encode_wav_to_mp3(self.source, self.destination)
