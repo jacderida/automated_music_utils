@@ -4,11 +4,12 @@ from amu.commands.command import CommandValidationError
 from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
 
 class EncodeWavToMp3CommandTest(unittest.TestCase):
+    @mock.patch('os.remove')
     @mock.patch('os.path.exists')
     @mock.patch('os.makedirs')
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.encode.LameEncoder')
-    def test__execute__encoder_called_correctly__is_called_with_correct_arguments(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock):
+    def test__execute__encoder_called_correctly__is_called_with_correct_arguments(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
         path_exists_mock.return_value = True
         command = EncodeWavToMp3Command(config_mock, encoder_mock)
         command.source = '/some/source'
@@ -16,17 +17,31 @@ class EncodeWavToMp3CommandTest(unittest.TestCase):
         command.execute()
         encoder_mock.encode_wav_to_mp3.assert_called_once_with('/some/source', '/some/destination')
 
+    @mock.patch('os.remove')
     @mock.patch('os.path.exists')
     @mock.patch('os.makedirs')
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.encode.LameEncoder')
-    def test__execute__destination_directory_does_not_exist__destination_directory_is_created(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock):
+    def test__execute__destination_directory_does_not_exist__destination_directory_is_created(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
         path_exists_mock.return_value = False
         command = EncodeWavToMp3Command(config_mock, encoder_mock)
         command.source = '/some/source'
         command.destination = '/some/destination/with/many/sub/directories/mp3'
         command.execute()
         makedirs_mock.assert_called_once_with('/some/destination/with/many/sub/directories')
+
+    @mock.patch('os.remove')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.makedirs')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.encode.LameEncoder')
+    def test__execute__source_should_be_deleted_after_encoding__source_is_deleted(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
+        path_exists_mock.return_value = False
+        command = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command.source = '/some/source'
+        command.destination = '/some/destination/with/many/sub/directories/mp3'
+        command.execute()
+        remove_mock.assert_called_once_with('/some/source')
 
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.encode.LameEncoder')
