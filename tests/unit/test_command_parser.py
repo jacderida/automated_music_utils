@@ -3,7 +3,7 @@ import mock
 import os
 import unittest
 from amu.clidriver import CliDriver
-from amu.clidriver import CommandParser
+from amu.parsing import CommandParser
 from amu.commands.ripcdcommand import RipCdCommand
 from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
 
