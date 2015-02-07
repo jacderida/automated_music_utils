@@ -41,6 +41,8 @@ class EncodeWavToMp3Command(Command):
         if self.source:
             if not os.path.exists(self.source):
                 raise CommandValidationError('The specified source does not exist.')
+            if os.path.isdir(self.source):
+                raise CommandValidationError('The source cannot be a directory.')
         else:
             raise CommandValidationError('A source must be specified for encoding a wav to mp3')
         if not self.destination:

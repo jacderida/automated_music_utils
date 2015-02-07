@@ -41,3 +41,15 @@ class EncodeWavToMp3CommandTest(unittest.TestCase):
             command = EncodeWavToMp3Command(config_mock, encoder_mock)
             command.source = '/some/source'
             command.validate()
+
+    @mock.patch('amu.config.os.path.isdir')
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.encode.LameEncoder')
+    def test__validate__source_is_directory__throws_command_validation_exception(self, config_mock, encoder_mock, path_exists_mock, isdir_mock):
+        path_exists_mock.return_value = True
+        isdir_mock.return_value = True
+        with self.assertRaisesRegexp(CommandValidationError, 'The source cannot be a directory.'):
+            command = EncodeWavToMp3Command(config_mock, encoder_mock)
+            command.source = '/some/source/'
+            command.validate()
