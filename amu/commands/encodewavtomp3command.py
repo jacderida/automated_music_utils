@@ -53,4 +53,5 @@ class EncodeWavToMp3Command(Command):
         if not os.path.exists(directory_path):
             os.makedirs(directory_path)
         self._encoder.encode_wav_to_mp3(self.source, self.destination)
-        os.remove(self.source)
+        if not self.keep_source:
+            os.remove(self.source)

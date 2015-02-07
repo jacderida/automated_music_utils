@@ -43,6 +43,20 @@ class EncodeWavToMp3CommandTest(unittest.TestCase):
         command.execute()
         remove_mock.assert_called_once_with('/some/source')
 
+    @mock.patch('os.remove')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.makedirs')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.encode.LameEncoder')
+    def test__execute__keep_source_has_been_specified__source_is_not_deleted(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
+        path_exists_mock.return_value = False
+        command = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command.source = '/some/source'
+        command.destination = '/some/destination/with/many/sub/directories/mp3'
+        command.keep_source = True
+        command.execute()
+        self.assertFalse(remove_mock.called)
+
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.encode.LameEncoder')
     def test__validate__source_is_empty__throws_command_validation_exception(self, config_mock, encoder_mock):
