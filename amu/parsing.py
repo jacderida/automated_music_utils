@@ -49,6 +49,8 @@ class EncodeCommandParser(object):
     def parse_wav_to_mp3(self, source, destination):
         if not os.path.exists(source):
             raise CommandParsingError('The source directory or wav file must exist')
+        if not destination:
+            raise CommandParsingError('The destination cannot be empty')
         if os.path.isfile(source):
             command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
             command.source = source
