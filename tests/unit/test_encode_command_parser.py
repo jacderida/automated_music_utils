@@ -15,10 +15,11 @@ class EncodeCommandParserTest(unittest.TestCase):
         exists_mock.return_value = True
         isfile_mock.return_value = True
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/path/to/song.mp3')
-        self.assertIsInstance(command, EncodeWavToMp3Command)
-        self.assertEqual('/some/path/to/song.wav', command.source)
-        self.assertEqual('/some/path/to/song.mp3', command.destination)
+        commands = parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/path/to/song.mp3')
+        self.assertEqual(1, len(commands))
+        self.assertIsInstance(commands[0], EncodeWavToMp3Command)
+        self.assertEqual('/some/path/to/song.wav', commands[0].source)
+        self.assertEqual('/some/path/to/song.mp3', commands[0].destination)
 
     @mock.patch('os.path.exists')
     @mock.patch('amu.encode.LameEncoder')

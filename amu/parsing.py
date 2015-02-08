@@ -64,7 +64,7 @@ class EncodeCommandParser(object):
         command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
         command.source = source
         command.destination = destination
-        return command
+        return [command]
 
     def _get_directory_command(self, source, destination):
         commands = []
