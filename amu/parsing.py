@@ -39,3 +39,17 @@ class CommandParser(object):
             if args.keep_source:
                 command.keep_source = True
             return command
+
+class EncodeCommandParser(object):
+    def __init__(self, configuration_provider, cd_ripper, encoder):
+        self._configuration_provider = configuration_provider
+        self._cd_ripper = cd_ripper
+        self._encoder = encoder
+
+    def parse_wav_to_mp3(self, args):
+        source = args.source
+        if os.path.isfile(source):
+            command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+            command.source = source
+            command.destination = args.destination
+            return command
