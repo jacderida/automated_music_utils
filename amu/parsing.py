@@ -23,7 +23,7 @@ class CommandParser(object):
             command.destination = args.destination
         else:
             command.destination = os.getcwd()
-        return command
+        return [command]
 
     def _get_encode_command(self, args):
         if args.encoding_from == 'wav' and args.encoding_to == 'mp3':

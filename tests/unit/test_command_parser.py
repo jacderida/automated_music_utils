@@ -19,7 +19,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip'])
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.from_args(args)
+        command = parser.from_args(args)[0]
         self.assertIsInstance(command, RipCdCommand)
 
     @mock.patch('amu.encode.LameEncoder')
@@ -30,7 +30,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip'])
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.from_args(args)
+        command = parser.from_args(args)[0]
         self.assertEqual(os.getcwd(), command.destination)
 
     @mock.patch('amu.encode.LameEncoder')
@@ -41,7 +41,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip', '--destination=/some/path'])
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.from_args(args)
+        command = parser.from_args(args)[0]
         self.assertEqual('/some/path', command.destination)
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')

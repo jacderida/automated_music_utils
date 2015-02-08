@@ -48,9 +48,10 @@ class CliDriver(object):
         config_provider = ConfigurationProvider()
         parser = CommandParser(
             config_provider, RubyRipperCdRipper(config_provider), LameEncoder(config_provider))
-        command = parser.from_args(self._get_arguments())
-        command.validate()
-        command.execute()
+        commands = parser.from_args(self._get_arguments())
+        for command in commands:
+            command.validate()
+            command.execute()
         return 0
 
 if __name__ == '__main__':
