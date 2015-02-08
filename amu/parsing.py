@@ -27,18 +27,21 @@ class CommandParser(object):
 
     def _get_encode_command(self, args):
         if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
-            command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
             if args.source:
-                command.source = args.source
+                source = args.source
             else:
-                command.source = os.getcwd()
+                source = os.getcwd()
             if args.destination:
-                command.destination = args.destination
+                destination = args.destination
             else:
-                command.destination = os.getcwd()
+                destination = os.getcwd()
+            encode_command_parser = EncodeCommandParser(
+                self._configuration_provider, self._cd_ripper, self._encoder)
+            commands = encode_command_parser.parse_wav_to_mp3(source, destination)
             if args.keep_source:
-                command.keep_source = True
-            return command
+                for command in commands:
+                    command.keep_source = True
+            return commands
 
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):
@@ -76,7 +79,6 @@ class EncodeCommandParser(object):
                     destination, multi_cd_directory, os.path.splitext(source_wav)[0] + ".mp3")
                 commands.append(command)
         return commands
-
 
 class CommandParsingError(Exception):
     def __init__(self, message):
