@@ -52,6 +52,8 @@ class EncodeCommandParser(object):
         if not destination:
             raise CommandParsingError('The destination cannot be empty')
         if os.path.isfile(source):
+            if not destination.endswith('.mp3'):
+                raise CommandParsingError('If the source is a file, the destination must also be a file.')
             command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
             command.source = source
             command.destination = destination

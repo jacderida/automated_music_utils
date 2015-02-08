@@ -113,3 +113,16 @@ class EncodeCommandParserTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandParsingError, 'The destination cannot be empty'):
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
             parser.parse_wav_to_mp3('/some/path/to/song.wav', '')
+
+    @mock.patch('os.walk')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__parse_wav_to_mp3__source_is_file_but_destination_is_directory__throws_command_parsing_error(self, config_mock, cd_ripper_mock, encoder_mock, isfile_mock, exists_mock, walk_mock):
+        exists_mock.return_value = True
+        isfile_mock.return_value = True
+        with self.assertRaisesRegexp(CommandParsingError, 'If the source is a file, the destination must also be a file.'):
+            parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
+            parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/destination/')
