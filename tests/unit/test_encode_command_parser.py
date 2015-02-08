@@ -59,7 +59,7 @@ class EncodeCommandParserTest(unittest.TestCase):
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.rip.RubyRipperCdRipper')
-    def test__parse_wav_to_mp3__source_multi_cd_release__returns_8_correctly_specified_encode_wav_to_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock, isfile_mock, exists_mock, walk_mock):
+    def test__parse_wav_to_mp3__source_is_multi_cd_release__returns_8_correctly_specified_encode_wav_to_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock, isfile_mock, exists_mock, walk_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
