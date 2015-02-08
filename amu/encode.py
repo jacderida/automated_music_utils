@@ -21,7 +21,8 @@ class LameEncoder(object):
             source,
             destination
         ]
-        popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
+        print "[encode] Running lame with {0}".format(subprocess_args)
+        popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         lines_iterator = iter(popen.stdout.readline, "")
         for line in lines_iterator:
             if line:

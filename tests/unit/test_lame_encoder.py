@@ -29,7 +29,7 @@ class LameEncoderTest(unittest.TestCase):
             '/some/path/source',
             '/some/path/destination'
         ]
-        subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE)
+        subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     @mock.patch('amu.encode.os.path.exists')
     @mock.patch('amu.rip.ConfigurationProvider', autospec=True)
