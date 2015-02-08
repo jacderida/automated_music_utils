@@ -52,12 +52,18 @@ class EncodeCommandParser(object):
         if not destination:
             raise CommandParsingError('The destination cannot be empty')
         if os.path.isfile(source):
-            if not destination.endswith('.mp3'):
-                raise CommandParsingError('If the source is a file, the destination must also be a file.')
-            command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-            command.source = source
-            command.destination = destination
-            return command
+            return self._get_single_file_command(source, destination)
+        return self._get_directory_command(source, destination)
+
+    def _get_single_file_command(self, source, destination):
+        if not destination.endswith('.mp3'):
+            raise CommandParsingError('If the source is a file, the destination must also be a file.')
+        command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+        command.source = source
+        command.destination = destination
+        return command
+
+    def _get_directory_command(self, source, destination):
         commands = []
         for root, directories, files in os.walk(source):
             for source_wav in [f for f in files if f.endswith(".wav")]:
@@ -66,7 +72,8 @@ class EncodeCommandParser(object):
                     multi_cd_directory = os.path.basename(root)
                 command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
                 command.source = os.path.join(source, multi_cd_directory, source_wav)
-                command.destination = os.path.join(destination, multi_cd_directory, os.path.splitext(source_wav)[0] + ".mp3")
+                command.destination = os.path.join(
+                    destination, multi_cd_directory, os.path.splitext(source_wav)[0] + ".mp3")
                 commands.append(command)
         return commands
 
