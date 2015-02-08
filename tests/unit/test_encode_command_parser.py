@@ -52,6 +52,7 @@ class EncodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[2].source, '/some/path/to/wavs/03 - Track 3.wav')
         self.assertEqual(commands[2].destination, '/some/destination/03 - Track 3.mp3')
         self.assertEqual(commands[3].source, '/some/path/to/wavs/04 - Track 4.wav')
+        self.assertEqual(commands[3].destination, '/some/destination/04 - Track 4.mp3')
 
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
