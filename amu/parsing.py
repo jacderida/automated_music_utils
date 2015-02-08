@@ -54,14 +54,17 @@ class EncodeCommandParser(object):
             command.source = source
             command.destination = destination
             return command
+        commands = []
         for root, directories, files in os.walk(source):
-            commands = []
             for source_wav in files:
+                multi_cd_directory = ''
+                if root != source:
+                    multi_cd_directory = os.path.basename(root)
                 command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-                command.source = os.path.join(source, source_wav)
-                command.destination = os.path.join(destination, os.path.splitext(source_wav)[0] + ".mp3")
+                command.source = os.path.join(source, multi_cd_directory, source_wav)
+                command.destination = os.path.join(destination, multi_cd_directory, os.path.splitext(source_wav)[0] + ".mp3")
                 commands.append(command)
-            return commands
+        return commands
 
 
 class CommandParsingError(Exception):
