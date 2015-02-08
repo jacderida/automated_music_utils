@@ -4,6 +4,7 @@ import os
 import unittest
 from amu.clidriver import CliDriver
 from amu.parsing import CommandParser
+from amu.parsing import CommandParsingError
 from amu.commands.ripcdcommand import RipCdCommand
 from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
 
@@ -71,6 +72,7 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
+        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
         parser.from_args(args)
         current_working_directory = os.getcwd()
@@ -84,6 +86,7 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--source=/some/source'])
+        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/source', os.getcwd())
@@ -96,6 +99,7 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
+        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
         parser.from_args(args)
         current_working_directory = os.getcwd()
@@ -109,6 +113,7 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--destination=/some/destination'])
+        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(os.getcwd(), '/some/destination')
@@ -150,3 +155,16 @@ class CommandParserTest(unittest.TestCase):
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
         self.assertFalse(commands[0].keep_source)
         self.assertFalse(commands[1].keep_source)
+
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__from_args__encode_wav_to_mp3_command_when_there_are_no_wavs_to_encode__throws_command_parsing_error(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
+        encode_command_parser_mock.return_value = []
+        with self.assertRaisesRegexp(CommandParsingError, 'The source directory has no wavs to encode'):
+            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
+            parser.from_args(args)

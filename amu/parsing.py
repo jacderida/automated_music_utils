@@ -38,6 +38,8 @@ class CommandParser(object):
             encode_command_parser = EncodeCommandParser(
                 self._configuration_provider, self._cd_ripper, self._encoder)
             commands = encode_command_parser.parse_wav_to_mp3(source, destination)
+            if len(commands) == 0:
+                raise CommandParsingError('The source directory has no wavs to encode')
             if args.keep_source:
                 for command in commands:
                     command.keep_source = True
