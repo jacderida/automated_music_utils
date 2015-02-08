@@ -49,6 +49,7 @@ class EncodeCommandParser(object):
     def parse_wav_to_mp3(self, source, destination):
         if not os.path.exists(source):
             raise CommandParsingError('The source directory or wav file must exist')
+        some_string = 'ddd'
         if os.path.isfile(source):
             command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
             command.source = source
@@ -56,7 +57,7 @@ class EncodeCommandParser(object):
             return command
         commands = []
         for root, directories, files in os.walk(source):
-            for source_wav in files:
+            for source_wav in [f for f in files if f.endswith(".wav")]:
                 multi_cd_directory = ''
                 if root != source:
                     multi_cd_directory = os.path.basename(root)

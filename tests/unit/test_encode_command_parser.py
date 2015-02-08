@@ -87,3 +87,19 @@ class EncodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[6].destination, '/some/destination/cd2/03 - Track 3.mp3')
         self.assertEqual(commands[7].source, '/some/path/to/wavs/cd2/04 - Track 4.wav')
         self.assertEqual(commands[7].destination, '/some/destination/cd2/04 - Track 4.mp3')
+
+    @mock.patch('os.walk')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__parse_wav_to_mp3__source_contains_files_that_are_not_wavs__commands_should_not_be_generated_for_non_wav_files(self, config_mock, cd_ripper_mock, encoder_mock, isfile_mock, exists_mock, walk_mock):
+        exists_mock.return_value = True
+        isfile_mock.return_value = False
+        walk_mock.return_value = [
+            ('/some/path/to/wavs', (), ('01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav', 'rip.log', 'description.txt'))
+        ]
+        parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        self.assertEqual(4, len(commands))
