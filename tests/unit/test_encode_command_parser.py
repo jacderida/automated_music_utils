@@ -15,7 +15,7 @@ class EncodeCommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--source=/some/path/to/song.wav', '--destination=/some/path/to/song.mp3'])
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.parse_wav_to_mp3(args)
+        command = parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/path/to/song.mp3')
         self.assertIsInstance(command, EncodeWavToMp3Command)
         self.assertEqual('/some/path/to/song.wav', command.source)
         self.assertEqual('/some/path/to/song.mp3', command.destination)

@@ -46,10 +46,9 @@ class EncodeCommandParser(object):
         self._cd_ripper = cd_ripper
         self._encoder = encoder
 
-    def parse_wav_to_mp3(self, args):
-        source = args.source
+    def parse_wav_to_mp3(self, source, destination):
         if os.path.isfile(source):
             command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
             command.source = source
-            command.destination = args.destination
+            command.destination = destination
             return command
