@@ -52,6 +52,8 @@ class EncodeCommandParser(object):
         self._encoder = encoder
 
     def parse_cd_rip(self, rip_destination, destination, track_count):
+        if not rip_destination:
+            raise CommandParsingError('The rip destination cannot be empty')
         commands = []
         rip_cd_command = RipCdCommand(self._configuration_provider, self._cd_ripper)
         rip_cd_command.destination = rip_destination
