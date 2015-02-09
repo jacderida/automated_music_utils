@@ -51,6 +51,18 @@ class EncodeCommandParser(object):
         self._cd_ripper = cd_ripper
         self._encoder = encoder
 
+    def parse_cd_rip(self, rip_destination, destination, track_count):
+        commands = []
+        rip_cd_command = RipCdCommand(self._configuration_provider, self._cd_ripper)
+        rip_cd_command.destination = rip_destination
+        commands.append(rip_cd_command)
+        for i in range(1, track_count + 1):
+            encode_wav_to_mp3_command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+            encode_wav_to_mp3_command.source = os.path.join(rip_destination, "0{0} - Track {0}.wav".format(i))
+            encode_wav_to_mp3_command.destination = os.path.join(destination, "0{0} - Track {0}.mp3".format(i))
+            commands.append(encode_wav_to_mp3_command)
+        return commands
+
     def parse_wav_to_mp3(self, source, destination):
         if not os.path.exists(source):
             raise CommandParsingError('The source directory or wav file must exist')

@@ -1,7 +1,7 @@
 import mock
 import unittest
-from amu.clidriver import CliDriver
 from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
+from amu.commands.ripcdcommand import RipCdCommand
 from amu.parsing import CommandParsingError
 from amu.parsing import EncodeCommandParser
 
@@ -127,3 +127,28 @@ class EncodeCommandParserTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandParsingError, 'If the source is a file, the destination must also be a file.'):
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
             parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/destination/')
+
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__parse_cd_to_mp3__cd_has_5_tracks__it_should_generate_a_correctly_specified_rip_cd_command_and_5_correctly_specified_encode_wav_to_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock):
+        parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        commands = parser.parse_cd_rip('/tmp/rip/destination', '/some/destination', 5)
+        self.assertEqual(6, len(commands))
+        self.assertIsInstance(commands[0], RipCdCommand)
+        self.assertEqual(commands[0].destination, '/tmp/rip/destination')
+        self.assertIsInstance(commands[1], EncodeWavToMp3Command)
+        self.assertEqual(commands[1].source, '/tmp/rip/destination/01 - Track 1.wav')
+        self.assertEqual(commands[1].destination, '/some/destination/01 - Track 1.mp3')
+        self.assertIsInstance(commands[2], EncodeWavToMp3Command)
+        self.assertEqual(commands[2].source, '/tmp/rip/destination/02 - Track 2.wav')
+        self.assertEqual(commands[2].destination, '/some/destination/02 - Track 2.mp3')
+        self.assertIsInstance(commands[3], EncodeWavToMp3Command)
+        self.assertEqual(commands[3].source, '/tmp/rip/destination/03 - Track 3.wav')
+        self.assertEqual(commands[3].destination, '/some/destination/03 - Track 3.mp3')
+        self.assertIsInstance(commands[4], EncodeWavToMp3Command)
+        self.assertEqual(commands[4].source, '/tmp/rip/destination/04 - Track 4.wav')
+        self.assertEqual(commands[4].destination, '/some/destination/04 - Track 4.mp3')
+        self.assertIsInstance(commands[5], EncodeWavToMp3Command)
+        self.assertEqual(commands[5].source, '/tmp/rip/destination/05 - Track 5.wav')
+        self.assertEqual(commands[5].destination, '/some/destination/05 - Track 5.mp3')
