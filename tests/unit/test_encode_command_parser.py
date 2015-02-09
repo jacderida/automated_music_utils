@@ -152,3 +152,15 @@ class EncodeCommandParserTest(unittest.TestCase):
         self.assertIsInstance(commands[5], EncodeWavToMp3Command)
         self.assertEqual(commands[5].source, '/tmp/rip/destination/05 - Track 5.wav')
         self.assertEqual(commands[5].destination, '/some/destination/05 - Track 5.mp3')
+
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__parse_cd_to_mp3__cd_has_12_tracks__the_track_numbers_should_be_padded_correctly(self, config_mock, cd_ripper_mock, encoder_mock):
+        parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        commands = parser.parse_cd_rip('/tmp/rip/destination', '/some/destination', 12)
+        self.assertEqual(13, len(commands))
+        self.assertEqual(commands[1].source, '/tmp/rip/destination/01 - Track 1.wav')
+        self.assertEqual(commands[1].destination, '/some/destination/01 - Track 1.mp3')
+        self.assertEqual(commands[10].source, '/tmp/rip/destination/10 - Track 10.wav')
+        self.assertEqual(commands[10].destination, '/some/destination/10 - Track 10.mp3')

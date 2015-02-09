@@ -58,8 +58,8 @@ class EncodeCommandParser(object):
         commands.append(rip_cd_command)
         for i in range(1, track_count + 1):
             encode_wav_to_mp3_command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-            encode_wav_to_mp3_command.source = os.path.join(rip_destination, "0{0} - Track {0}.wav".format(i))
-            encode_wav_to_mp3_command.destination = os.path.join(destination, "0{0} - Track {0}.mp3".format(i))
+            encode_wav_to_mp3_command.source = os.path.join(rip_destination, self._get_track_name(i, "wav"))
+            encode_wav_to_mp3_command.destination = os.path.join(destination, self._get_track_name(i, "mp3"))
             commands.append(encode_wav_to_mp3_command)
         return commands
 
@@ -71,6 +71,11 @@ class EncodeCommandParser(object):
         if os.path.isfile(source):
             return self._get_single_file_command(source, destination)
         return self._get_directory_command(source, destination)
+
+    def _get_track_name(self, track_number, extension):
+        if track_number < 10:
+            return "0{0} - Track {0}.{1}".format(track_number, extension)
+        return "{0} - Track {0}.{1}".format(track_number, extension)
 
     def _get_single_file_command(self, source, destination):
         if not destination.endswith('.mp3'):
