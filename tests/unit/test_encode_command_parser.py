@@ -172,3 +172,11 @@ class EncodeCommandParserTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandParsingError, 'The rip destination cannot be empty'):
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
             parser.parse_cd_rip('', '/some/destination', 5)
+
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__parse_cd_to_mp3__destination_is_empty__throws_command_parsing_exception(self, config_mock, cd_ripper_mock, encoder_mock):
+        with self.assertRaisesRegexp(CommandParsingError, 'The destination cannot be empty'):
+            parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
+            parser.parse_cd_rip('/tmp/rip/destination', '', 5)
