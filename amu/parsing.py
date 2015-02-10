@@ -56,6 +56,8 @@ class EncodeCommandParser(object):
             raise CommandParsingError('The rip destination cannot be empty')
         if not destination:
             raise CommandParsingError('The destination cannot be empty')
+        if track_count < 1:
+            raise CommandParsingError('The track count must be greather than or equal to 1')
         commands = []
         rip_cd_command = RipCdCommand(self._configuration_provider, self._cd_ripper)
         rip_cd_command.destination = rip_destination
