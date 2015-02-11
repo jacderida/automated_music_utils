@@ -227,3 +227,24 @@ class CommandParserTest(unittest.TestCase):
         temp_path = stored_args_mock.call_args[0][0]
         parsed_uuid = temp_path.split('/tmp/')[1]
         self.assertEqual(4, uuid.UUID(parsed_uuid).get_version())
+
+    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__from_args__encode_cd_to_mp3_command_with_no_optional_destination__destination_should_be_current_working_directory(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
+        gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
+        number_of_tracks_mock.return_value = 2
+        encode_command_parser_mock.return_value = [
+            RipCdCommand(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock)
+        ]
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        parser.from_args(args)
+        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), os.getcwd(), 2)
