@@ -155,6 +155,8 @@ class CommandParserTest(unittest.TestCase):
         commands = parser.from_args(args)
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
+        self.assertFalse(commands[0].keep_source)
+        self.assertFalse(commands[1].keep_source)
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     @mock.patch('amu.encode.LameEncoder')
