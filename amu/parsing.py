@@ -29,40 +29,29 @@ class CommandParser(object):
         return [command]
 
     def _get_encode_command(self, args):
+        if args.destination:
+            destination = args.destination
+        else:
+            destination = os.getcwd()
+        encode_command_parser = EncodeCommandParser(
+            self._configuration_provider, self._cd_ripper, self._encoder)
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
-            if args.destination:
-                destination = args.destination
-            else:
-                destination = os.getcwd()
-            encode_command_parser = EncodeCommandParser(
-                self._configuration_provider, self._cd_ripper, self._encoder)
             commands = encode_command_parser.parse_cd_rip(
                 os.path.join(tempfile.gettempdir(), str(uuid.uuid4())),
                 destination,
-                utils.get_number_of_tracks_on_cd()
-            )
-            if args.keep_source:
-                for command in commands:
-                    command.keep_source = True
-            return commands
+                utils.get_number_of_tracks_on_cd())
         if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
             if args.source:
                 source = args.source
             else:
                 source = os.getcwd()
-            if args.destination:
-                destination = args.destination
-            else:
-                destination = os.getcwd()
-            encode_command_parser = EncodeCommandParser(
-                self._configuration_provider, self._cd_ripper, self._encoder)
             commands = encode_command_parser.parse_wav_to_mp3(source, destination)
             if len(commands) == 0:
                 raise CommandParsingError('The source directory has no wavs to encode')
-            if args.keep_source:
-                for command in commands:
-                    command.keep_source = True
-            return commands
+        if args.keep_source:
+            for command in commands:
+                command.keep_source = True
+        return commands
 
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):
