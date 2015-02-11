@@ -275,3 +275,23 @@ class CommandParserTest(unittest.TestCase):
         commands = parser.from_args(args)
         self.assertTrue(commands[1].keep_source)
         self.assertTrue(commands[2].keep_source)
+
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__from_args__encode_rip_to_mp3_command_without_keep_source_specified__keep_source_should_be_false(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, number_of_tracks_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
+        number_of_tracks_mock.return_value = 2
+        encode_command_parser_mock.return_value = [
+            RipCdCommand(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock)
+        ]
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        commands = parser.from_args(args)
+        self.assertFalse(commands[1].keep_source)
+        self.assertFalse(commands[2].keep_source)
