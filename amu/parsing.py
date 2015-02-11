@@ -36,11 +36,15 @@ class CommandParser(object):
                 destination = os.getcwd()
             encode_command_parser = EncodeCommandParser(
                 self._configuration_provider, self._cd_ripper, self._encoder)
-            return encode_command_parser.parse_cd_rip(
+            commands = encode_command_parser.parse_cd_rip(
                 os.path.join(tempfile.gettempdir(), str(uuid.uuid4())),
                 destination,
                 utils.get_number_of_tracks_on_cd()
             )
+            if args.keep_source:
+                for command in commands:
+                    command.keep_source = True
+            return commands
         if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
             if args.source:
                 source = args.source
