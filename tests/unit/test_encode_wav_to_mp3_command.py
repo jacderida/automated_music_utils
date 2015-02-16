@@ -1,7 +1,7 @@
 import mock
 import unittest
-from amu.commands.command import CommandValidationError
-from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
+from amu.commands import CommandValidationError
+from amu.commands import EncodeWavToMp3Command
 
 class EncodeWavToMp3CommandTest(unittest.TestCase):
     @mock.patch('os.remove')

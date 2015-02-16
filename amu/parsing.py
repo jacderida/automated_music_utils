@@ -2,8 +2,8 @@ import os
 import tempfile
 import uuid
 from amu import utils
-from amu.commands.ripcdcommand import RipCdCommand
-from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
+from amu.commands import RipCdCommand
+from amu.commands import EncodeWavToMp3Command
 
 class CommandParser(object):
     """ Responsible for parsing the string based command from the command line

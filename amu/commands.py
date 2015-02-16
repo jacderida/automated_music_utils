@@ -1,7 +1,24 @@
 import os
-from amu.commands.command import Command
-from amu.commands.command import CommandValidationError
 from amu.encode import LameEncoder
+from amu.rip import RubyRipperCdRipper
+
+class CommandValidationError(Exception):
+    def __init__(self, message):
+        super(CommandValidationError, self).__init__(message)
+        self.message = message
+
+class Command(object):
+    """ Base command that provides functionality common to all commands. """
+    def __init__(self, config_provider):
+        self._config_provider = config_provider
+
+    def validate(self):
+        """ Validates the command before execution. """
+        pass
+
+    def execute(self):
+        """ Executes the command. """
+        pass
 
 class EncodeWavToMp3Command(Command):
     def __init__(self, config_provider, encoder):
@@ -55,3 +72,26 @@ class EncodeWavToMp3Command(Command):
         self._encoder.encode_wav_to_mp3(self.source, self.destination)
         if not self.keep_source:
             os.remove(self.source)
+
+class RipCdCommand(Command):
+    def __init__(self, config_provider, cd_ripper):
+        super(RipCdCommand, self).__init__(config_provider)
+        if cd_ripper is None:
+            cd_ripper = RubyRipperCdRipper(config_provider)
+        self._cd_ripper = cd_ripper
+        self._destination = ''
+
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
+
+    def validate(self):
+        if not self.destination:
+            raise CommandValidationError('A destination must be supplied for the CD rip')
+
+    def execute(self):
+        self._cd_ripper.rip_cd(self.destination)

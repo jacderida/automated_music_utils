@@ -5,8 +5,8 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands.ripcdcommand import RipCdCommand
-from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
+from amu.commands import RipCdCommand
+from amu.commands import EncodeWavToMp3Command
 from amu.parsing import CommandParser
 from amu.parsing import CommandParsingError
 

@@ -1,7 +1,7 @@
 import mock
 import unittest
-from amu.commands.command import CommandValidationError
-from amu.commands.ripcdcommand import RipCdCommand
+from amu.commands import CommandValidationError
+from amu.commands import RipCdCommand
 
 
 class RipCdCommandTest(unittest.TestCase):

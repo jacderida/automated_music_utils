@@ -1,7 +1,7 @@
 import mock
 import unittest
-from amu.commands.encodewavtomp3command import EncodeWavToMp3Command
-from amu.commands.ripcdcommand import RipCdCommand
+from amu.commands import EncodeWavToMp3Command
+from amu.commands import RipCdCommand
 from amu.parsing import CommandParsingError
 from amu.parsing import EncodeCommandParser
 
