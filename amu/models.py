@@ -1,11 +1,8 @@
 class Track(object):
-    def __init__(self, artist, title, position):
+    def __init__(self):
         self._artist = ''
         self._title = ''
         self._position = 0
-        self._artist = artist
-        self._title = title
-        self._position = position
 
     @property
     def artist(self):
