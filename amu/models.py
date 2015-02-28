@@ -110,6 +110,8 @@ class ReleaseModel(object):
         :track: The track to be added to the release.
 
         """
+        if type(track) != TrackModel:
+            raise ValueError('The track must be a TrackModel object')
         self._tracks.append(track)
 
     def get_tracks(self):

@@ -16,3 +16,8 @@ class ReleaseModelTest(unittest.TestCase):
         self.assertEqual(added_track.artist, 'Aphex Twin')
         self.assertEqual(added_track.title, 'Tha')
         self.assertEqual(added_track.position, 2)
+
+    def test__add_track__when_adding_a_non_track_object__value_error_is_thrown(self):
+        with self.assertRaises(ValueError):
+            release = ReleaseModel()
+            release.add_track(1)
