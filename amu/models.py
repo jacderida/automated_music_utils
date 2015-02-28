@@ -1,4 +1,4 @@
-class Track(object):
+class TrackModel(object):
     def __init__(self):
         self._artist = ''
         self._title = ''
@@ -27,3 +27,79 @@ class Track(object):
     @position.setter
     def position(self, value):
         self._position = value
+
+class ReleaseModel(object):
+    def __init__(self):
+        self._artist = ''
+        self._label = ''
+        self._catno = ''
+        self._title = ''
+        self._format = ''
+        self._country = ''
+        self._genre = ''
+        self._style = ''
+        self._tracks = []
+
+    @property
+    def artist(self):
+        return self._artist
+
+    @artist.setter
+    def artist(self, value):
+        self._artist = value
+
+    @property
+    def label(self):
+        return self._label
+
+    @label.setter
+    def label(self, value):
+        self._label = value
+
+    @property
+    def catno(self):
+        return self._catno
+
+    @catno.setter
+    def catno(self, value):
+        self._catno = value
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+
+    @property
+    def format(self):
+        return self._format
+
+    @format.setter
+    def format(self, value):
+        self._format = value
+
+    @property
+    def country(self):
+        return self._country
+
+    @country.setter
+    def country(self, value):
+        self._country = value
+
+    @property
+    def genre(self):
+        return self._genre
+
+    @genre.setter
+    def genre(self, value):
+        self._genre = value
+
+    @property
+    def style(self):
+        return self._style
+
+    @style.setter
+    def style(self, value):
+        self._style = value
