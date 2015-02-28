@@ -103,3 +103,17 @@ class ReleaseModel(object):
     @style.setter
     def style(self, value):
         self._style = value
+
+    def add_track(self, track):
+        """Adds a track to the collection
+
+        :track: The track to be added to the release.
+
+        """
+        self._tracks.append(track)
+
+    def get_tracks(self):
+        """ Gets the tracks as a tuple.
+        :returns: The tracks as a read only list.
+        """
+        return tuple(self._tracks)
