@@ -18,6 +18,11 @@ class ReleaseModelTest(unittest.TestCase):
         self.assertEqual(added_track.position, 2)
 
     def test__add_track__when_adding_a_non_track_object__value_error_is_thrown(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegexp(ValueError, 'The track must be a TrackModel object'):
             release = ReleaseModel()
             release.add_track(1)
+
+    def test__add_track__when_adding_none__value_error_is_thrown(self):
+        with self.assertRaisesRegexp(ValueError, 'A non-null value must be supplied for the track'):
+            release = ReleaseModel()
+            release.add_track(None)

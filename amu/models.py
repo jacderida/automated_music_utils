@@ -110,6 +110,8 @@ class ReleaseModel(object):
         :track: The track to be added to the release.
 
         """
+        if track == None:
+            raise ValueError('A non-null value must be supplied for the track')
         if type(track) != TrackModel:
             raise ValueError('The track must be a TrackModel object')
         self._tracks.append(track)
