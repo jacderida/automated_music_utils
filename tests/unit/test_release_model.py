@@ -26,3 +26,13 @@ class ReleaseModelTest(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, 'A non-null value must be supplied for the track'):
             release = ReleaseModel()
             release.add_track(None)
+
+    def test__get_tracks__when_returning_the_tracks__tracks_are_returned_as_tuple(self):
+        track = TrackModel()
+        track.artist = 'Aphex Twin'
+        track.title = 'Tha'
+        track.position = 2
+        release = ReleaseModel()
+        release.add_track(track)
+        tracks = release.get_tracks()
+        self.assertIsInstance(tracks, tuple)
