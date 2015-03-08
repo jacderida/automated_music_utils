@@ -84,4 +84,11 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release = client.release(202433)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertTrue(release.year, 1995)
+        self.assertEqual(release.year, 1995)
+
+    def test__from_discogs_release__release_has_multiple_genres__the_full_list_of_genres_are_used(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(1952653)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.genre, 'Electronic, Stage & Screen')

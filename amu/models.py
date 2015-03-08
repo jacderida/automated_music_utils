@@ -77,7 +77,7 @@ class ReleaseModel(object):
         else:
             release_model.year = release.year
         release_model.country = release.country
-        release_model.genre = release.genres[0]
+        release_model.genre = ReleaseModel._get_genre_from_discogs_model(release.genres)
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
 
@@ -104,6 +104,17 @@ class ReleaseModel(object):
             if i < len(descriptions) - 1:
                 format_string += ", "
         return format_string
+
+    @staticmethod
+    def _get_genre_from_discogs_model(genres):
+        if len(genres) == 1:
+            return genres[0]
+        genre_string = ''
+        for i, genre in enumerate(genres):
+            genre_string += genre
+            if i < len(genres) - 1:
+                genre_string += ", "
+        return genre_string
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
