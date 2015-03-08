@@ -64,3 +64,17 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.artist, 'AFX')
+
+    def test__from_discogs_release__release_has_multiple_artists__the_joined_artist_is_used(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(202433)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.artist, 'Aphex Twin / Gavin Bryars')
+
+    def test__from_discogs_release__release_has_no_master__the_date_for_the_current_release_is_used(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(202433)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertTrue(release.year, 1995)

@@ -72,7 +72,10 @@ class ReleaseModel(object):
         release_model.label = release.labels[0].name
         release_model.catno = release.data['labels'][0]['catno']
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
-        release_model.year = release.master.main_release.year
+        if release.master != None:
+            release_model.year = release.master.main_release.year
+        else:
+            release_model.year = release.year
         release_model.country = release.country
         release_model.genre = release.genres[0]
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
@@ -87,6 +90,8 @@ class ReleaseModel(object):
                 artists_string += artist["anv"]
             else:
                 artists_string += artist["name"]
+            if artist["join"]:
+                artists_string += " {0} ".format(artist["join"])
         return artists_string
 
     @staticmethod
