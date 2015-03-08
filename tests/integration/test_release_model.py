@@ -92,3 +92,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.genre, 'Electronic, Stage & Screen')
+
+    def test__from_discogs_release__release_has_multiple_labels__the_full_list_of_labels_are_used(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(2318107)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.label, 'Apollo, [PIAS] Recordings')

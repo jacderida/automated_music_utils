@@ -69,7 +69,7 @@ class ReleaseModel(object):
         release_model = ReleaseModel()
         release_model.artist = ReleaseModel._get_artists_from_discogs_model(release)
         release_model.title = release.title
-        release_model.label = release.labels[0].name
+        release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
         release_model.catno = release.data['labels'][0]['catno']
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
         if release.master != None:
@@ -115,6 +115,17 @@ class ReleaseModel(object):
             if i < len(genres) - 1:
                 genre_string += ", "
         return genre_string
+
+    @staticmethod
+    def _get_labels_from_discogs_model(labels):
+        if len(labels) == 1:
+            return labels[0].name
+        label_string = ''
+        for i, label in enumerate(labels):
+            label_string += label.name
+            if i < len(labels) - 1:
+                label_string += ', '
+        return label_string
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
