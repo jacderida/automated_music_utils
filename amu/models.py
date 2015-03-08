@@ -75,6 +75,7 @@ class ReleaseModel(object):
         release_model.year = release.year
         release_model.country = release.country
         release_model.genre = release.genres[0]
+        ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
 
     @staticmethod
@@ -87,6 +88,14 @@ class ReleaseModel(object):
             if i < len(descriptions) - 1:
                 format_string += ", "
         return format_string
+
+    @staticmethod
+    def _get_tracks_from_discogs_model(release_model, tracklist):
+        for i, track in enumerate(tracklist):
+            track_model = TrackModel()
+            track_model.position = i + 1
+            track_model.title = track.title
+            release_model.add_track(track_model)
 
     @property
     def artist(self):
