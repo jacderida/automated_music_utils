@@ -99,3 +99,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.label, 'Apollo, [PIAS] Recordings')
+
+    def test__from_discogs_release__release_has_artists_separated_by_commas__the_correct_joined_artist_is_used(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(6517290)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.artist, 'Jack Jezioro, Craig Duncan, John Dockery')

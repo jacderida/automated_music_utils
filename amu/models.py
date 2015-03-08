@@ -90,8 +90,12 @@ class ReleaseModel(object):
                 artists_string += artist["anv"]
             else:
                 artists_string += artist["name"]
-            if artist["join"]:
-                artists_string += " {0} ".format(artist["join"])
+            join = artist["join"]
+            if join:
+                if join == ",":
+                    artists_string += "{0} ".format(join)
+                else:
+                    artists_string += " {0} ".format(join)
         return artists_string
 
     @staticmethod
