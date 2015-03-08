@@ -65,6 +65,13 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.artist, 'AFX')
 
+    def test__from_discogs_release__release_has_artists_with_multiple_anvs__anvs_are_resolved(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(2679310)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.artist, 'W. Bennett / B. Bennett')
+
     def test__from_discogs_release__release_has_multiple_artists__the_joined_artist_is_used(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(202433)
