@@ -4,6 +4,22 @@ class TrackModel(object):
         self._title = ''
         self._position = 0
 
+    @staticmethod
+    def from_discogs_track(track, position):
+        """ Converts a discogs track to a track in our domain.
+
+        :track: The discogs track.
+        :position: The position of the track. This needs to come from outside,
+        because the discogs position will be things like "A1" for
+        vinyl releases.
+        :returns: The track model in our application domain.
+
+        """
+        track_model = TrackModel()
+        track_model.position = position
+        track_model.title = track.title
+        return track_model
+
     @property
     def artist(self):
         return self._artist
