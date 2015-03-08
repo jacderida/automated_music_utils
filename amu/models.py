@@ -18,6 +18,8 @@ class TrackModel(object):
         track_model = TrackModel()
         track_model.position = position
         track_model.title = track.title
+        if "artists" in track.data:
+            track_model.artist = ArtistHelper.get_artists(track.data["artists"])
         return track_model
 
     @property
@@ -67,7 +69,7 @@ class ReleaseModel(object):
 
         """
         release_model = ReleaseModel()
-        release_model.artist = ReleaseModel._get_artists_from_discogs_model(release)
+        release_model.artist = ArtistHelper.get_artists(release.data["artists"])
         release_model.title = release.title
         release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
         release_model.year = ReleaseModel._get_date_from_discogs_model(release)
@@ -88,10 +90,9 @@ class ReleaseModel(object):
         return date
 
     @staticmethod
-    def _get_artists_from_discogs_model(release):
-        artists = release.data["artists"]
+    def get_artists_from_discogs_model(artist_data):
         artists_string = ''
-        for artist in artists:
+        for artist in artist_data:
             if artist["anv"]:
                 artists_string += artist["anv"]
             else:
@@ -245,3 +246,20 @@ class ReleaseModel(object):
         :returns: The tracks as a read only list.
         """
         return tuple(self._tracks)
+
+class ArtistHelper(object):
+    @staticmethod
+    def get_artists(artist_data):
+        artists_string = ''
+        for artist in artist_data:
+            if artist["anv"]:
+                artists_string += artist["anv"]
+            else:
+                artists_string += artist["name"]
+            join = artist["join"]
+            if join:
+                if join == ",":
+                    artists_string += "{0} ".format(join)
+                else:
+                    artists_string += " {0} ".format(join)
+        return artists_string
