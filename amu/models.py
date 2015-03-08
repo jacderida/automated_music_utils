@@ -67,7 +67,7 @@ class ReleaseModel(object):
 
         """
         release_model = ReleaseModel()
-        release_model.artist = release.artists[0].name
+        release_model.artist = ReleaseModel._get_artists_from_discogs_model(release)
         release_model.title = release.title
         release_model.label = release.labels[0].name
         release_model.catno = release.data['labels'][0]['catno']
@@ -77,6 +77,17 @@ class ReleaseModel(object):
         release_model.genre = release.genres[0]
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
+
+    @staticmethod
+    def _get_artists_from_discogs_model(release):
+        artists = release.data["artists"]
+        artists_string = ''
+        for artist in artists:
+            if artist["anv"]:
+                artists_string += artist["anv"]
+            else:
+                artists_string += artist["name"]
+        return artists_string
 
     @staticmethod
     def _get_format_from_discogs_model(formats):

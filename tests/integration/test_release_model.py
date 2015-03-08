@@ -6,6 +6,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
     def test__from_discogs_release__release_with_single_artist_and_single_label__release_is_parsed_correctly(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(1303737)
+        discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.artist, 'Aphex Twin')
         self.assertEqual(release.title, 'Selected Ambient Works 85-92')
@@ -19,6 +20,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
     def test__from_discogs_release__release_with_single_artist__tracklist_is_parsed_correctly(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(1303737)
+        discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         tracks = release.get_tracks()
         self.assertEqual(13, len(tracks))
@@ -52,5 +54,13 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
     def test__from_discogs_release__release_is_a_reissue__release_year_from_master_is_used(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(1303737)
+        discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.year, 1992)
+
+    def test__from_discogs_release__release_artist_is_anv__anv_is_resolved(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(28763)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.artist, 'AFX')
