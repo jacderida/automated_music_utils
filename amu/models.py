@@ -36,9 +36,41 @@ class ReleaseModel(object):
         self._title = ''
         self._format = ''
         self._country = ''
+        self._year = 0
         self._genre = ''
         self._style = ''
         self._tracks = []
+
+    @staticmethod
+    def from_discogs_release(release):
+        """ Converts a release from a discogs model to a simpler model
+        in our domain.
+
+        :release: The discogs based release model.
+        :returns: The simpler model from our application domain.
+
+        """
+        release_model = ReleaseModel()
+        release_model.artist = release.artists[0].name
+        release_model.title = release.title
+        release_model.label = release.labels[0].name
+        release_model.catno = release.data['labels'][0]['catno']
+        release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
+        release_model.year = release.year
+        release_model.country = release.country
+        release_model.genre = release.genres[0]
+        return release_model
+
+    @staticmethod
+    def _get_format_from_discogs_model(formats):
+        discogs_format = formats[0]
+        format_string = "{0}, ".format(discogs_format["name"])
+        descriptions = discogs_format["descriptions"]
+        for i, description in enumerate(descriptions):
+            format_string += description
+            if i < len(descriptions) - 1:
+                format_string += ", "
+        return format_string
 
     @property
     def artist(self):
@@ -87,6 +119,14 @@ class ReleaseModel(object):
     @country.setter
     def country(self, value):
         self._country = value
+
+    @property
+    def year(self):
+        return self._year
+
+    @year.setter
+    def year(self, value):
+        self._year = value
 
     @property
     def genre(self):
