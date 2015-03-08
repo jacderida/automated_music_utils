@@ -120,3 +120,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.year, 'Unknown')
+
+    def test__from_discogs_release__release_has_index_tracks__index_tracks_should_be_ignored(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(804556)
+        discogs_release.refresh()
+        tracks = ReleaseModel.from_discogs_release(discogs_release).get_tracks()
+        self.assertEqual(len(tracks), 15)

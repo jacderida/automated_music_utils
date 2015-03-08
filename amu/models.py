@@ -152,8 +152,9 @@ class ReleaseModel(object):
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
         for i, track in enumerate(tracklist):
-            track_model = TrackModel.from_discogs_track(track, i + 1)
-            release_model.add_track(track_model)
+            if track.position: # If track has no position, it's an index track.
+                track_model = TrackModel.from_discogs_track(track, i + 1)
+                release_model.add_track(track_model)
 
     @property
     def artist(self):
