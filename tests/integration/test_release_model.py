@@ -14,7 +14,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(release.catno, 'AMB3922RM')
         self.assertEqual(release.format, 'CD, Album, Remastered, Reissue')
         self.assertEqual(release.country, 'Belgium')
-        self.assertEqual(release.year, 1992)
+        self.assertEqual(release.year, '1992')
         self.assertEqual(release.genre, 'Electronic')
 
     def test__from_discogs_release__release_with_single_artist__tracklist_is_parsed_correctly(self):
@@ -56,7 +56,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release = client.release(1303737)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.year, 1992)
+        self.assertEqual(release.year, '1992')
 
     def test__from_discogs_release__release_artist_is_anv__anv_is_resolved(self):
         client = discogs_client.Client('amu/0.1')
@@ -84,7 +84,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release = client.release(202433)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.year, 1995)
+        self.assertEqual(release.year, '1995')
 
     def test__from_discogs_release__release_has_multiple_genres__the_full_list_of_genres_are_used(self):
         client = discogs_client.Client('amu/0.1')
@@ -106,3 +106,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.artist, 'Jack Jezioro, Craig Duncan, John Dockery')
+
+    def test__from_discogs_release__release_has_no_date__unknown_is_used_as_date_string(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(3709896)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release.year, 'Unknown')

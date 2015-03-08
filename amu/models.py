@@ -52,7 +52,7 @@ class ReleaseModel(object):
         self._title = ''
         self._format = ''
         self._country = ''
-        self._year = 0
+        self._year = ''
         self._genre = ''
         self._style = ''
         self._tracks = []
@@ -70,16 +70,22 @@ class ReleaseModel(object):
         release_model.artist = ReleaseModel._get_artists_from_discogs_model(release)
         release_model.title = release.title
         release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
+        release_model.year = ReleaseModel._get_date_from_discogs_model(release)
         release_model.catno = release.data['labels'][0]['catno']
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
-        if release.master != None:
-            release_model.year = release.master.main_release.year
-        else:
-            release_model.year = release.year
         release_model.country = release.country
         release_model.genre = ReleaseModel._get_genre_from_discogs_model(release.genres)
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
+
+    @staticmethod
+    def _get_date_from_discogs_model(release):
+        date = 'Unknown'
+        if release.master != None:
+            date = str(release.master.main_release.year)
+        elif release.year != 0:
+            date = str(release.year)
+        return date
 
     @staticmethod
     def _get_artists_from_discogs_model(release):
