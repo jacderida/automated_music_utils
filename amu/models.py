@@ -71,7 +71,7 @@ class ReleaseModel(object):
         release_model.title = release.title
         release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
         release_model.year = ReleaseModel._get_date_from_discogs_model(release)
-        release_model.catno = release.data['labels'][0]['catno']
+        release_model.catno = ReleaseModel._get_cat_numbers_from_discogs_model(release)
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
         release_model.country = release.country
         release_model.genre = ReleaseModel._get_genre_from_discogs_model(release.genres)
@@ -136,6 +136,18 @@ class ReleaseModel(object):
             if i < len(labels) - 1:
                 label_string += ', '
         return label_string
+
+    @staticmethod
+    def _get_cat_numbers_from_discogs_model(release):
+        labels = release.data['labels']
+        if len(labels) == 1:
+            return labels[0]['catno']
+        catno_string = ''
+        for i, label in enumerate(labels):
+            catno_string += label['catno']
+            if i < len(labels) - 1:
+                catno_string += ', '
+        return catno_string
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
