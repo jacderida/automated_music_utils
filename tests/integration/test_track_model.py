@@ -19,10 +19,16 @@ class TrackModelIntegrationTest(unittest.TestCase):
         self.assertEqual(track.title, 'Conquestadores Extraterrestriales (Remix)')
         self.assertEqual(track.artist, 'Legowelt')
 
-    def test__from_discogs_track__track_has_artist_with_anv__track_has_artist(self):
+    def test__from_discogs_track__track_has_artist_with_anv__anv_is_resolved(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(494794)
         track = TrackModel.from_discogs_track(discogs_release.tracklist[2], 3)
         self.assertEqual(track.position, 3)
         self.assertEqual(track.title, '46 Analord-Masplid')
         self.assertEqual(track.artist, 'AFX')
+
+    def test__from_discogs_track__track_has_multiple_artists__the_joined_artist_is_used(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(3646941)
+        track = TrackModel.from_discogs_track(discogs_release.tracklist[20], 3)
+        self.assertEqual(track.artist, 'Brian Bennett / Warren Bennett')
