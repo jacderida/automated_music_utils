@@ -11,10 +11,18 @@ class TrackModelIntegrationTest(unittest.TestCase):
         self.assertEqual(track.title, 'Xtal')
         self.assertEqual(track.artist, '')
 
-    def test__from_discogs_track__track_has_an_artist__track_is_parsed_correctly(self):
+    def test__from_discogs_track__track_has_an_artist__track_has_artist(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(1144083)
         track = TrackModel.from_discogs_track(discogs_release.tracklist[2], 3)
         self.assertEqual(track.position, 3)
         self.assertEqual(track.title, 'Conquestadores Extraterrestriales (Remix)')
         self.assertEqual(track.artist, 'Legowelt')
+
+    def test__from_discogs_track__track_has_artist_with_anv__track_has_artist(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(494794)
+        track = TrackModel.from_discogs_track(discogs_release.tracklist[2], 3)
+        self.assertEqual(track.position, 3)
+        self.assertEqual(track.title, '46 Analord-Masplid')
+        self.assertEqual(track.artist, 'AFX')
