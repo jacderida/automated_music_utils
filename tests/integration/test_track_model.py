@@ -32,3 +32,9 @@ class TrackModelIntegrationTest(unittest.TestCase):
         discogs_release = client.release(3646941)
         track = TrackModel.from_discogs_track(discogs_release.tracklist[20], 3)
         self.assertEqual(track.artist, 'Brian Bennett / Warren Bennett')
+
+    def test__from_discogs_track__track_has_artists_with_multiple_anvs__the_anvs_are_resolved(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(1606562)
+        track = TrackModel.from_discogs_track(discogs_release.tracklist[2], 3)
+        self.assertEqual(track.artist, 'L. Hurdle / F. Ricotti')
