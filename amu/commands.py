@@ -174,6 +174,12 @@ class TagMp3Command(Command):
     def genre(self, value):
         self._genre = value
 
+    def validate(self):
+        if not os.path.exists(self._source):
+            raise CommandValidationError('The specified mp3 source does not exist.')
+        if os.path.isdir(self._source):
+            raise CommandValidationError('The source must be an mp3, not a directory.')
+
     def execute(self):
         tag = ID3v2(self._source)
         self._add_artist_frame(tag)

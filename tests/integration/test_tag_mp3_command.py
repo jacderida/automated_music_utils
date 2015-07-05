@@ -6,6 +6,7 @@ import unittest
 from amu.commands import TagMp3Command
 from amu.utils import get_id3_tag_data
 
+
 class TagMp3CommandTest(unittest.TestCase):
     def setUp(self):
         shutil.copyfile('tests/integration/data/song.mp3', 'tests/integration/data/test_data.mp3')
