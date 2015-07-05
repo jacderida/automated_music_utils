@@ -64,3 +64,18 @@ class TagMp3CommandTest(unittest.TestCase):
         command.track_number = 0
         with self.assertRaises(CommandValidationError):
             command.validate()
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('os.path.isdir')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__validate__track_no_is_greater_than_total__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        isdir_mock.return_value = False
+        command = TagMp3Command(config_mock)
+        command.source = '/Music/album/song.mp3'
+        command.artist = 'Aphex Twin'
+        command.title = 'Flap Head'
+        command.track_number = 3
+        command.track_total = 2
+        with self.assertRaises(CommandValidationError):
+            command.validate()

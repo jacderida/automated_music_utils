@@ -185,6 +185,8 @@ class TagMp3Command(Command):
             raise CommandValidationError('A title must be supplied for the mp3.')
         if self._track_number < 1:
             raise CommandValidationError('The track number must be at least 1.')
+        if self._track_number > self._track_total:
+            raise CommandValidationError('The track number cannot be greater than the track total.')
 
     def execute(self):
         tag = ID3v2(self._source)
