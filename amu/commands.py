@@ -104,6 +104,7 @@ class TagMp3Command(Command):
         self._source = ''
         self._artist = ''
         self._title = ''
+        self._album = ''
 
     @property
     def source(self):
@@ -129,10 +130,19 @@ class TagMp3Command(Command):
     def title(self, value):
         self._title = value
 
+    @property
+    def album(self):
+        return self._album
+
+    @album.setter
+    def album(self, value):
+        self._album = value
+
     def execute(self):
         tag = ID3v2(self._source)
         self._add_artist_frame(tag)
         self._add_title_frame(tag)
+        self._add_album_frame(tag)
         tag.commit()
 
     def _add_artist_frame(self, tag):
@@ -144,3 +154,8 @@ class TagMp3Command(Command):
         title_frame = tag.new_frame("TIT2")
         title_frame.set_text(self._title)
         tag.frames.append(title_frame)
+
+    def _add_album_frame(self, tag):
+        album_frame = tag.new_frame("TALB")
+        album_frame.set_text(self._album)
+        tag.frames.append(album_frame)
