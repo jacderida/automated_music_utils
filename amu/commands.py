@@ -197,7 +197,10 @@ class TagMp3Command(Command):
     def _add_track_number_frame(self, tag):
         track_number_frame = tag.new_frame("TRCK")
         track_number_string = str(self._track_number)
+        track_total_string = str(self._track_total)
         if self._track_number < 10:
             track_number_string = "0{0}".format(self._track_number)
-        track_number_frame.set_text("{0}/{1}".format(track_number_string, self._track_total))
+        if self._track_total < 10:
+            track_total_string = "0{0}".format(self._track_total)
+        track_number_frame.set_text("{0}/{1}".format(track_number_string, track_total_string))
         tag.frames.append(track_number_frame)
