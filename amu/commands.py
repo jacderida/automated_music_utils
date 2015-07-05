@@ -106,6 +106,8 @@ class TagMp3Command(Command):
         self._title = ''
         self._album = ''
         self._year = ''
+        self._track_number = 0
+        self._track_total = 0
 
     @property
     def source(self):
@@ -147,12 +149,29 @@ class TagMp3Command(Command):
     def year(self, value):
         self._year = value
 
+    @property
+    def track_number(self):
+        return self._track_number
+
+    @track_number.setter
+    def track_number(self, value):
+        self._track_number = value
+
+    @property
+    def track_total(self):
+        return self._track_total
+
+    @track_total.setter
+    def track_total(self, value):
+        self._track_total = value
+
     def execute(self):
         tag = ID3v2(self._source)
         self._add_artist_frame(tag)
         self._add_title_frame(tag)
         self._add_album_frame(tag)
         self._add_year_frame(tag)
+        self._add_track_number_frame(tag)
         tag.commit()
 
     def _add_artist_frame(self, tag):
@@ -174,3 +193,8 @@ class TagMp3Command(Command):
         year_frame = tag.new_frame("TYER")
         year_frame.set_text(self._year)
         tag.frames.append(year_frame)
+
+    def _add_track_number_frame(self, tag):
+        track_number_frame = tag.new_frame("TRCK")
+        track_number_frame.set_text("{0}/{1}".format(self._track_number, self._track_total))
+        tag.frames.append(track_number_frame)
