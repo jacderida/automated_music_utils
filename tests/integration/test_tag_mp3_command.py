@@ -51,6 +51,14 @@ class TagMp3CommandTest(unittest.TestCase):
         self.assertEqual(tag_data['year'], u'2015')
 
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__execute__year_is_not_supplied__tag_should_not_have_a_year_frame(self, config_mock):
+        command = TagMp3Command(config_mock)
+        command.source = 'tests/integration/data/test_data.mp3'
+        command.execute()
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertFalse(tag_data.has_key('year'))
+
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__execute__set_the_track_number_on_the_id3_tag__tag_should_have_correct_track_number(self, config_mock):
         command = TagMp3Command(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'

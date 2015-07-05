@@ -216,9 +216,10 @@ class TagMp3Command(Command):
         tag.frames.append(album_frame)
 
     def _add_year_frame(self, tag):
-        year_frame = tag.new_frame("TYER")
-        year_frame.set_text(self._year)
-        tag.frames.append(year_frame)
+        if self._year:
+            year_frame = tag.new_frame("TYER")
+            year_frame.set_text(self._year)
+            tag.frames.append(year_frame)
 
     def _add_track_number_frame(self, tag):
         track_number_frame = tag.new_frame("TRCK")
