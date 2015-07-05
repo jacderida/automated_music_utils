@@ -4,6 +4,7 @@ import os
 import shutil
 import subprocess
 from copy import deepcopy
+from tagger import ID3v2
 from mock import DEFAULT, Mock
 
 
@@ -38,3 +39,20 @@ def get_number_of_tracks_on_cd():
     track_lines = [m.group(0) for line in lines for m in [re.search('^[0-9].*', line)] if m]
     return len(track_lines)
 
+def get_id3_tag_data(path):
+    tag_data = {}
+    id3 = ID3v2(path)
+    for frame in id3.frames:
+        if frame.fid == "TPE1":
+            tag_data["artist"] = frame.strings[0].replace('\x00', '')
+        elif frame.fid == "TIT2":
+            tag_data["title"] = frame.strings[0].replace('\x00', '')
+        elif frame.fid == "TALB":
+            tag_data["album"] = frame.strings[0].replace('\x00', '')
+        elif frame.fid == "TYER":
+            tag_data["year"] = frame.strings[0].replace('\x00', '')
+        elif frame.fid == "TRCK":
+            tag_data["trackno"] = frame.strings[0].replace('\x00', '')
+        elif frame.fid == "TCON":
+            tag_data["genre"] = frame.strings[0].replace('\x00', '')
+    return tag_data

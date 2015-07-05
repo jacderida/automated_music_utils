@@ -1,4 +1,6 @@
 import os
+from tagger import ID3v2
+from tagger.constants import ID3V2_FIELD_ENC_UTF16
 from amu.encode import LameEncoder
 from amu.rip import RubyRipperCdRipper
 
@@ -95,3 +97,32 @@ class RipCdCommand(Command):
 
     def execute(self):
         self._cd_ripper.rip_cd(self.destination)
+
+class TagMp3Command(Command):
+    def __init__(self, config_provider):
+        super(TagMp3Command, self).__init__(config_provider)
+        self._source = ''
+        self._artist = ''
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def artist(self):
+        return self._artist
+
+    @artist.setter
+    def artist(self, value):
+        self._artist = value
+
+    def execute(self):
+        tag = ID3v2(self._source)
+        artist_frame = tag.new_frame("TPE1")
+        artist_frame.set_text(self._artist)
+        tag.frames.append(artist_frame)
+        tag.commit()
