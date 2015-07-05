@@ -14,7 +14,7 @@ class TagMp3CommandTest(unittest.TestCase):
         os.remove('tests/integration/data/test_data.mp3')
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__execute__set_the_id3_tag_on_the_mp3__mp3_should_have_correct_artist(self, config_mock):
+    def test__execute__set_the_artist_on_the_id3_tag__tag_should_have_correct_artist(self, config_mock):
         command = TagMp3Command(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'
         command.artist = 'Aphex Twin'
@@ -23,7 +23,7 @@ class TagMp3CommandTest(unittest.TestCase):
         self.assertEqual(tag_data['artist'], u'Aphex Twin')
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__execute__set_the_id3_tag_on_the_mp3__mp3_should_have_correct_title(self, config_mock):
+    def test__execute__set_the_title_on_the_id3_tag__tag_should_have_correct_title(self, config_mock):
         command = TagMp3Command(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'
         command.title = 'Flap Head'
@@ -32,7 +32,7 @@ class TagMp3CommandTest(unittest.TestCase):
         self.assertEqual(tag_data['title'], u'Flap Head')
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__execute__set_the_id3_tag_on_the_mp3__mp3_should_have_correct_album(self, config_mock):
+    def test__execute__set_the_album_on_the_id3_tag__tag_should_have_correct_album(self, config_mock):
         command = TagMp3Command(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'
         command.album = 'Drukqs'
@@ -41,7 +41,7 @@ class TagMp3CommandTest(unittest.TestCase):
         self.assertEqual(tag_data['album'], u'Drukqs')
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__execute__set_the_id3_tag_on_the_mp3__mp3_should_have_correct_year(self, config_mock):
+    def test__execute__set_the_year_on_the_id3_tag__tag_should_have_correct_year(self, config_mock):
         command = TagMp3Command(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'
         command.year = '2015'
