@@ -21,3 +21,12 @@ class TagMp3CommandTest(unittest.TestCase):
         command.execute()
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['artist'], u'Aphex Twin')
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__execute__set_the_id3_tag_on_the_mp3__mp3_should_have_correct_title(self, config_mock):
+        command = TagMp3Command(config_mock)
+        command.source = 'tests/integration/data/test_data.mp3'
+        command.title = 'Flap Head'
+        command.execute()
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['title'], u'Flap Head')
