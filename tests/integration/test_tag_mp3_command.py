@@ -58,3 +58,13 @@ class TagMp3CommandTest(unittest.TestCase):
         command.execute()
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['trackno'], u'10/15')
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__execute__track_number_is_less_than_10__tag_should_have_correct_track_number_padded_with_0(self, config_mock):
+        command = TagMp3Command(config_mock)
+        command.source = 'tests/integration/data/test_data.mp3'
+        command.track_number = 5
+        command.track_total = 15
+        command.execute()
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['trackno'], u'05/15')
