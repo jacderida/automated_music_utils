@@ -106,6 +106,7 @@ class TagMp3Command(Command):
         self._title = ''
         self._album = ''
         self._year = ''
+        self._genre = ''
         self._track_number = 0
         self._track_total = 0
 
@@ -165,6 +166,14 @@ class TagMp3Command(Command):
     def track_total(self, value):
         self._track_total = value
 
+    @property
+    def genre(self):
+        return self._genre
+
+    @genre.setter
+    def genre(self, value):
+        self._genre = value
+
     def execute(self):
         tag = ID3v2(self._source)
         self._add_artist_frame(tag)
@@ -172,6 +181,7 @@ class TagMp3Command(Command):
         self._add_album_frame(tag)
         self._add_year_frame(tag)
         self._add_track_number_frame(tag)
+        self._add_genre_frame(tag)
         tag.commit()
 
     def _add_artist_frame(self, tag):
@@ -204,3 +214,8 @@ class TagMp3Command(Command):
             track_total_string = "0{0}".format(self._track_total)
         track_number_frame.set_text("{0}/{1}".format(track_number_string, track_total_string))
         tag.frames.append(track_number_frame)
+
+    def _add_genre_frame(self, tag):
+        genre_frame = tag.new_frame("TCON")
+        genre_frame.set_text(self._genre)
+        tag.frames.append(genre_frame)

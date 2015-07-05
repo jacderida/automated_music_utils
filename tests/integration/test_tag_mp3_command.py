@@ -78,3 +78,12 @@ class TagMp3CommandTest(unittest.TestCase):
         command.execute()
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['trackno'], u'05/06')
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__execute__set_the_genre_on_the_id3_tag__tag_should_have_correct_genre(self, config_mock):
+        command = TagMp3Command(config_mock)
+        command.source = 'tests/integration/data/test_data.mp3'
+        command.genre = 'Techno'
+        command.execute()
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['genre'], u'Techno')
