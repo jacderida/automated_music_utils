@@ -179,6 +179,8 @@ class TagMp3Command(Command):
             raise CommandValidationError('The specified mp3 source does not exist.')
         if os.path.isdir(self._source):
             raise CommandValidationError('The source must be an mp3, not a directory.')
+        if not self._artist:
+            raise CommandValidationError('An artist must be supplied for the mp3.')
 
     def execute(self):
         tag = ID3v2(self._source)

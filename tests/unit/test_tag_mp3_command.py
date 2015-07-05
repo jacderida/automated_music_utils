@@ -25,3 +25,15 @@ class TagMp3CommandTest(unittest.TestCase):
         command.source = '/Music/album/non_existent.mp3'
         with self.assertRaises(CommandValidationError):
             command.validate()
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('os.path.isdir')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__validate__artist_is_not_supplied__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        isdir_mock.return_value = False
+        command = TagMp3Command(config_mock)
+        command.source = '/Music/album/song.mp3'
+        command.artist = ''
+        with self.assertRaises(CommandValidationError):
+            command.validate()
