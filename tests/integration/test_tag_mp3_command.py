@@ -98,6 +98,14 @@ class TagMp3CommandTest(unittest.TestCase):
         self.assertEqual(tag_data['genre'], u'Techno')
 
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__execute__genre_is_not_supplied__tag_should_not_have_a_genre_frame(self, config_mock):
+        command = TagMp3Command(config_mock)
+        command.source = 'tests/integration/data/test_data.mp3'
+        command.execute()
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertFalse(tag_data.has_key('genre'))
+
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__execute__set_all_fields_on_the_id3_tag__tag_should_have_all_fields_set(self, config_mock):
         command = TagMp3Command(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'

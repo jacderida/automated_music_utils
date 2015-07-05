@@ -233,6 +233,7 @@ class TagMp3Command(Command):
         tag.frames.append(track_number_frame)
 
     def _add_genre_frame(self, tag):
-        genre_frame = tag.new_frame("TCON")
-        genre_frame.set_text(self._genre)
-        tag.frames.append(genre_frame)
+        if self._genre:
+            genre_frame = tag.new_frame("TCON")
+            genre_frame.set_text(self._genre)
+            tag.frames.append(genre_frame)
