@@ -180,11 +180,11 @@ class TagMp3Command(Command):
         if os.path.isdir(self._source):
             raise CommandValidationError('The source must be an mp3, not a directory.')
         if not self._artist:
-            raise CommandValidationError('An artist must be supplied for the mp3.')
+            raise CommandValidationError('An artist must be supplied for the tag.')
         if not self._album:
             raise CommandValidationError('An album must be supplied for the tag.')
         if not self._title:
-            raise CommandValidationError('A title must be supplied for the mp3.')
+            raise CommandValidationError('A title must be supplied for the tag.')
         if self._track_number < 1:
             raise CommandValidationError('The track number must be at least 1.')
         if self._track_number > self._track_total:
