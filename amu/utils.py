@@ -40,6 +40,13 @@ def get_number_of_tracks_on_cd():
     return len(track_lines)
 
 def get_id3_tag_data(path):
+    """
+    Gets the ID3 tag from an MP3.
+
+    For some unknown reason, the way I'm using the pytagger library causes the null character (x00),
+    which is then converted to a string, to be written out to the value of the frame for the tag.
+    Until I figure out how to use it properly, I'm just going to leave this as a known issue.
+    """
     tag_data = {}
     id3 = ID3v2(path)
     for frame in id3.frames:
