@@ -39,7 +39,12 @@ class CliDriver(object):
             '--keep-source', action='store_true', help='If encoding from wav, use this to keep the original wav being removed.')
         tag_parser = subparsers.add_parser('tag', help='Tags an audio file')
         tag_parser.add_argument(
+            'action', choices=['add', 'remove'], help='The tagging action to be performed. A tag can be added or removed.')
+        tag_parser.add_argument(
             'format', choices=['mp3', 'flac'], help='The file format of the audio file being tagged.')
+        tag_parser.add_argument(
+            '--source',
+            help='The source audio files to tag. This can be a file or a directory. If the source is omitted, the files in the current working directory will be used.')
         tag_parser.add_argument('--artist', help='The artist to use for the tag.')
         tag_parser.add_argument('--album', help='The album to use for the tag.')
         tag_parser.add_argument('--year', help='The year to use for the tag.')
