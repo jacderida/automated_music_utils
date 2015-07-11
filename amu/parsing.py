@@ -122,6 +122,15 @@ class EncodeCommandParser(object):
                 commands.append(command)
         return commands
 
+class TagCommandParser(object):
+    def __init__(self, configuration_provider):
+        self._configuration_provider = configuration_provider
+
+    def parse_add_mp3_tag_command(self, source):
+        command = AddMp3TagCommand(self._configuration_provider)
+        command.source = source
+        return [command]
+
 class CommandParsingError(Exception):
     def __init__(self, message):
         super(CommandParsingError, self).__init__(message)
