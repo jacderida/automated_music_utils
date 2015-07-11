@@ -5,6 +5,7 @@ from amu import utils
 from amu.commands import RipCdCommand
 from amu.commands import EncodeWavToMp3Command
 
+
 class CommandParser(object):
     """ Responsible for parsing the string based command from the command line
         into a command object that can be executed.

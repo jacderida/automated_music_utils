@@ -37,6 +37,15 @@ class CliDriver(object):
             '--destination', help='The destination of the resulting mp3 or flac. This can be a file or directory.')
         encode_parser.add_argument(
             '--keep-source', action='store_true', help='If encoding from wav, use this to keep the original wav being removed.')
+        tag_parser = subparsers.add_parser('tag', help='Tags an audio file')
+        tag_parser.add_argument(
+            'format', choices=['mp3', 'flac'], help='The file format of the audio file being tagged.')
+        tag_parser.add_argument('--artist', help='The artist to use for the tag.')
+        tag_parser.add_argument('--album', help='The album to use for the tag.')
+        tag_parser.add_argument('--year', help='The year to use for the tag.')
+        tag_parser.add_argument('--genre', help='The year to use for the tag.')
+        tag_parser.add_argument('--track-number', help='The track number to use for the tag.')
+        tag_parser.add_argument('--track-total', help='The track total to use for the tag.')
         return parser
 
     def _get_arguments(self):
