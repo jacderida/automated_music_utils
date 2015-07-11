@@ -98,9 +98,9 @@ class RipCdCommand(Command):
     def execute(self):
         self._cd_ripper.rip_cd(self.destination)
 
-class TagMp3Command(Command):
+class AddMp3TagCommand(Command):
     def __init__(self, config_provider):
-        super(TagMp3Command, self).__init__(config_provider)
+        super(AddMp3TagCommand, self).__init__(config_provider)
         self._source = ''
         self._artist = ''
         self._title = ''

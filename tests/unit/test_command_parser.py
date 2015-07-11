@@ -7,7 +7,7 @@ from amu import utils
 from amu.clidriver import CliDriver
 from amu.commands import RipCdCommand
 from amu.commands import EncodeWavToMp3Command
-from amu.commands import TagMp3Command
+from amu.commands import AddMp3TagCommand
 from amu.parsing import CommandParser
 from amu.parsing import CommandParsingError
 
@@ -306,4 +306,4 @@ class CommandParserTest(unittest.TestCase):
         args = arg_parser.parse_args(['tag', 'mp3'])
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
         command = parser.from_args(args)[0]
-        self.assertIsInstance(command, TagMp3Command)
+        self.assertIsInstance(command, AddMp3TagCommand)
