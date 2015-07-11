@@ -4,6 +4,7 @@ import uuid
 from amu import utils
 from amu.commands import RipCdCommand
 from amu.commands import EncodeWavToMp3Command
+from amu.commands import TagMp3Command
 
 
 class CommandParser(object):
@@ -20,6 +21,8 @@ class CommandParser(object):
             return self._get_rip_command(args)
         elif args.command == 'encode':
             return self._get_encode_command(args)
+        elif args.command == 'tag':
+            return self._get_tag_command(args)
 
     def _get_rip_command(self, args):
         command = RipCdCommand(self._configuration_provider, self._cd_ripper)
@@ -53,6 +56,10 @@ class CommandParser(object):
             for command in commands:
                 command.keep_source = True
         return commands
+
+    def _get_tag_command(self, args):
+        command = TagMp3Command(self._configuration_provider)
+        return [command]
 
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):
