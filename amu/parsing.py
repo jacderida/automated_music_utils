@@ -59,6 +59,7 @@ class CommandParser(object):
 
     def _get_tag_command(self, args):
         command = AddMp3TagCommand(self._configuration_provider)
+        command.source = args.source
         return [command]
 
 class EncodeCommandParser(object):
