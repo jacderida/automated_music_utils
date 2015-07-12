@@ -140,12 +140,18 @@ class TagCommandParser(object):
     def _get_directory_command(self, command_args):
         commands = []
         for root, directories, files in os.walk(command_args.source):
+            track_total = len(files)
+            track_number = 1
             for source_wav in [f for f in files if f.endswith(".mp3")]:
                 multi_cd_directory = ''
                 if root != command_args.source:
                     multi_cd_directory = os.path.basename(root)
                 full_source = os.path.join(command_args.source, multi_cd_directory, source_wav)
-                commands.append(self._get_add_mp3_command(full_source, command_args))
+                command = self._get_add_mp3_command(full_source, command_args)
+                command.track_number = track_number
+                command.track_total = track_total
+                commands.append(command)
+                track_number += 1
         return commands
 
     def _get_add_mp3_command(self, source, command_args):
