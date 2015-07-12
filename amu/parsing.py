@@ -260,8 +260,14 @@ class AddTagCommandArgs(object):
     @staticmethod
     def from_args(args):
         command_args = AddTagCommandArgs()
-        command_args.artist = AddTagCommandArgs._dequote(args.artist)
+        command_args.artist = AddTagCommandArgs._get_value_from_args(args.artist)
         return command_args
+
+    @staticmethod
+    def _get_value_from_args(args_value):
+        if not args_value:
+            return ''
+        return AddTagCommandArgs._dequote(args_value)
 
     @staticmethod
     def _dequote(s):
