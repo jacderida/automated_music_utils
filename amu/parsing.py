@@ -127,9 +127,26 @@ class TagCommandParser(object):
         self._configuration_provider = configuration_provider
 
     def parse_add_mp3_tag_command(self, source):
+        if os.path.isfile(source):
+            return self._get_single_file_command(source)
+        return self._get_directory_command(source)
+
+    def _get_single_file_command(self, source):
         command = AddMp3TagCommand(self._configuration_provider)
         command.source = source
         return [command]
+
+    def _get_directory_command(self, source):
+        commands = []
+        for root, directories, files in os.walk(source):
+            for source_wav in [f for f in files if f.endswith(".mp3")]:
+                multi_cd_directory = ''
+                if root != source:
+                    multi_cd_directory = os.path.basename(root)
+                command = AddMp3TagCommand(self._configuration_provider)
+                command.source = os.path.join(source, multi_cd_directory, source_wav)
+                commands.append(command)
+        return commands
 
 class CommandParsingError(Exception):
     def __init__(self, message):
