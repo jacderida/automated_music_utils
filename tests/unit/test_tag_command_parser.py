@@ -215,3 +215,29 @@ class TagCommandParserTest(unittest.TestCase):
         parser = TagCommandParser(config_mock)
         with self.assertRaisesRegexp(CommandParsingError, 'With a directory source, a track number and total override cannot be specified.'):
             parser.parse_add_mp3_tag_command(command_args)
+
+    @mock.patch('os.walk')
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_source(self, config_mock, isfile_mock, walk_mock):
+        walk_mock.return_value = [
+            ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
+            ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
+            ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        isfile_mock.return_value = False
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/mp3s'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_add_mp3_tag_command(command_args)
+        self.assertEqual(8, len(commands))
+        self.assertEqual('/some/path/to/mp3s/cd1/01 - Track 1.mp3', commands[0].source)
+        self.assertEqual('/some/path/to/mp3s/cd1/02 - Track 2.mp3', commands[1].source)
+        self.assertEqual('/some/path/to/mp3s/cd1/03 - Track 3.mp3', commands[2].source)
+        self.assertEqual('/some/path/to/mp3s/cd1/04 - Track 4.mp3', commands[3].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/01 - Track 1.mp3', commands[4].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/02 - Track 2.mp3', commands[5].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/03 - Track 3.mp3', commands[6].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/04 - Track 4.mp3', commands[7].source)
