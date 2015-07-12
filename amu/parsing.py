@@ -162,6 +162,10 @@ class TagCommandParser(object):
         command.title = command_args.title
         command.year = command_args.year
         command.genre = command_args.genre
+        self._set_track_information(command, command_args)
+        return command
+
+    def _set_track_information(self, command, command_args):
         if command_args.track_number == 0:
             command.track_number = 1
             command.track_total = 1
@@ -169,7 +173,6 @@ class TagCommandParser(object):
             if command_args.track_total == 0:
                 raise CommandParsingError('If a track number has been supplied, a track total must also be supplied.')
             command.track_number = command_args.track_number
-        return command
 
 class AddTagCommandArgs(object):
     def __init__(self):
