@@ -241,3 +241,29 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/path/to/mp3s/cd2/02 - Track 2.mp3', commands[5].source)
         self.assertEqual('/some/path/to/mp3s/cd2/03 - Track 3.mp3', commands[6].source)
         self.assertEqual('/some/path/to/mp3s/cd2/04 - Track 4.mp3', commands[7].source)
+
+    @mock.patch('os.walk')
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_numbers(self, config_mock, isfile_mock, walk_mock):
+        walk_mock.return_value = [
+            ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
+            ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
+            ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        isfile_mock.return_value = False
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/mp3s'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_add_mp3_tag_command(command_args)
+        self.assertEqual(8, len(commands))
+        self.assertEqual(1, commands[0].track_number)
+        self.assertEqual(2, commands[1].track_number)
+        self.assertEqual(3, commands[2].track_number)
+        self.assertEqual(4, commands[3].track_number)
+        self.assertEqual(1, commands[4].track_number)
+        self.assertEqual(2, commands[5].track_number)
+        self.assertEqual(3, commands[6].track_number)
+        self.assertEqual(4, commands[7].track_number)
