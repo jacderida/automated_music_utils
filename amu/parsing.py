@@ -176,6 +176,7 @@ class TagCommandParser(object):
             if command_args.track_total == 0:
                 raise CommandParsingError('If a track number has been supplied, a track total must also be supplied.')
             command.track_number = command_args.track_number
+            command.track_total = command_args.track_total
 
 class AddTagCommandArgs(object):
     def __init__(self):

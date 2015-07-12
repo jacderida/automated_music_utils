@@ -130,6 +130,21 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__source_is_file_and_track_number_is_specified__add_mp3_tag_command_has_track_number_set(self, config_mock, isfile_mock):
+        isfile_mock.return_value = True
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/song.mp3'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        command_args.title = 'Vordhosbn'
+        command_args.track_number = 2
+        command_args.track_total = 10
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_add_mp3_tag_command(command_args)
+        self.assertEqual(10, commands[0].track_total)
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__parse_add_mp3_tag_command__source_is_file_and_track_number_is_specified_but_track_total_is_not__command_parsing_error_is_raised(self, config_mock, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
