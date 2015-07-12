@@ -245,3 +245,22 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual(0, command_args.track_number)
+
+    def test__from_args__when_passed_args_for_add_tag_command__the_genre_should_be_specified_correctly(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist=Legowelt',
+            '--album=Sturmvogel',
+            '--title=Pimpshifter',
+            '--year=2000',
+            '--genre=Electronic',
+            '--track-number=1',
+            '--track-total=6'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual('Electronic', command_args.genre)
