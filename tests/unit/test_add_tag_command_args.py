@@ -79,3 +79,22 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual('Sturmvogel', command_args.album)
+
+    def test__from_args__when_the_album_has_a_space_in_the_name__the_album_should_be_specified_without_surrounding_quotes(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist=Legowelt',
+            '--album="The Teac Life"',
+            '--title=Moonmist',
+            '--year=2011',
+            '--genre=Electronic',
+            '--track-number=6',
+            '--track-total=14'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual('The Teac Life', command_args.album)
