@@ -129,6 +129,8 @@ class TagCommandParser(object):
     def parse_add_mp3_tag_command(self, command_args):
         if os.path.isfile(command_args.source):
             return self._get_single_file_command(command_args)
+        if command_args.track_total != 0:
+            raise CommandParsingError('With a directory source, a track number and total override cannot be specified.')
         return self._get_directory_command(command_args)
 
     def _get_single_file_command(self, command_args):

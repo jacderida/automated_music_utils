@@ -132,3 +132,17 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/path/to/mp3s/02 - Track 2.mp3', commands[1].source)
         self.assertEqual('/some/path/to/mp3s/03 - Track 3.mp3', commands[2].source)
         self.assertEqual('/some/path/to/mp3s/04 - Track 4.mp3', commands[3].source)
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_source(self, config_mock, isfile_mock):
+        isfile_mock.return_value = False
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/mp3s'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        command_args.track_number = 2
+        command_args.track_total = 10
+        parser = TagCommandParser(config_mock)
+        with self.assertRaisesRegexp(CommandParsingError, 'With a directory source, a track number and total override cannot be specified.'):
+            parser.parse_add_mp3_tag_command(command_args)
