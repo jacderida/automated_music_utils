@@ -297,24 +297,60 @@ class CommandParserTest(unittest.TestCase):
         self.assertFalse(commands[1].keep_source)
         self.assertFalse(commands[2].keep_source)
 
+    @mock.patch('amu.parsing.TagCommandParser.parse_add_mp3_tag_command')
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.rip.RubyRipperCdRipper')
-    def test__from_args__when_add_mp3_tag_is_specified__command_parser_returns_add_mp3_tag_command(self, cd_ripper_mock, config_mock, encoder_mock):
+    def test__from_args__when_add_mp3_tag_is_specified__the_tag_command_parser_should_be_used(self, cd_ripper_mock, config_mock, encoder_mock, tag_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
-        args = arg_parser.parse_args(['tag', 'add', 'mp3'])
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist="Aphex Twin"',
+            '--album="Druqks"',
+            '--title="Vordhosbn"',
+            '--year="2001"',
+            '--genre="Electronic"',
+            '--track-number=2',
+            '--track-total=15'
+        ])
+        tag_command_parser_mock.return_value = [AddMp3TagCommand(config_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.from_args(args)[0]
-        self.assertIsInstance(command, AddMp3TagCommand)
+        commands = parser.from_args(args)
+        tag_command_parser_mock.assert_called_once()
+        self.assertEqual(1, len(commands))
 
+    @mock.patch('amu.parsing.TagCommandParser.parse_add_mp3_tag_command')
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.config.ConfigurationProvider')
     @mock.patch('amu.rip.RubyRipperCdRipper')
-    def test__from_args__when_add_mp3_tag_is_specified_with_a_file_source__command_has_source_set(self, cd_ripper_mock, config_mock, encoder_mock):
+    def test__from_args__when_add_mp3_tag_is_specified__the_tag_command_parser_should_be_called_with_the_correct_arguments(self, cd_ripper_mock, config_mock, encoder_mock, tag_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
-        args = arg_parser.parse_args(['tag', 'add', 'mp3', '--source=/some/path/song.mp3'])
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist="Aphex Twin"',
+            '--album=Druqks',
+            '--title=Vordhosbn',
+            '--year=2001',
+            '--genre=Electronic',
+            '--track-number=2',
+            '--track-total=15'
+        ])
+        tag_command_parser_mock.return_value = [AddMp3TagCommand(config_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        command = parser.from_args(args)[0]
-        self.assertEqual('/some/path/song.mp3', command.source)
+        parser.from_args(args)
+        command_args = tag_command_parser_mock.call_args[0][0]
+        self.assertEqual('"Aphex Twin"', command_args.artist)
+        self.assertEqual('Druqks', command_args.album)
+        self.assertEqual('Vordhosbn', command_args.title)
+        self.assertEqual('2001', command_args.year)
+        self.assertEqual('Electronic', command_args.genre)
+        self.assertEqual('2', command_args.track_number)
+        self.assertEqual('15', command_args.track_total)
