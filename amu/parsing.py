@@ -255,6 +255,7 @@ class AddTagCommandArgs(object):
     @staticmethod
     def from_args(args):
         command_args = AddTagCommandArgs()
+        command_args.source = AddTagCommandArgs._get_value_from_args(args.source)
         command_args.artist = AddTagCommandArgs._get_value_from_args(args.artist)
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
