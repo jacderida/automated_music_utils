@@ -126,16 +126,16 @@ class TagCommandParser(object):
     def __init__(self, configuration_provider):
         self._configuration_provider = configuration_provider
 
-    def parse_add_mp3_tag_command(self, source, artist, album):
+    def parse_add_mp3_tag_command(self, source, artist, album, title):
         if os.path.isfile(source):
-            return self._get_single_file_command(source, artist, album)
-        return self._get_directory_command(source, artist, album)
+            return self._get_single_file_command(source, artist, album, title)
+        return self._get_directory_command(source, artist, album, title)
 
-    def _get_single_file_command(self, source, artist, album):
-        command = self._get_add_mp3_command(source, artist, album)
+    def _get_single_file_command(self, source, artist, album, title):
+        command = self._get_add_mp3_command(source, artist, album, title)
         return [command]
 
-    def _get_directory_command(self, source, artist, album):
+    def _get_directory_command(self, source, artist, album, title):
         commands = []
         for root, directories, files in os.walk(source):
             for source_wav in [f for f in files if f.endswith(".mp3")]:
@@ -143,14 +143,15 @@ class TagCommandParser(object):
                 if root != source:
                     multi_cd_directory = os.path.basename(root)
                 full_source = os.path.join(source, multi_cd_directory, source_wav)
-                commands.append(self._get_add_mp3_command(full_source, artist, album))
+                commands.append(self._get_add_mp3_command(full_source, artist, album, title))
         return commands
 
-    def _get_add_mp3_command(self, source, artist, album):
+    def _get_add_mp3_command(self, source, artist, album, title):
         command = AddMp3TagCommand(self._configuration_provider)
         command.source = source
         command.artist = artist
         command.album = album
+        command.title = title
         return command
 
 class CommandParsingError(Exception):
