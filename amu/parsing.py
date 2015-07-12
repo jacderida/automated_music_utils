@@ -260,8 +260,14 @@ class AddTagCommandArgs(object):
     @staticmethod
     def from_args(args):
         command_args = AddTagCommandArgs()
-        command_args.artist = args.artist
+        command_args.artist = AddTagCommandArgs._dequote(args.artist)
         return command_args
+
+    @staticmethod
+    def _dequote(s):
+        if (s[0] == s[-1]) and s.startswith(("'", '"')):
+            return s[1:-1]
+        return s
 
 class CommandParsingError(Exception):
     def __init__(self, message):
