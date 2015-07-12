@@ -188,7 +188,7 @@ class AddTagCommandArgs(object):
         self._artist = ''
         self._title = ''
         self._album = ''
-        self._year = ''
+        self._year = 0
         self._genre = ''
         self._track_number = 0
         self._track_total = 0
@@ -264,6 +264,7 @@ class AddTagCommandArgs(object):
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
         command_args.year = AddTagCommandArgs._get_numeric_value_from_args(args.year)
+        command_args.track_number = AddTagCommandArgs._get_numeric_value_from_args(args.track_number)
         return command_args
 
     @staticmethod
