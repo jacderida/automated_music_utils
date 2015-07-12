@@ -155,6 +155,8 @@ class TagCommandParser(object):
         if command_args.track_number == 0:
             command.track_number = 1
             command.track_total = 1
+        else:
+            command.track_number = command_args.track_number
         return command
 
 class AddTagCommandArgs(object):
