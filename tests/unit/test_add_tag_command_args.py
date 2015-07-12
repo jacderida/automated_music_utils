@@ -24,6 +24,25 @@ class AddTagCommandArgsTest(unittest.TestCase):
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual('/some/path/to/song.mp3', command_args.source)
 
+    def test__from_args__when_source_has_spaces__the_source_should_be_specified_without_surrounding_quotes(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source="/some/path/with a space/to/song.mp3"',
+            '--artist=Legowelt',
+            '--album=Sturmvogel',
+            '--title=Pimpshifter',
+            '--year=2000',
+            '--genre=Electronic',
+            '--track-number=1',
+            '--track-total=6'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual('/some/path/with a space/to/song.mp3', command_args.source)
+
     def test__from_args__when_passed_args_for_add_tag_command__the_artist_should_be_specified_correctly(self):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
