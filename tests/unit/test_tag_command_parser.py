@@ -135,7 +135,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_source(self, config_mock, isfile_mock):
+    def test__parse_add_mp3_tag_command__source_is_directory_with_track_number_override__command_parsing_error_is_raised(self, config_mock, isfile_mock):
         isfile_mock.return_value = False
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/mp3s'
