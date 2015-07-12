@@ -126,33 +126,108 @@ class TagCommandParser(object):
     def __init__(self, configuration_provider):
         self._configuration_provider = configuration_provider
 
-    def parse_add_mp3_tag_command(self, source, artist, album, title):
-        if os.path.isfile(source):
-            return self._get_single_file_command(source, artist, album, title)
-        return self._get_directory_command(source, artist, album, title)
+    def parse_add_mp3_tag_command(self, command_args):
+        if os.path.isfile(command_args.source):
+            return self._get_single_file_command(command_args)
+        return self._get_directory_command(command_args)
 
-    def _get_single_file_command(self, source, artist, album, title):
-        command = self._get_add_mp3_command(source, artist, album, title)
+    def _get_single_file_command(self, command_args):
+        command = self._get_add_mp3_command(command_args.source, command_args)
         return [command]
 
-    def _get_directory_command(self, source, artist, album, title):
+    def _get_directory_command(self, command_args):
         commands = []
-        for root, directories, files in os.walk(source):
+        for root, directories, files in os.walk(command_args.source):
             for source_wav in [f for f in files if f.endswith(".mp3")]:
                 multi_cd_directory = ''
-                if root != source:
+                if root != command_args.source:
                     multi_cd_directory = os.path.basename(root)
-                full_source = os.path.join(source, multi_cd_directory, source_wav)
-                commands.append(self._get_add_mp3_command(full_source, artist, album, title))
+                full_source = os.path.join(command_args.source, multi_cd_directory, source_wav)
+                commands.append(self._get_add_mp3_command(full_source, command_args))
         return commands
 
-    def _get_add_mp3_command(self, source, artist, album, title):
+    def _get_add_mp3_command(self, source, command_args):
         command = AddMp3TagCommand(self._configuration_provider)
         command.source = source
-        command.artist = artist
-        command.album = album
-        command.title = title
+        command.artist = command_args.artist
+        command.album = command_args.album
+        command.title = command_args.title
         return command
+
+class AddTagCommandArgs(object):
+    def __init__(self):
+        self._source = ''
+        self._artist = ''
+        self._title = ''
+        self._album = ''
+        self._year = ''
+        self._genre = ''
+        self._track_number = 0
+        self._track_total = 0
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def artist(self):
+        return self._artist
+
+    @artist.setter
+    def artist(self, value):
+        self._artist = value
+
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+
+    @property
+    def album(self):
+        return self._album
+
+    @album.setter
+    def album(self, value):
+        self._album = value
+
+    @property
+    def year(self):
+        return self._year
+
+    @year.setter
+    def year(self, value):
+        self._year = value
+
+    @property
+    def track_number(self):
+        return self._track_number
+
+    @track_number.setter
+    def track_number(self, value):
+        self._track_number = value
+
+    @property
+    def track_total(self):
+        return self._track_total
+
+    @track_total.setter
+    def track_total(self, value):
+        self._track_total = value
+
+    @property
+    def genre(self):
+        return self._genre
+
+    @genre.setter
+    def genre(self, value):
+        self._genre = value
 
 class CommandParsingError(Exception):
     def __init__(self, message):
