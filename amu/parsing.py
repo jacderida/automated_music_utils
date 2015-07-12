@@ -263,8 +263,15 @@ class AddTagCommandArgs(object):
         command_args.artist = AddTagCommandArgs._get_value_from_args(args.artist)
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
-        command_args.year = AddTagCommandArgs._get_value_from_args(args.year)
+        command_args.year = AddTagCommandArgs._get_numeric_value_from_args(args.year)
         return command_args
+
+    @staticmethod
+    def _get_numeric_value_from_args(args_value):
+        value = AddTagCommandArgs._get_value_from_args(args_value)
+        if not value:
+            return 0
+        return int(value)
 
     @staticmethod
     def _get_value_from_args(args_value):
