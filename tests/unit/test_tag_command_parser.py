@@ -60,7 +60,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__year_is_specified__add_mp3_tag_command_has_title_correctly_specified(self, config_mock, isfile_mock):
+    def test__parse_add_mp3_tag_command__year_is_specified__add_mp3_tag_command_has_year_correctly_specified(self, config_mock, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -71,6 +71,21 @@ class TagCommandParserTest(unittest.TestCase):
         parser = TagCommandParser(config_mock)
         commands = parser.parse_add_mp3_tag_command(command_args)
         self.assertEqual('2001', commands[0].year)
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__genre_is_specified__add_mp3_tag_command_has_genre_correctly_specified(self, config_mock, isfile_mock):
+        isfile_mock.return_value = True
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/song.mp3'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        command_args.title = 'Vordhosbn'
+        command_args.year = '2001'
+        command_args.genre = 'Electronic'
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_add_mp3_tag_command(command_args)
+        self.assertEqual('Electronic', commands[0].genre)
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')

@@ -161,6 +161,7 @@ class TagCommandParser(object):
         command.album = command_args.album
         command.title = command_args.title
         command.year = command_args.year
+        command.genre = command_args.genre
         if command_args.track_number == 0:
             command.track_number = 1
             command.track_total = 1
