@@ -154,3 +154,21 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual('Geneva Hideout', command_args.title)
+
+    def test__from_args__when_the_title_is_not_specified__the_title_should_be_an_empty_string(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist=Legowelt',
+            '--album=Pimpshifter',
+            '--year=2000',
+            '--genre=Electronic',
+            '--track-number=2',
+            '--track-total=6'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual('', command_args.title)
