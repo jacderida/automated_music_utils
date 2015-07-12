@@ -257,6 +257,12 @@ class AddTagCommandArgs(object):
     def genre(self, value):
         self._genre = value
 
+    @staticmethod
+    def from_args(args):
+        command_args = AddTagCommandArgs()
+        command_args.artist = args.artist
+        return command_args
+
 class CommandParsingError(Exception):
     def __init__(self, message):
         super(CommandParsingError, self).__init__(message)
