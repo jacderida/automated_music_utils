@@ -59,15 +59,7 @@ class CommandParser(object):
 
     def _get_tag_command(self, args):
         tag_command_parser = TagCommandParser(self._configuration_provider)
-        command_args = AddTagCommandArgs()
-        command_args.artist = args.artist
-        command_args.album = args.album
-        command_args.title = args.title
-        command_args.year = args.year
-        command_args.genre = args.genre
-        command_args.track_number = args.track_number
-        command_args.track_total = args.track_total
-        commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
+        commands = tag_command_parser.parse_add_mp3_tag_command(AddTagCommandArgs.from_args(args))
         return commands
 
 class EncodeCommandParser(object):

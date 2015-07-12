@@ -67,10 +67,10 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.artist = 'Aphex Twin'
         command_args.album = 'Druqks'
         command_args.title = 'Vordhosbn'
-        command_args.year = '2001'
+        command_args.year = 2001
         parser = TagCommandParser(config_mock)
         commands = parser.parse_add_mp3_tag_command(command_args)
-        self.assertEqual('2001', commands[0].year)
+        self.assertEqual(2001, commands[0].year)
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
@@ -81,7 +81,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.artist = 'Aphex Twin'
         command_args.album = 'Druqks'
         command_args.title = 'Vordhosbn'
-        command_args.year = '2001'
+        command_args.year = 2001
         command_args.genre = 'Electronic'
         parser = TagCommandParser(config_mock)
         commands = parser.parse_add_mp3_tag_command(command_args)
