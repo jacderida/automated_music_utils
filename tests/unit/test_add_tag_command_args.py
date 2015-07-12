@@ -264,3 +264,22 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual('Electronic', command_args.genre)
+
+    def test__from_args__when_the_genre_has_a_space_in_the_name__the_genre_should_be_specified_without_surrounding_quotes(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist=Legowelt',
+            '--album=Pimpshifter',
+            '--title="Sturmvogel"',
+            '--year=2000',
+            '--genre="Cool Jazz"',
+            '--track-number=2',
+            '--track-total=6'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual('Cool Jazz', command_args.genre)
