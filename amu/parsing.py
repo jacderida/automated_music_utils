@@ -58,8 +58,11 @@ class CommandParser(object):
         return commands
 
     def _get_tag_command(self, args):
+        command_args = AddTagCommandArgs.from_args(args)
+        if not command_args.source:
+            command_args.source = os.getcwd()
         tag_command_parser = TagCommandParser(self._configuration_provider)
-        commands = tag_command_parser.parse_add_mp3_tag_command(AddTagCommandArgs.from_args(args))
+        commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
         return commands
 
 class EncodeCommandParser(object):
