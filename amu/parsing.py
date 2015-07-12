@@ -152,6 +152,8 @@ class TagCommandParser(object):
         command.artist = command_args.artist
         command.album = command_args.album
         command.title = command_args.title
+        if command_args.track_number == 0:
+            command.track_number = 1
         return command
 
 class AddTagCommandArgs(object):
