@@ -227,3 +227,21 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual(1, command_args.track_number)
+
+    def test__from_args__when_the_track_number_is_not_specified__the_track_number_should_be_0(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist=Legowelt',
+            '--album=Sturmvogel',
+            '--title=Pimpshifter',
+            '--year=2000',
+            '--genre=Electronic',
+            '--track-total=6'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual(0, command_args.track_number)
