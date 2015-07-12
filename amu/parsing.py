@@ -126,14 +126,15 @@ class TagCommandParser(object):
     def __init__(self, configuration_provider):
         self._configuration_provider = configuration_provider
 
-    def parse_add_mp3_tag_command(self, source):
+    def parse_add_mp3_tag_command(self, source, artist):
         if os.path.isfile(source):
-            return self._get_single_file_command(source)
+            return self._get_single_file_command(source, artist)
         return self._get_directory_command(source)
 
-    def _get_single_file_command(self, source):
+    def _get_single_file_command(self, source, artist):
         command = AddMp3TagCommand(self._configuration_provider)
         command.source = source
+        command.artist = artist
         return [command]
 
     def _get_directory_command(self, source):
