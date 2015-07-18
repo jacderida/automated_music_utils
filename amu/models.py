@@ -3,9 +3,11 @@ class TrackModel(object):
         self._artist = ''
         self._title = ''
         self._position = 0
+        self._disc_number = 0
+        self._disc_total = 0
 
     @staticmethod
-    def from_discogs_track(track, position):
+    def from_discogs_track(track, position, disc_number, disc_total):
         """ Converts a discogs track to a track in our domain.
 
         :track: The discogs track.
@@ -17,6 +19,8 @@ class TrackModel(object):
         """
         track_model = TrackModel()
         track_model.position = position
+        track_model.disc_number = disc_number
+        track_model.disc_total = disc_total
         track_model.title = track.title
         if "artists" in track.data:
             track_model.artist = ArtistHelper.get_artists(track.data["artists"])
@@ -45,6 +49,22 @@ class TrackModel(object):
     @position.setter
     def position(self, value):
         self._position = value
+
+    @property
+    def disc_number(self):
+        return self._disc_number
+
+    @disc_number.setter
+    def disc_number(self, value):
+        self._disc_number = value
+
+    @property
+    def disc_total(self):
+        return self._disc_total
+
+    @disc_total.setter
+    def disc_total(self, value):
+        self._disc_total = value
 
 class ReleaseModel(object):
     def __init__(self):
@@ -154,6 +174,7 @@ class ReleaseModel(object):
     def _get_tracks_from_discogs_model(release_model, tracklist):
         track_number = 1
         disc_number = 1
+        disc_total = 1
         for track in tracklist:
             if track.position: # If track has no position, it's an index track.
                 if '-' in track.position:
@@ -161,7 +182,7 @@ class ReleaseModel(object):
                     if discogs_disc_number != disc_number:
                         disc_number += 1
                         track_number = 1
-                track_model = TrackModel.from_discogs_track(track, track_number)
+                track_model = TrackModel.from_discogs_track(track, track_number, disc_number, disc_total)
                 release_model.add_track(track_model)
                 track_number += 1
 
