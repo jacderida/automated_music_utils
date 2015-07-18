@@ -137,13 +137,7 @@ class TagCommandParser(object):
             track_number = 1
             for i, source_file in enumerate([f for f in files if f.endswith(".mp3")]):
                 track = tracks[i]
-                command_args = AddTagCommandArgs()
-                command_args.artist = release_model.artist
-                command_args.album = release_model.title
-                command_args.title = track.title
-                command_args.year = int(release_model.year)
-                command_args.genre = release_model.genre
-                command = self._get_add_mp3_command(source_file, command_args)
+                command = self._get_add_mp3_command_from_release_model(source_file, release_model, track)
                 command.track_number = track_number
                 command.track_total = track_total
                 commands.append(command)
@@ -177,6 +171,15 @@ class TagCommandParser(object):
                 commands.append(command)
                 track_number += 1
         return commands
+
+    def _get_add_mp3_command_from_release_model(self, source, release_model, track):
+        command_args = AddTagCommandArgs()
+        command_args.artist = release_model.artist
+        command_args.album = release_model.title
+        command_args.title = track.title
+        command_args.year = int(release_model.year)
+        command_args.genre = release_model.genre
+        return self._get_add_mp3_command(source, command_args)
 
     def _get_add_mp3_command(self, source, command_args):
         command = AddMp3TagCommand(self._configuration_provider)
