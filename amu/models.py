@@ -241,6 +241,14 @@ class ReleaseModel(object):
             raise ValueError('The track must be a TrackModel object')
         self._tracks.append(track)
 
+    def add_track_directly(self, artist, title, position):
+        """ Horrible method to be used in testing code. """
+        track = TrackModel()
+        track.artist = artist
+        track.title = title
+        track.position = position
+        self._tracks.append(track)
+
     def get_tracks(self):
         """ Gets the tracks as a tuple.
         :returns: The tracks as a read only list.
