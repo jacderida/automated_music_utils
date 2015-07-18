@@ -197,3 +197,12 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual('Syncom Data', tracks[5].artist)
         self.assertEqual('Rude 66', tracks[6].artist)
         self.assertEqual('Hank (32)', tracks[7].artist)
+
+    def test__from_discogs_release__release_has_artists_on_tracks_with_anvs__the_anvs_should_be_resolved(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(51236)
+        discogs_release.refresh()
+        tracks = ReleaseModel.from_discogs_release(discogs_release).get_tracks()
+        self.assertEqual('Red Cell', tracks[3].artist)
+        self.assertEqual('Neuro Politique', tracks[4].artist)
+        self.assertEqual('Kosmik Kommando', tracks[5].artist)
