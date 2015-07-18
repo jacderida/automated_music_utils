@@ -73,6 +73,7 @@ class ReleaseModel(object):
         self._catno = ''
         self._title = ''
         self._format = ''
+        self._format_quantity = 0
         self._country = ''
         self._year = ''
         self._genre = ''
@@ -95,6 +96,7 @@ class ReleaseModel(object):
         release_model.year = ReleaseModel._get_date_from_discogs_model(release)
         release_model.catno = ReleaseModel._get_cat_numbers_from_discogs_model(release)
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
+        release_model.format_quantity = ReleaseModel._get_format_quantity_from_discogs_model(release.formats)
         release_model.country = release.country
         release_model.genre = ReleaseModel._get_genre_from_discogs_model(release.genres)
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
@@ -137,6 +139,11 @@ class ReleaseModel(object):
         return format_string
 
     @staticmethod
+    def _get_format_quantity_from_discogs_model(formats):
+        discogs_format = formats[0]
+        return int(discogs_format["qty"])
+
+    @staticmethod
     def _get_genre_from_discogs_model(genres):
         if len(genres) == 1:
             return genres[0]
@@ -174,7 +181,7 @@ class ReleaseModel(object):
     def _get_tracks_from_discogs_model(release_model, tracklist):
         track_number = 1
         disc_number = 1
-        disc_total = 1
+        disc_total = release_model.format_quantity
         for track in tracklist:
             if track.position: # If track has no position, it's an index track.
                 if '-' in track.position:
@@ -225,6 +232,14 @@ class ReleaseModel(object):
     @format.setter
     def format(self, value):
         self._format = value
+
+    @property
+    def format_quantity(self):
+        return self._format_quantity
+
+    @format_quantity.setter
+    def format_quantity(self, value):
+        self._format_quantity = value
 
     @property
     def country(self):
