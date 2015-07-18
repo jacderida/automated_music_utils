@@ -278,4 +278,13 @@ class ArtistHelper(object):
                     artists_string += "{0} ".format(join)
                 else:
                     artists_string += " {0} ".format(join)
+        stripped_artists = artists_string.strip()
+        if stripped_artists[-1] == ',':
+            """
+            For some utterly bizarre reason, on releases like compilations that have
+            artists on tracks, even if there's only one artist, there's still a join
+            present, in the form of a comma. This little piece of code returns the artist
+            less the superfluous comma at the end.
+            """
+            return stripped_artists[0:-1]
         return artists_string

@@ -183,3 +183,17 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         tracks = ReleaseModel.from_discogs_release(discogs_release).get_tracks()
         self.assertEqual(len(tracks), 15)
+
+    def test__from_discogs_release__release_has_artists_on_tracks__the_tracks_should_have_artists_assigned(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(480352)
+        discogs_release.refresh()
+        tracks = ReleaseModel.from_discogs_release(discogs_release).get_tracks()
+        self.assertEqual('Franck Sarrio', tracks[0].artist)
+        self.assertEqual('Subliminal Criminal', tracks[1].artist)
+        self.assertEqual('AU', tracks[2].artist)
+        self.assertEqual('Duracel', tracks[3].artist)
+        self.assertEqual('Nimoy (2)', tracks[4].artist)
+        self.assertEqual('Syncom Data', tracks[5].artist)
+        self.assertEqual('Rude 66', tracks[6].artist)
+        self.assertEqual('Hank (32)', tracks[7].artist)
