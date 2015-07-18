@@ -206,3 +206,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual('Red Cell', tracks[3].artist)
         self.assertEqual('Neuro Politique', tracks[4].artist)
         self.assertEqual('Kosmik Kommando', tracks[5].artist)
+
+    def test__from_discogs_release__release_has_artists_on_tracks_with_joins__the_artists_should_be_assigned_correctly(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(56042)
+        discogs_release.refresh()
+        tracks = ReleaseModel.from_discogs_release(discogs_release).get_tracks()
+        self.assertEqual('Overdose / Duracel', tracks[2].artist)
