@@ -506,7 +506,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__year_is_set_on_tracks(self, config_mock, walk_mock):
+    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__track_number_is_set_on_tracks(self, config_mock, walk_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Legowelt'
         release_model.title = 'Pimpshifter'
