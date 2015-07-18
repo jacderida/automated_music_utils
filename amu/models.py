@@ -152,10 +152,18 @@ class ReleaseModel(object):
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
-        for i, track in enumerate(tracklist):
+        track_number = 1
+        disc_number = 1
+        for track in tracklist:
             if track.position: # If track has no position, it's an index track.
-                track_model = TrackModel.from_discogs_track(track, i + 1)
+                if '-' in track.position:
+                    discogs_disc_number = int(track.position.split('-')[0])
+                    if discogs_disc_number != disc_number:
+                        disc_number += 1
+                        track_number = 1
+                track_model = TrackModel.from_discogs_track(track, track_number)
                 release_model.add_track(track_model)
+                track_number += 1
 
     @property
     def artist(self):
