@@ -503,3 +503,36 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(2000, commands[3].year)
         self.assertEqual(2000, commands[4].year)
         self.assertEqual(2000, commands[5].year)
+
+    @mock.patch('os.walk')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__year_is_set_on_tracks(self, config_mock, walk_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Legowelt'
+        release_model.title = 'Pimpshifter'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4)
+        release_model.add_track_directly(None, 'Strange Girl', 5)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual(1, commands[0].track_number)
+        self.assertEqual(2, commands[1].track_number)
+        self.assertEqual(3, commands[2].track_number)
+        self.assertEqual(4, commands[3].track_number)
+        self.assertEqual(5, commands[4].track_number)
+        self.assertEqual(6, commands[5].track_number)
