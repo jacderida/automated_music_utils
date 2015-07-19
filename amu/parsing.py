@@ -133,6 +133,7 @@ class TagCommandParser(object):
         commands = []
         tracks = release_model.get_tracks()
         for root, directories, files in os.walk(source_path):
+            print files
             for i, source_file in enumerate([f for f in files if f.endswith(".mp3")]):
                 command = self._get_add_mp3_command_from_release_model(source_file, release_model, tracks[i])
                 commands.append(command)

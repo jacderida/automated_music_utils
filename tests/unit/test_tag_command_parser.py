@@ -569,3 +569,52 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(6, commands[3].track_total)
         self.assertEqual(6, commands[4].track_total)
         self.assertEqual(6, commands[5].track_total)
+
+    @mock.patch('os.walk')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model__release_is_multi_cd__24_add_mp3_tag_commands_are_returned(self, config_mock, walk_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Aphex Twin'
+        release_model.title = 'Selected Ambient Works Volume II'
+        release_model.label = 'Warp Records'
+        release_model.catno = 'WARPCD21'
+        release_model.format = 'CD, Album'
+        release_model.format_quantity = 2
+        release_model.country = 'UK'
+        release_model.year = '1994'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Experimental, Ambient'
+        release_model.add_track_directly(None, 'Untitled', 1, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 2, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 3, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 4, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 5, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 6, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 7, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 8, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 9, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 10, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 11, 12, 1, 2)
+        release_model.add_track_directly(None, 'Untitled', 12, 12, 1, 2)
+        release_model.add_track_directly(None, 'Blue Calx', 1, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 2, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 3, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 4, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 5, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 6, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 7, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 8, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 9, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 10, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 11, 12, 2, 2)
+        release_model.add_track_directly(None, 'Untitled', 12, 12, 2, 2)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, ('cd1', 'cd2'), ()),
+            (source_path + '/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3')),
+            (source_path + '/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3')),
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual(24, len(commands))
