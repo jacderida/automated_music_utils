@@ -181,7 +181,10 @@ class ReleaseModel(object):
     def _get_tracks_from_discogs_model(release_model, tracklist):
         track_number = 1
         disc_number = 1
-        disc_total = release_model.format_quantity
+        if "CD" in release_model.format:
+            disc_total = release_model.format_quantity
+        else:
+            disc_total = 1
         for track in tracklist:
             if track.position: # If track has no position, it's an index track.
                 if '-' in track.position:
