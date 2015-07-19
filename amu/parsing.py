@@ -130,16 +130,18 @@ class TagCommandParser(object):
         self._configuration_provider = configuration_provider
 
     def parse_from_release_model(self, source_path, release_model):
+        i = 0
         commands = []
         tracks = release_model.get_tracks()
         for root, _, files in os.walk(source_path):
-            for i, source_file in enumerate([f for f in files if f.endswith(".mp3")]):
+            for source_file in [f for f in files if f.endswith(".mp3")]:
                 multi_cd_directory = ''
                 if root != source_path:
                     multi_cd_directory = os.path.basename(root)
                 full_source = os.path.join(source_path, multi_cd_directory, source_file)
                 command = self._get_add_mp3_command_from_release_model(full_source, release_model, tracks[i])
                 commands.append(command)
+                i += 1
         return commands
 
     def parse_add_mp3_tag_command(self, command_args):
