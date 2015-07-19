@@ -131,7 +131,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__source_is_file_and_track_number_is_specified__add_mp3_tag_command_has_track_number_set(self, config_mock, isfile_mock):
+    def test__parse_add_mp3_tag_command__source_is_file_and_track_total_is_specified__add_mp3_tag_command_has_track_total_set(self, config_mock, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -324,12 +324,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -352,12 +352,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -385,12 +385,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -418,12 +418,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -451,12 +451,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -484,12 +484,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -517,12 +517,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -550,12 +550,12 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4)
-        release_model.add_track_directly(None, 'Strange Girl', 5)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6)
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
