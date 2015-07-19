@@ -174,7 +174,10 @@ class TagCommandParser(object):
 
     def _get_add_mp3_command_from_release_model(self, source, release_model, track):
         command_args = AddTagCommandArgs()
-        command_args.artist = release_model.artist
+        if track.artist:
+            command_args.artist = track.artist
+        else:
+            command_args.artist = release_model.artist
         command_args.album = release_model.title
         command_args.title = track.title
         command_args.year = int(release_model.year)

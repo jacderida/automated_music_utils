@@ -742,7 +742,7 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.add_track_directly('Gavin Bryars', 'Raising The Titanic (Big Drum Mix)', 2, 13, 1, 2)
         release_model.add_track_directly('Gentle People', 'Journey (Aphex Twin Care Mix)', 3, 13, 1, 2)
         release_model.add_track_directly('Kinesthesia', 'Triachus (Mix By Aphex Twin)', 4, 13, 1, 2)
-        release_model.add_track_directly('Philip Glass', 'Hereos (Aphex Twin Remix)', 5, 13, 1, 2)
+        release_model.add_track_directly('Phillip Glass', 'Hereos (Aphex Twin Remix)', 5, 13, 1, 2)
         release_model.add_track_directly('Buck Tick', 'In The Glitter Part 2 (Aphex Twin Mix)', 6, 13, 1, 2)
         release_model.add_track_directly('Jesus Jones', 'Zeros And Ones (Aphex Twin Reconstruction #2)', 7, 13, 1, 2)
         release_model.add_track_directly('Nav Katze', 'Ziggy (Aphex Twin Mix #1)', 8, 13, 1, 2)
@@ -799,3 +799,79 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual("You Can't Hide Your Love (Hidden Love Mix)", commands[23].title)
         self.assertEqual('Spotlight (Aphex Twin Mix)', commands[24].title)
         self.assertEqual('Debase (Soft Palate)', commands[25].title)
+
+    @mock.patch('os.walk')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model__release_is_multi_cd__artists_are_set_correctly(self, config_mock, walk_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Aphex Twin'
+        release_model.title = '26 Mixes For Cash'
+        release_model.label = 'Warp Records'
+        release_model.catno = 'WARPCD102'
+        release_model.format = 'CD, Compilation'
+        release_model.format_quantity = 2
+        release_model.country = 'UK'
+        release_model.year = '2003'
+        release_model.genre = 'Electronic'
+        release_model.style = 'IDM, Drum n Bass, Ambient, Experimental, Acid'
+        release_model.add_track_directly('Seefeel', 'Time To Find Me (AFX Fast Mix)', 1, 13, 1, 2)
+        release_model.add_track_directly('Gavin Bryars', 'Raising The Titanic (Big Drum Mix)', 2, 13, 1, 2)
+        release_model.add_track_directly('Gentle People', 'Journey (Aphex Twin Care Mix)', 3, 13, 1, 2)
+        release_model.add_track_directly('Kinesthesia', 'Triachus (Mix By Aphex Twin)', 4, 13, 1, 2)
+        release_model.add_track_directly('Phillip Glass', 'Hereos (Aphex Twin Remix)', 5, 13, 1, 2)
+        release_model.add_track_directly('Buck Tick', 'In The Glitter Part 2 (Aphex Twin Mix)', 6, 13, 1, 2)
+        release_model.add_track_directly('Jesus Jones', 'Zeros And Ones (Aphex Twin Reconstruction #2)', 7, 13, 1, 2)
+        release_model.add_track_directly('Nav Katze', 'Ziggy (Aphex Twin Mix #1)', 8, 13, 1, 2)
+        release_model.add_track_directly('Saint Etienne', 'Your Head My Voice (Voix Revirement)', 9, 13, 1, 2)
+        release_model.add_track_directly('Nav Katze', 'Change (Aphex Twin Mix #1)', 10, 13, 1, 2)
+        release_model.add_track_directly('Beatniks, The', "Une Femme N'est Pas Un Homme (Aphex Twin Mix)", 11, 13, 1, 2)
+        release_model.add_track_directly('Nine Inch Nails', 'The Beauty Of Being Numb Section B (Created By Aphex Twin)', 12, 13, 1, 2)
+        release_model.add_track_directly('Nobukazu Takemura', 'Let My Fish Loose (Aphex Twin Remix)', 12, 13, 1, 2)
+        release_model.add_track_directly('Die Fantastischen Vier', 'Kreiger (Aphex Twin Baldhu Mix)', 1, 13, 2, 2)
+        release_model.add_track_directly('Phillip Boa & The Voodoo Club', 'Deep In Velvet (Aphex Twin Turnips Mix)', 2, 13, 2, 2)
+        release_model.add_track_directly('Curve', 'Falling Free (Aphex Twin Remix)', 3, 13, 2, 2)
+        release_model.add_track_directly('Mescalinum United', 'We Have Arrived (Aphex Twin QQT Mix)', 4, 13, 2, 2)
+        release_model.add_track_directly('Nine Inch Nails', 'At The Heart Of It All (Created By Aphex Twin)', 5, 13, 2, 2)
+        release_model.add_track_directly('808 State', 'Flow Coma (Remix By AFX)', 6, 13, 2, 2)
+        release_model.add_track_directly('Aphex Twin', 'Window Licker (Acid Edit)', 7, 13, 2, 2)
+        release_model.add_track_directly('Baby Ford', 'Normal (Helston Flora Remix By AFX)', 8, 13, 2, 2)
+        release_model.add_track_directly('Aphex Twin', 'SAW2 CD1 TRK2 (Original Mix)', 9, 13, 2, 2)
+        release_model.add_track_directly('Meat Beat Manifesto', 'Mindstream (The Aphex Twin Remix)', 10, 13, 2, 2)
+        release_model.add_track_directly('DMX Krew', "You Can't Hide Your Love (Hidden Love Mix)", 11, 13, 2, 2)
+        release_model.add_track_directly('Wagon Christ', 'Spotlight (Aphex Twin Mix)', 12, 13, 2, 2)
+        release_model.add_track_directly('Mike Flowers Pops', 'Debase (Soft Palate)', 13, 13, 2, 2)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, ('cd1', 'cd2'), ()),
+            (source_path + '/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3', '13 - Track 13.mp3')),
+            (source_path + '/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3', '13 - Track 13.mp3')),
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual('Seefeel', commands[0].artist)
+        self.assertEqual('Gavin Bryars', commands[1].artist)
+        self.assertEqual('Gentle People', commands[2].artist)
+        self.assertEqual('Kinesthesia', commands[3].artist)
+        self.assertEqual('Phillip Glass', commands[4].artist)
+        self.assertEqual('Buck Tick', commands[5].artist)
+        self.assertEqual('Jesus Jones', commands[6].artist)
+        self.assertEqual('Nav Katze', commands[7].artist)
+        self.assertEqual('Saint Etienne', commands[8].artist)
+        self.assertEqual('Nav Katze', commands[9].artist)
+        self.assertEqual('Beatniks, The', commands[10].artist)
+        self.assertEqual('Nine Inch Nails', commands[11].artist)
+        self.assertEqual('Nobukazu Takemura', commands[12].artist)
+        self.assertEqual('Die Fantastischen Vier', commands[13].artist)
+        self.assertEqual('Phillip Boa & The Voodoo Club', commands[14].artist)
+        self.assertEqual('Curve', commands[15].artist)
+        self.assertEqual('Mescalinum United', commands[16].artist)
+        self.assertEqual('Nine Inch Nails', commands[17].artist)
+        self.assertEqual('808 State', commands[18].artist)
+        self.assertEqual('Aphex Twin', commands[19].artist)
+        self.assertEqual('Baby Ford', commands[20].artist)
+        self.assertEqual('Aphex Twin', commands[21].artist)
+        self.assertEqual('Meat Beat Manifesto', commands[22].artist)
+        self.assertEqual('DMX Krew', commands[23].artist)
+        self.assertEqual('Wagon Christ', commands[24].artist)
+        self.assertEqual('Mike Flowers Pops', commands[25].artist)
