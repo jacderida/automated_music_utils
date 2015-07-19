@@ -209,7 +209,7 @@ class ReleaseModel(object):
     def _get_single_disc_track_data(tracklist):
         track_totals = []
         track_number = 1
-        track_total = len(tracklist)
+        track_total = len([x for x in tracklist if x.position])
         for track in tracklist:
             if track.position: # Track with no position is an index track.
                 track_totals.append((track_number, track_total, 1, 1))
