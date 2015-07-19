@@ -4,9 +4,6 @@ from time import sleep
 from amu.models import ReleaseModel
 
 class ReleaseModelIntegrationTest(unittest.TestCase):
-    def setUp(self):
-        sleep(10)
-
     def test__from_discogs_release__release_with_single_artist_and_single_label__release_is_parsed_correctly(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(1303737)
@@ -20,6 +17,39 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(release.country, 'Belgium')
         self.assertEqual(release.year, '1992')
         self.assertEqual(release.genre, 'Electronic')
+
+    def test__from_discogs_release__release_has_single_disc__the_track_number_and_totals_should_be_assigned_correctly(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(1303737)
+        discogs_release.refresh()
+        release = ReleaseModel.from_discogs_release(discogs_release)
+        tracks = release.get_tracks()
+        self.assertEqual(1, tracks[0].track_number)
+        self.assertEqual(13, tracks[0].track_total)
+        self.assertEqual(2, tracks[1].track_number)
+        self.assertEqual(13, tracks[1].track_total)
+        self.assertEqual(3, tracks[2].track_number)
+        self.assertEqual(13, tracks[2].track_total)
+        self.assertEqual(4, tracks[3].track_number)
+        self.assertEqual(13, tracks[3].track_total)
+        self.assertEqual(5, tracks[4].track_number)
+        self.assertEqual(13, tracks[4].track_total)
+        self.assertEqual(6, tracks[5].track_number)
+        self.assertEqual(13, tracks[5].track_total)
+        self.assertEqual(7, tracks[6].track_number)
+        self.assertEqual(13, tracks[6].track_total)
+        self.assertEqual(8, tracks[7].track_number)
+        self.assertEqual(13, tracks[7].track_total)
+        self.assertEqual(9, tracks[8].track_number)
+        self.assertEqual(13, tracks[8].track_total)
+        self.assertEqual(10, tracks[9].track_number)
+        self.assertEqual(13, tracks[9].track_total)
+        self.assertEqual(11, tracks[10].track_number)
+        self.assertEqual(13, tracks[10].track_total)
+        self.assertEqual(12, tracks[11].track_number)
+        self.assertEqual(13, tracks[11].track_total)
+        self.assertEqual(13, tracks[12].track_number)
+        self.assertEqual(13, tracks[12].track_total)
 
     def test__from_discogs_release__release_with_single_artist__tracklist_is_parsed_correctly(self):
         client = discogs_client.Client('amu/0.1')

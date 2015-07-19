@@ -3,11 +3,13 @@ class TrackModel(object):
         self._artist = ''
         self._title = ''
         self._position = 0
+        self._track_number = 0
+        self._track_total = 0
         self._disc_number = 0
         self._disc_total = 0
 
     @staticmethod
-    def from_discogs_track(track, position, disc_number, disc_total):
+    def from_discogs_track(track, track_number, track_total, disc_number, disc_total):
         """ Converts a discogs track to a track in our domain.
 
         :track: The discogs track.
@@ -18,7 +20,8 @@ class TrackModel(object):
 
         """
         track_model = TrackModel()
-        track_model.position = position
+        track_model.track_number = track_number
+        track_model.track_total = track_total
         track_model.disc_number = disc_number
         track_model.disc_total = disc_total
         track_model.title = track.title
@@ -49,6 +52,22 @@ class TrackModel(object):
     @position.setter
     def position(self, value):
         self._position = value
+
+    @property
+    def track_number(self):
+        return self._track_number
+
+    @track_number.setter
+    def track_number(self, value):
+        self._track_number = value
+
+    @property
+    def track_total(self):
+        return self._track_total
+
+    @track_total.setter
+    def track_total(self, value):
+        self._track_total = value
 
     @property
     def disc_number(self):
@@ -179,22 +198,37 @@ class ReleaseModel(object):
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
+        track_data = ReleaseModel._get_track_data(tracklist)
+        for i, track in enumerate(tracklist):
+            track_model = TrackModel.from_discogs_track(
+                track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3])
+            release_model.add_track(track_model)
+        #track_number = 1
+        #disc_number = 1
+        #if "CD" in release_model.format:
+            #disc_total = release_model.format_quantity
+        #else:
+            #disc_total = 1
+        #for track in tracklist:
+            #if track.position: # If track has no position, it's an index track.
+                #if '-' in track.position:
+                    #discogs_disc_number = int(track.position.split('-')[0])
+                    #if discogs_disc_number != disc_number:
+                        #disc_number += 1
+                        #track_number = 1
+                #track_model = TrackModel.from_discogs_track(track, track_number, disc_number, disc_total)
+                #release_model.add_track(track_model)
+                #track_number += 1
+
+    @staticmethod
+    def _get_track_data(tracklist):
+        track_data = []
         track_number = 1
-        disc_number = 1
-        if "CD" in release_model.format:
-            disc_total = release_model.format_quantity
-        else:
-            disc_total = 1
-        for track in tracklist:
-            if track.position: # If track has no position, it's an index track.
-                if '-' in track.position:
-                    discogs_disc_number = int(track.position.split('-')[0])
-                    if discogs_disc_number != disc_number:
-                        disc_number += 1
-                        track_number = 1
-                track_model = TrackModel.from_discogs_track(track, track_number, disc_number, disc_total)
-                release_model.add_track(track_model)
-                track_number += 1
+        track_total = len(tracklist)
+        for _ in tracklist:
+            track_data.append((track_number, track_total, 1, 1))
+            track_number += 1
+        return track_data
 
     @property
     def artist(self):
