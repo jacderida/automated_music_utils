@@ -605,6 +605,39 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model__release_has_artists_on_tracks__artists_are_set_correctly(self, config_mock, walk_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Various'
+        release_model.title = 'Bronson Quest'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3047'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly('Legowelt', 'Crystal Cat', 1, 6, 1, 1)
+        release_model.add_track_directly('It & My Computer', 'Bronx On / Bronx Off', 2, 6, 1, 1)
+        release_model.add_track_directly('Orgue Electronique', 'Beirut Meeting', 3, 6, 1, 1)
+        release_model.add_track_directly('Luke Eargoggle', 'The Mechanic Priest', 4, 6, 1, 1)
+        release_model.add_track_directly('Porn.Darsteller', "L'ombre Des Heros", 5, 6, 1, 1)
+        release_model.add_track_directly('Sendex', 'Raid On Entebbe', 6, 6, 1, 1)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual('Legowelt', commands[0].artist)
+        self.assertEqual('It & My Computer', commands[1].artist)
+        self.assertEqual('Orgue Electronique', commands[2].artist)
+        self.assertEqual('Luke Eargoggle', commands[3].artist)
+        self.assertEqual('Porn.Darsteller', commands[4].artist)
+        self.assertEqual('Sendex', commands[5].artist)
+
+    @mock.patch('os.walk')
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__parse_from_release_model__release_is_multi_cd__24_add_mp3_tag_commands_are_returned(self, config_mock, walk_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
