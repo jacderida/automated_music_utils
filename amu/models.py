@@ -77,6 +77,7 @@ class TrackModel(object):
 
 class ReleaseModel(object):
     def __init__(self):
+        self._id = 0
         self._artist = ''
         self._label = ''
         self._catno = ''
@@ -99,6 +100,7 @@ class ReleaseModel(object):
 
         """
         release_model = ReleaseModel()
+        release_model.id = release.id
         release_model.artist = ArtistHelper.get_artists(release.data["artists"])
         release_model.title = release.title
         release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
@@ -254,6 +256,14 @@ class ReleaseModel(object):
                     track_total += 1
         track_totals_per_disc.append(track_total - 1)
         return track_totals_per_disc
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, value):
+        self._id = value
 
     @property
     def artist(self):
