@@ -76,7 +76,7 @@ class CommandParser(object):
         release_track_count = len(release_model.get_tracks())
         if track_count != release_track_count:
             raise CommandParsingError(
-                'The CD has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
+                'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
         tag_command_parser = TagCommandParser(self._configuration_provider)
         return tag_command_parser.parse_from_release_model(source, release_model)
 

@@ -193,7 +193,6 @@ class CommandParserTest(unittest.TestCase):
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_12_tag_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock, walk_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
-        args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=451034'])
         args = arg_parser.parse_args([
             'encode',
             'wav',
@@ -232,6 +231,55 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
         self.assertEqual(4, len(commands))
+
+    @mock.patch('os.walk')
+    @mock.patch('amu.metadata.DiscogsMetadataService')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__from_args__encode_wav_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock, walk_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--destination=/some/path/to/mp3s',
+            '--discogs-id=451034'
+        ])
+        encode_command_parser_mock.return_value = [
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock)
+        ]
+        walk_mock.return_value = [
+            ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        with self.assertRaisesRegexp(CommandParsingError, 'The source has 5 tracks and the discogs release has 4. The number of tracks on both must be the same.'):
+            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+            parser.from_args(args)
 
     @mock.patch('amu.metadata.DiscogsMetadataService')
     @mock.patch('amu.rip.tempfile.gettempdir')
@@ -461,7 +509,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        with self.assertRaisesRegexp(CommandParsingError, 'The CD has 11 tracks and the discogs release has 12. The number of tracks on both must be the same.'):
+        with self.assertRaisesRegexp(CommandParsingError, 'The source has 11 tracks and the discogs release has 12. The number of tracks on both must be the same.'):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
             parser.from_args(args)
 
