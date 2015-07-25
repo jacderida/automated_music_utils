@@ -11,10 +11,11 @@ class CommandParser(object):
     """ Responsible for parsing the string based command from the command line
         into a command object that can be executed.
     """
-    def __init__(self, configuration_provider, cd_ripper, encoder):
+    def __init__(self, configuration_provider, cd_ripper, encoder, metadata_service):
         self._configuration_provider = configuration_provider
         self._cd_ripper = cd_ripper
         self._encoder = encoder
+        self._metadata_service = metadata_service
 
     def from_args(self, args):
         if args.command == 'rip':

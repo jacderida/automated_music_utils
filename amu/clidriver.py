@@ -2,10 +2,11 @@
 import argparse
 import os
 import sys
-from amu.parsing import CommandParser
 from amu.config import ConfigurationProvider
-from amu.rip import RubyRipperCdRipper
 from amu.encode import LameEncoder
+from amu.metadata import DiscogsMetadataService
+from amu.parsing import CommandParser
+from amu.rip import RubyRipperCdRipper
 
 
 def main():
@@ -37,6 +38,8 @@ class CliDriver(object):
             '--destination', help='The destination of the resulting mp3 or flac. This can be a file or directory.')
         encode_parser.add_argument(
             '--keep-source', action='store_true', help='If encoding from wav, use this to keep the original wav being removed.')
+        encode_parser.add_argument(
+            '--discogs-id', help='The discogs ID for the release. When this is used metadata from the discogs release will be applied to the encoded files.')
         tag_parser = subparsers.add_parser('tag', help='Tags an audio file')
         tag_parser.add_argument(
             'action', choices=['add', 'remove'], help='The tagging action to be performed. A tag can be added or removed.')
@@ -62,7 +65,10 @@ class CliDriver(object):
         """ The main entry point for the CLI driver """
         config_provider = ConfigurationProvider()
         parser = CommandParser(
-            config_provider, RubyRipperCdRipper(config_provider), LameEncoder(config_provider))
+            config_provider,
+            RubyRipperCdRipper(config_provider),
+            LameEncoder(config_provider),
+            DiscogsMetadataService())
         commands = parser.from_args(self._get_arguments())
         for command in commands:
             command.validate()
