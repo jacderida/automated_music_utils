@@ -53,8 +53,11 @@ class CommandParser(object):
             else:
                 source = os.getcwd()
             commands = encode_command_parser.parse_wav_to_mp3(source, destination)
-            if len(commands) == 0:
+            track_count = len(commands)
+            if track_count == 0:
                 raise CommandParsingError('The source directory has no wavs to encode')
+            if args.discogs_id:
+                commands.extend(self._get_release_tag_commands(args.discogs_id, track_count, source))
         if args.keep_source:
             for command in commands:
                 command.keep_source = True

@@ -191,6 +191,8 @@ class AddMp3TagCommand(Command):
             raise CommandValidationError('The track number cannot be greater than the track total.')
 
     def execute(self):
+        print "[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.".format(
+            self.source, self.artist, self.album, self.title, self.year, self.genre)
         tag = ID3v2(self._source)
         self._add_artist_frame(tag)
         self._add_title_frame(tag)
