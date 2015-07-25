@@ -42,8 +42,11 @@ class CommandParser(object):
         encode_command_parser = EncodeCommandParser(
             self._configuration_provider, self._cd_ripper, self._encoder)
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
+            track_count = utils.get_number_of_tracks_on_cd()
             source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-            commands = encode_command_parser.parse_cd_rip(source, destination, utils.get_number_of_tracks_on_cd())
+            commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
+            if args.discogs_id:
+                commands.extend(self._get_release_tag_commands(args.discogs_id, track_count, source))
         if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
             if args.source:
                 source = args.source
@@ -55,10 +58,6 @@ class CommandParser(object):
         if args.keep_source:
             for command in commands:
                 command.keep_source = True
-        if args.discogs_id:
-            tag_command_parser = TagCommandParser(self._configuration_provider)
-            commands.extend(tag_command_parser.parse_from_release_model(
-                source, self._metadata_service.get_release_by_id(args.discogs_id)))
         return commands
 
     def _get_tag_command(self, args):
@@ -68,6 +67,15 @@ class CommandParser(object):
         tag_command_parser = TagCommandParser(self._configuration_provider)
         commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
         return commands
+
+    def _get_release_tag_commands(self, discogs_id, track_count, source):
+        release_model = self._metadata_service.get_release_by_id(discogs_id)
+        release_track_count = len(release_model.get_tracks())
+        if track_count != release_track_count:
+            raise CommandParsingError(
+                'The CD has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
+        tag_command_parser = TagCommandParser(self._configuration_provider)
+        return tag_command_parser.parse_from_release_model(source, release_model)
 
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):
