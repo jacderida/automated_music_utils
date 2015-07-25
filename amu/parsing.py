@@ -38,13 +38,12 @@ class CommandParser(object):
             destination = args.destination
         else:
             destination = os.getcwd()
+        source = ''
         encode_command_parser = EncodeCommandParser(
             self._configuration_provider, self._cd_ripper, self._encoder)
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
-            commands = encode_command_parser.parse_cd_rip(
-                os.path.join(tempfile.gettempdir(), str(uuid.uuid4())),
-                destination,
-                utils.get_number_of_tracks_on_cd())
+            source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
+            commands = encode_command_parser.parse_cd_rip(source, destination, utils.get_number_of_tracks_on_cd())
         if args.encoding_from == 'wav' and args.encoding_to == 'mp3':
             if args.source:
                 source = args.source
@@ -56,6 +55,10 @@ class CommandParser(object):
         if args.keep_source:
             for command in commands:
                 command.keep_source = True
+        if args.discogs_id:
+            tag_command_parser = TagCommandParser(self._configuration_provider)
+            commands.extend(tag_command_parser.parse_from_release_model(
+                source, self._metadata_service.get_release_by_id(args.discogs_id)))
         return commands
 
     def _get_tag_command(self, args):
