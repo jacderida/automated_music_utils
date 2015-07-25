@@ -327,7 +327,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 2
+        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
