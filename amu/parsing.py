@@ -151,6 +151,27 @@ class TagCommandParser(object):
     def __init__(self, configuration_provider):
         self._configuration_provider = configuration_provider
 
+    def parse_from_release_model_with_empty_source(self, source_path, release_model):
+        """ Gets a set of add tag commands based on the tracks on the release model.
+        The source for the commands will be assumed file names, based on the amount of tracks on
+        the release model.
+
+        This is going to be used for encoding CDs. It's not enough to point toward
+        the directory where the CD is going to be ripped to, and then use the
+        parse_from_release_model method, because the parsing occurs before the CD is ripped,
+        and so the track files don't yet exist. That method relies on there being pre-existing
+        files to use for the source for the command.
+
+        :source_path: The path where the MP3s will eventually be.
+        :release_model: The release model with the metadata for the tags.
+        :returns: A list of add tag commands.
+
+        """
+        commands = []
+        for track in release_model.get_tracks():
+            commands.append(self._get_add_mp3_command_from_release_model(source_path, release_model, track))
+        return commands
+
     def parse_from_release_model(self, source_path, release_model):
         i = 0
         commands = []
