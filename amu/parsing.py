@@ -61,7 +61,7 @@ class CommandParser(object):
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
         if args.discogs_id:
-            commands.extend(self._get_release_tag_commands(args.discogs_id, track_count, source))
+            commands.extend(self._get_release_tag_commands(args, track_count, source, destination))
         return commands
 
     def _get_encode_wav_to_mp3_commands(self, args, destination):
@@ -75,16 +75,18 @@ class CommandParser(object):
         if track_count == 0:
             raise CommandParsingError('The source directory has no wavs to encode')
         if args.discogs_id:
-            commands.extend(self._get_release_tag_commands(args.discogs_id, track_count, source))
+            commands.extend(self._get_release_tag_commands(args, track_count, source, destination))
         return commands
 
-    def _get_release_tag_commands(self, discogs_id, track_count, source):
-        release_model = self._metadata_service.get_release_by_id(discogs_id)
+    def _get_release_tag_commands(self, args, track_count, source, destination):
+        release_model = self._metadata_service.get_release_by_id(args.discogs_id)
         release_track_count = len(release_model.get_tracks())
         if track_count != release_track_count:
             raise CommandParsingError(
                 'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
         tag_command_parser = TagCommandParser(self._configuration_provider)
+        if args.encoding_from == 'cd':
+            return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
         return tag_command_parser.parse_from_release_model(source, release_model)
 
 class EncodeCommandParser(object):
