@@ -168,8 +168,11 @@ class TagCommandParser(object):
 
         """
         commands = []
+        track_number = 1
         for track in release_model.get_tracks():
-            commands.append(self._get_add_mp3_command_from_release_model(source_path, release_model, track))
+            full_source_path = os.path.join(source_path, "0{0} - Track {0}.mp3".format(track_number))
+            commands.append(self._get_add_mp3_command_from_release_model(full_source_path, release_model, track))
+            track_number += 1
         return commands
 
     def parse_from_release_model(self, source_path, release_model):
