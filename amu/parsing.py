@@ -106,8 +106,8 @@ class EncodeCommandParser(object):
         commands.append(rip_cd_command)
         for i in range(1, track_count + 1):
             encode_wav_to_mp3_command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-            encode_wav_to_mp3_command.source = os.path.join(rip_destination, self._get_track_name(i, "wav"))
-            encode_wav_to_mp3_command.destination = os.path.join(destination, self._get_track_name(i, "mp3"))
+            encode_wav_to_mp3_command.source = os.path.join(rip_destination, utils.get_track_name(i, "wav"))
+            encode_wav_to_mp3_command.destination = os.path.join(destination, utils.get_track_name(i, "mp3"))
             commands.append(encode_wav_to_mp3_command)
         return commands
 
@@ -119,11 +119,6 @@ class EncodeCommandParser(object):
         if os.path.isfile(source):
             return self._get_single_file_command(source, destination)
         return self._get_directory_command(source, destination)
-
-    def _get_track_name(self, track_number, extension):
-        if track_number < 10:
-            return "0{0} - Track {0}.{1}".format(track_number, extension)
-        return "{0} - Track {0}.{1}".format(track_number, extension)
 
     def _get_single_file_command(self, source, destination):
         if not destination.endswith('.mp3'):
@@ -170,7 +165,7 @@ class TagCommandParser(object):
         commands = []
         track_number = 1
         for track in release_model.get_tracks():
-            full_source_path = os.path.join(source_path, self._get_track_name(track_number, "mp3"))
+            full_source_path = os.path.join(source_path, utils.get_track_name(track_number, "mp3"))
             commands.append(self._get_add_mp3_command_from_release_model(full_source_path, release_model, track))
             track_number += 1
         return commands
@@ -252,11 +247,6 @@ class TagCommandParser(object):
                 raise CommandParsingError('If a track number has been supplied, a track total must also be supplied.')
             command.track_number = command_args.track_number
             command.track_total = command_args.track_total
-
-    def _get_track_name(self, track_number, extension):
-        if track_number < 10:
-            return "0{0} - Track {0}.{1}".format(track_number, extension)
-        return "{0} - Track {0}.{1}".format(track_number, extension)
 
 class AddTagCommandArgs(object):
     def __init__(self):

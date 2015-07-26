@@ -63,3 +63,8 @@ def get_id3_tag_data(path):
         elif frame.fid == "TCON":
             tag_data["genre"] = frame.strings[0].replace('\x00', '')
     return tag_data
+
+def get_track_name(track_number, extension):
+    if track_number < 10:
+        return "0{0} - Track {0}.{1}".format(track_number, extension)
+    return "{0} - Track {0}.{1}".format(track_number, extension)
