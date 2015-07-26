@@ -1144,7 +1144,7 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/source/mp3s/13 - Track 13.mp3', commands[12].source)
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__sources_are_specified_correctly(self, config_mock):
+    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__artists_are_specified_correctly(self, config_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -1167,3 +1167,28 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('AFX', commands[1].artist)
         self.assertEqual('AFX', commands[2].artist)
         self.assertEqual('AFX', commands[3].artist)
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__titles_are_specified_correctly(self, config_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
+        self.assertEqual('PWSteal.Ldpinch.D', commands[0].title)
+        self.assertEqual('Backdoor.Berbew.Q', commands[1].title)
+        self.assertEqual('W32.Deadcode.A', commands[2].title)
+        self.assertEqual('Backdoor.Spyboter.A', commands[3].title)
