@@ -1099,3 +1099,46 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/source/mp3s/02 - Track 2.mp3', commands[1].source)
         self.assertEqual('/some/source/mp3s/03 - Track 3.mp3', commands[2].source)
         self.assertEqual('/some/source/mp3s/04 - Track 4.mp3', commands[3].source)
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model_with_empty_source__release_has_13_tracks__sources_are_specified_correctly(self, config_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Aphex Twin'
+        release_model.title = 'Selected Ambient Works 85-92'
+        release_model.label = 'Apollo'
+        release_model.catno = 'AMB 3922 CD'
+        release_model.format = 'CD, Album'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '1992'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Techno, IDM, Ambient'
+        release_model.add_track_directly(None, 'Xtal', 1, 13, 1, 1)
+        release_model.add_track_directly(None, 'Tha', 2, 13, 1, 1)
+        release_model.add_track_directly(None, 'Pulsewidth', 3, 13, 1, 1)
+        release_model.add_track_directly(None, 'Ageispolis', 4, 13, 1, 1)
+        release_model.add_track_directly(None, 'I', 5, 13, 1, 1)
+        release_model.add_track_directly(None, 'Green Calx', 6, 13, 1, 1)
+        release_model.add_track_directly(None, 'Heliosphan', 7, 13, 1, 1)
+        release_model.add_track_directly(None, 'We Are The Music Makers', 8, 13, 1, 1)
+        release_model.add_track_directly(None, 'Schottkey 7th Path', 9, 13, 1, 1)
+        release_model.add_track_directly(None, 'Ptolemy', 10, 13, 1, 1)
+        release_model.add_track_directly(None, 'Hedphelym', 11, 13, 1, 1)
+        release_model.add_track_directly(None, 'Delphium', 12, 13, 1, 1)
+        release_model.add_track_directly(None, 'Actium', 13, 13, 1, 1)
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
+        self.assertEqual('/some/source/mp3s/01 - Track 1.mp3', commands[0].source)
+        self.assertEqual('/some/source/mp3s/02 - Track 2.mp3', commands[1].source)
+        self.assertEqual('/some/source/mp3s/03 - Track 3.mp3', commands[2].source)
+        self.assertEqual('/some/source/mp3s/04 - Track 4.mp3', commands[3].source)
+        self.assertEqual('/some/source/mp3s/05 - Track 5.mp3', commands[4].source)
+        self.assertEqual('/some/source/mp3s/06 - Track 6.mp3', commands[5].source)
+        self.assertEqual('/some/source/mp3s/07 - Track 7.mp3', commands[6].source)
+        self.assertEqual('/some/source/mp3s/08 - Track 8.mp3', commands[7].source)
+        self.assertEqual('/some/source/mp3s/09 - Track 9.mp3', commands[8].source)
+        self.assertEqual('/some/source/mp3s/10 - Track 10.mp3', commands[9].source)
+        self.assertEqual('/some/source/mp3s/11 - Track 11.mp3', commands[10].source)
+        self.assertEqual('/some/source/mp3s/12 - Track 12.mp3', commands[11].source)
+        self.assertEqual('/some/source/mp3s/13 - Track 13.mp3', commands[12].source)

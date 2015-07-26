@@ -170,7 +170,7 @@ class TagCommandParser(object):
         commands = []
         track_number = 1
         for track in release_model.get_tracks():
-            full_source_path = os.path.join(source_path, "0{0} - Track {0}.mp3".format(track_number))
+            full_source_path = os.path.join(source_path, self._get_track_name(track_number, "mp3"))
             commands.append(self._get_add_mp3_command_from_release_model(full_source_path, release_model, track))
             track_number += 1
         return commands
@@ -252,6 +252,11 @@ class TagCommandParser(object):
                 raise CommandParsingError('If a track number has been supplied, a track total must also be supplied.')
             command.track_number = command_args.track_number
             command.track_total = command_args.track_total
+
+    def _get_track_name(self, track_number, extension):
+        if track_number < 10:
+            return "0{0} - Track {0}.{1}".format(track_number, extension)
+        return "{0} - Track {0}.{1}".format(track_number, extension)
 
 class AddTagCommandArgs(object):
     def __init__(self):
