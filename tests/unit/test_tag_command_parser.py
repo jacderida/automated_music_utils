@@ -1317,3 +1317,32 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(2005, commands[1].year)
         self.assertEqual(2005, commands[2].year)
         self.assertEqual(2005, commands[3].year)
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model_with_empty_source__release_has_artists_on_tracks__artists_are_specified_correctly(self, config_mock):
+
+        release_model = ReleaseModel()
+        release_model.artist = 'Various'
+        release_model.title = 'Bronson Quest'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3047'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly('Legowelt', 'Crystal Cat', 1, 6, 1, 1)
+        release_model.add_track_directly('It & My Computer', 'Bronx On / Bronx Off', 2, 6, 1, 1)
+        release_model.add_track_directly('Orgue Electronique', 'Beirut Meeting', 3, 6, 1, 1)
+        release_model.add_track_directly('Luke Eargoggle', 'The Mechanic Priest', 4, 6, 1, 1)
+        release_model.add_track_directly('Porn.Darsteller', "L'ombre Des Heros", 5, 6, 1, 1)
+        release_model.add_track_directly('Sendex', 'Raid On Entebbe', 6, 6, 1, 1)
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
+        self.assertEqual('Legowelt', commands[0].artist)
+        self.assertEqual('It & My Computer', commands[1].artist)
+        self.assertEqual('Orgue Electronique', commands[2].artist)
+        self.assertEqual('Luke Eargoggle', commands[3].artist)
+        self.assertEqual('Porn.Darsteller', commands[4].artist)
+        self.assertEqual('Sendex', commands[5].artist)
