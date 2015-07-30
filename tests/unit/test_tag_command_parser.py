@@ -1408,3 +1408,39 @@ class TagCommandParserTest(unittest.TestCase):
         parser = TagCommandParser(config_mock)
         with self.assertRaisesRegexp(CommandParsingError, 'The source must have the same number of tracks as the release.'):
             parser.parse_from_release_model_with_sources(release_model, sources)
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model_with_sources__release_has_6_tracks__sources_are_set_correctly(self, config_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Various'
+        release_model.title = 'Bronson Quest'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3047'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly('Legowelt', 'Crystal Cat', 1, 6, 1, 1)
+        release_model.add_track_directly('It & My Computer', 'Bronx On / Bronx Off', 2, 6, 1, 1)
+        release_model.add_track_directly('Orgue Electronique', 'Beirut Meeting', 3, 6, 1, 1)
+        release_model.add_track_directly('Luke Eargoggle', 'The Mechanic Priest', 4, 6, 1, 1)
+        release_model.add_track_directly('Porn.Darsteller', "L'ombre Des Heros", 5, 6, 1, 1)
+        release_model.add_track_directly('Sendex', 'Raid On Entebbe', 6, 6, 1, 1)
+        sources = [
+            '/some/path/to/mp3s/01 - Track 01.mp3',
+            '/some/path/to/mp3s/02 - Track 02.mp3',
+            '/some/path/to/mp3s/03 - Track 03.mp3',
+            '/some/path/to/mp3s/04 - Track 04.mp3',
+            '/some/path/to/mp3s/05 - Track 05.mp3',
+            '/some/path/to/mp3s/06 - Track 06.mp3'
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model_with_sources(release_model, sources)
+        self.assertEqual('/some/path/to/mp3s/01 - Track 01.mp3', commands[0].source)
+        self.assertEqual('/some/path/to/mp3s/02 - Track 02.mp3', commands[1].source)
+        self.assertEqual('/some/path/to/mp3s/03 - Track 03.mp3', commands[2].source)
+        self.assertEqual('/some/path/to/mp3s/04 - Track 04.mp3', commands[3].source)
+        self.assertEqual('/some/path/to/mp3s/05 - Track 05.mp3', commands[4].source)
+        self.assertEqual('/some/path/to/mp3s/06 - Track 06.mp3', commands[5].source)
