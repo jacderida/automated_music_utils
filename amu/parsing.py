@@ -151,6 +151,8 @@ class TagCommandParser(object):
     def parse_from_release_model_with_sources(self, release_model, sources):
         commands = []
         tracks = release_model.get_tracks()
+        if len(tracks) != len(sources):
+            raise CommandParsingError('The source must have the same number of tracks as the release.')
         for i, source in enumerate(sources):
             commands.append(self._get_add_mp3_command_from_release_model(source, release_model, tracks[i]))
         return commands
