@@ -1502,3 +1502,39 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/path/to/mp3s/11 - Track 11.mp3', commands[10].source)
         self.assertEqual('/some/path/to/mp3s/12 - Track 12.mp3', commands[11].source)
         self.assertEqual('/some/path/to/mp3s/13 - Track 13.mp3', commands[12].source)
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model_with_sources__release_has_6_tracks__artists_are_set_correctly(self, config_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Various'
+        release_model.title = 'Bronson Quest'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3047'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly('Legowelt', 'Crystal Cat', 1, 6, 1, 1)
+        release_model.add_track_directly('It & My Computer', 'Bronx On / Bronx Off', 2, 6, 1, 1)
+        release_model.add_track_directly('Orgue Electronique', 'Beirut Meeting', 3, 6, 1, 1)
+        release_model.add_track_directly('Luke Eargoggle', 'The Mechanic Priest', 4, 6, 1, 1)
+        release_model.add_track_directly('Porn.Darsteller', "L'ombre Des Heros", 5, 6, 1, 1)
+        release_model.add_track_directly('Sendex', 'Raid On Entebbe', 6, 6, 1, 1)
+        sources = [
+            '/some/path/to/mp3s/01 - Track 01.mp3',
+            '/some/path/to/mp3s/02 - Track 02.mp3',
+            '/some/path/to/mp3s/03 - Track 03.mp3',
+            '/some/path/to/mp3s/04 - Track 04.mp3',
+            '/some/path/to/mp3s/05 - Track 05.mp3',
+            '/some/path/to/mp3s/06 - Track 06.mp3'
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model_with_sources(release_model, sources)
+        self.assertEqual('Legowelt', commands[0].artist)
+        self.assertEqual('It & My Computer', commands[1].artist)
+        self.assertEqual('Orgue Electronique', commands[2].artist)
+        self.assertEqual('Luke Eargoggle', commands[3].artist)
+        self.assertEqual('Porn.Darsteller', commands[4].artist)
+        self.assertEqual('Sendex', commands[5].artist)
