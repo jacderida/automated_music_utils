@@ -148,6 +148,13 @@ class TagCommandParser(object):
     def __init__(self, configuration_provider):
         self._configuration_provider = configuration_provider
 
+    def parse_from_release_model_with_sources(self, release_model, sources):
+        commands = []
+        tracks = release_model.get_tracks()
+        for i, source in enumerate(sources):
+            commands.append(self._get_add_mp3_command_from_release_model(source, release_model, tracks[i]))
+        return commands
+
     def parse_from_release_model_with_empty_source(self, source_path, release_model):
         """ Gets a set of add tag commands based on the tracks on the release model.
         The source for the commands will be assumed file names, based on the amount of tracks on
