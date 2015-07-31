@@ -233,6 +233,62 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.rip.RubyRipperCdRipper')
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_sources_from_the_encode_commands_should_be_used(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--destination=/some/path/to/mp3s',
+            '--discogs-id=451034'
+        ])
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/some/path/to/mp3s/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/some/path/to/mp3s/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/some/path/to/mp3s/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4.source = '/some/path/to/mp3s/04 - Track 04.mp3'
+        commands.append(command4)
+        print len(commands)
+        encode_command_parser_mock.return_value = commands
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
+        self.assertEqual('/some/path/to/mp3s/01 - Track 01.mp3', commands[0].source)
+        self.assertEqual('/some/path/to/mp3s/02 - Track 02.mp3', commands[1].source)
+        self.assertEqual('/some/path/to/mp3s/03 - Track 03.mp3', commands[2].source)
+        self.assertEqual('/some/path/to/mp3s/04 - Track 04.mp3', commands[3].source)
+
+    @mock.patch('amu.metadata.DiscogsMetadataService')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__from_args__encode_wav_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
