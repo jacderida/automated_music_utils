@@ -70,6 +70,8 @@ class CliDriver(object):
             LameEncoder(config_provider),
             DiscogsMetadataService())
         commands = parser.from_args(self._get_arguments())
+        print commands
+        raw_input()
         for command in commands:
             command.validate()
             command.execute()

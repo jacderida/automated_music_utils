@@ -246,16 +246,20 @@ class CommandParserTest(unittest.TestCase):
         ])
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
-        command1.source = '/some/path/to/mp3s/01 - Track 01.mp3'
+        command1.source = '/some/path/to/wavs/01 - Track 01.wav'
+        command1.destination = '/some/path/to/mp3s/01 - Track 01.mp3'
         commands.append(command1)
         command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
-        command2.source = '/some/path/to/mp3s/02 - Track 02.mp3'
+        command2.source = '/some/path/to/wavs/02 - Track 02.wav'
+        command2.destination = '/some/path/to/mp3s/02 - Track 02.mp3'
         commands.append(command2)
         command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
-        command3.source = '/some/path/to/mp3s/03 - Track 03.mp3'
+        command3.source = '/some/path/to/wavs/03 - Track 03.wav'
+        command3.destination = '/some/path/to/mp3s/03 - Track 03.mp3'
         commands.append(command3)
         command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
-        command4.source = '/some/path/to/mp3s/04 - Track 04.mp3'
+        command4.source = '/some/path/to/wavs/04 - Track 04.wav'
+        command4.destination = '/some/path/to/mp3s/04 - Track 04.mp3'
         commands.append(command4)
         print len(commands)
         encode_command_parser_mock.return_value = commands

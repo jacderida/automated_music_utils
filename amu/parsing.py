@@ -90,7 +90,7 @@ class CommandParser(object):
         if args.encoding_from == 'cd':
             return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
         return tag_command_parser.parse_from_release_model_with_sources(
-            release_model, [x.source for x in commands])
+            release_model, [x.destination for x in commands])
 
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):

@@ -1,6 +1,5 @@
 import os
 from tagger import ID3v2
-from tagger.constants import ID3V2_FIELD_ENC_UTF16
 from amu.encode import LameEncoder
 from amu.rip import RubyRipperCdRipper
 
@@ -175,6 +174,7 @@ class AddMp3TagCommand(Command):
         self._genre = value
 
     def validate(self):
+        print self._source
         if not os.path.exists(self._source):
             raise CommandValidationError('The specified mp3 source does not exist.')
         if os.path.isdir(self._source):
