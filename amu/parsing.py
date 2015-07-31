@@ -61,7 +61,8 @@ class CommandParser(object):
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
         if args.discogs_id:
-            commands.extend(self._get_release_tag_commands(args, track_count, source, destination))
+            # The first command is a rip cd command, which we don't need.
+            commands.extend(self._get_release_tag_commands(args, commands[1:], source, destination))
         return commands
 
     def _get_encode_wav_to_mp3_commands(self, args, destination):
@@ -75,19 +76,21 @@ class CommandParser(object):
         if track_count == 0:
             raise CommandParsingError('The source directory has no wavs to encode')
         if args.discogs_id:
-            commands.extend(self._get_release_tag_commands(args, track_count, source, destination))
+            commands.extend(self._get_release_tag_commands(args, commands, source, destination))
         return commands
 
-    def _get_release_tag_commands(self, args, track_count, source, destination):
+    def _get_release_tag_commands(self, args, commands, source, destination):
         release_model = self._metadata_service.get_release_by_id(args.discogs_id)
         release_track_count = len(release_model.get_tracks())
+        track_count = len(commands)
         if track_count != release_track_count:
             raise CommandParsingError(
                 'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
         tag_command_parser = TagCommandParser(self._configuration_provider)
         if args.encoding_from == 'cd':
             return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
-        return tag_command_parser.parse_from_release_model(source, release_model)
+        return tag_command_parser.parse_from_release_model_with_sources(
+            release_model, [x.source for x in commands])
 
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):

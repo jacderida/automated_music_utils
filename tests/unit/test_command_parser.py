@@ -184,13 +184,12 @@ class CommandParserTest(unittest.TestCase):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
             parser.from_args(args)
 
-    @mock.patch('os.walk')
     @mock.patch('amu.metadata.DiscogsMetadataService')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.rip.RubyRipperCdRipper')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_4_tag_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock, walk_mock):
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_4_tag_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -206,9 +205,6 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
-        ]
-        walk_mock.return_value = [
-            ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
 
         release_model = ReleaseModel()
@@ -232,13 +228,12 @@ class CommandParserTest(unittest.TestCase):
         commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
         self.assertEqual(4, len(commands))
 
-    @mock.patch('os.walk')
     @mock.patch('amu.metadata.DiscogsMetadataService')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.rip.RubyRipperCdRipper')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__from_args__encode_wav_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock, walk_mock):
+    def test__from_args__encode_wav_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -255,9 +250,6 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
-        ]
-        walk_mock.return_value = [
-            ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
 
         release_model = ReleaseModel()
