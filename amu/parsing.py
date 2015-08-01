@@ -189,7 +189,7 @@ class TagCommandParser(object):
         commands = []
         tracks = release_model.get_tracks()
         for root, _, files in os.walk(source_path):
-            for source_file in [f for f in files if f.endswith(".mp3")]:
+            for source_file in [f for f in sorted(files) if f.endswith(".mp3")]:
                 multi_cd_directory = ''
                 if root != source_path:
                     multi_cd_directory = os.path.basename(root)
