@@ -215,7 +215,7 @@ class TagCommandParser(object):
         for root, directories, files in os.walk(command_args.source):
             track_total = len(files)
             track_number = 1
-            for source_wav in [f for f in files if f.endswith(".mp3")]:
+            for source_wav in [f for f in sorted(files) if f.endswith(".mp3")]:
                 multi_cd_directory = ''
                 if root != command_args.source:
                     multi_cd_directory = os.path.basename(root)
