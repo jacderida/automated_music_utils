@@ -261,7 +261,6 @@ class CommandParserTest(unittest.TestCase):
         command4.source = '/some/path/to/wavs/04 - Track 04.wav'
         command4.destination = '/some/path/to/mp3s/04 - Track 04.mp3'
         commands.append(command4)
-        print len(commands)
         encode_command_parser_mock.return_value = commands
 
         release_model = ReleaseModel()

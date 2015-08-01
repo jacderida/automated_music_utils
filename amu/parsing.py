@@ -110,10 +110,10 @@ class EncodeCommandParser(object):
         rip_cd_command.destination = rip_destination
         commands.append(rip_cd_command)
         for i in range(1, track_count + 1):
-            encode_wav_to_mp3_command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-            encode_wav_to_mp3_command.source = os.path.join(rip_destination, utils.get_track_name(i, "wav"))
-            encode_wav_to_mp3_command.destination = os.path.join(destination, utils.get_track_name(i, "mp3"))
-            commands.append(encode_wav_to_mp3_command)
+            command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+            command.source = os.path.join(rip_destination, utils.get_track_name(i, "wav"))
+            command.destination = os.path.join(destination, utils.get_track_name(i, "mp3"))
+            commands.append(command)
         return commands
 
     def parse_wav_to_mp3(self, source, destination):
@@ -136,7 +136,7 @@ class EncodeCommandParser(object):
     def _get_directory_command(self, source, destination):
         commands = []
         for root, directories, files in os.walk(source):
-            for source_wav in [f for f in files if f.endswith(".wav")]:
+            for source_wav in [f for f in sorted(files) if f.endswith(".wav")]:
                 multi_cd_directory = ''
                 if root != source:
                     multi_cd_directory = os.path.basename(root)
