@@ -13,3 +13,10 @@ class MoveAudioFileCommandTest(unittest.TestCase):
         command.destination = '/some/other/mp3/destination/01 - Track 1.mp3'
         command.execute()
         rename_mock.assert_called_once_with('/some/mp3/source/01 - Track 1.mp3', '/some/other/mp3/destination/01 - Track 1.mp3')
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__validate__source_is_empty__raises_command_validation_error(self, config_mock):
+        command = MoveAudioFileCommand(config_mock)
+        command.source = ''
+        with self.assertRaisesRegexp(CommandValidationError, 'A source must be supplied for the move audio file command.'):
+            command.validate()
