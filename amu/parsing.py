@@ -229,18 +229,31 @@ class TagCommandParser(object):
     def _get_directory_command(self, command_args):
         commands = []
         for root, directories, files in os.walk(command_args.source):
-            track_total = len(files)
-            track_number = 1
-            for source_wav in [f for f in sorted(files) if f.endswith(".mp3")]:
-                multi_cd_directory = ''
-                if root != command_args.source:
-                    multi_cd_directory = os.path.basename(root)
-                full_source = os.path.join(command_args.source, multi_cd_directory, source_wav)
-                command = self._get_add_mp3_command(full_source, command_args)
-                command.track_number = track_number
-                command.track_total = track_total
-                commands.append(command)
-                track_number += 1
+            if len(directories) > 0:
+                for directory in sorted(directories):
+                    full_source_directory = os.path.join(root, directory)
+                    mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith(".mp3")]
+                    track_total = len(mp3_files)
+                    track_number = 1
+                    for source_file in mp3_files:
+                        full_source_path = os.path.join(full_source_directory, source_file)
+                        command = self._get_add_mp3_command(full_source_path, command_args)
+                        command.track_number = track_number
+                        command.track_total = track_total
+                        commands.append(command)
+                        track_number += 1
+            else:
+                mp3_files = [f for f in sorted(files) if f.endswith(".mp3")]
+                track_total = len(mp3_files)
+                track_number = 1
+                for source_file in mp3_files:
+                    full_source_path = os.path.join(root, source_file)
+                    command = self._get_add_mp3_command(full_source_path, command_args)
+                    command.track_number = track_number
+                    command.track_total = track_total
+                    commands.append(command)
+                    track_number += 1
+            break
         return commands
 
     def _get_add_tag_command_from_release_model(self, source, release_model, track):

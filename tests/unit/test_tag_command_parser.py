@@ -252,14 +252,19 @@ class TagCommandParserTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandParsingError, 'With a directory source, a track number and total override cannot be specified.'):
             parser.parse_add_mp3_tag_command(command_args)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_source(self, config_mock, isfile_mock, walk_mock):
+    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_source(self, config_mock, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
             ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'],
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         ]
         isfile_mock.return_value = False
         command_args = AddTagCommandArgs()
@@ -278,14 +283,62 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/path/to/mp3s/cd2/03 - Track 3.mp3', commands[6].source)
         self.assertEqual('/some/path/to/mp3s/cd2/04 - Track 4.mp3', commands[7].source)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_numbers(self, config_mock, isfile_mock, walk_mock):
+    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory_and_walk_returns_directories_in_arbitrary_order__returns_16_add_mp3_tag_commands_with_correct_source(self, config_mock, isfile_mock, walk_mock, listdir_mock):
+        walk_mock.return_value = [
+            ('/some/path/to/mp3s', ('cd4', 'cd2', 'cd3', 'cd1'), ()),
+            ('/some/path/to/mp3s/cd4', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
+            ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
+            ('/some/path/to/mp3s/cd3', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
+            ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'],
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'],
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'],
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        ]
+        isfile_mock.return_value = False
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/mp3s'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_add_mp3_tag_command(command_args)
+        self.assertEqual(16, len(commands))
+        self.assertEqual('/some/path/to/mp3s/cd1/01 - Track 1.mp3', commands[0].source)
+        self.assertEqual('/some/path/to/mp3s/cd1/02 - Track 2.mp3', commands[1].source)
+        self.assertEqual('/some/path/to/mp3s/cd1/03 - Track 3.mp3', commands[2].source)
+        self.assertEqual('/some/path/to/mp3s/cd1/04 - Track 4.mp3', commands[3].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/01 - Track 1.mp3', commands[4].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/02 - Track 2.mp3', commands[5].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/03 - Track 3.mp3', commands[6].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/04 - Track 4.mp3', commands[7].source)
+        self.assertEqual('/some/path/to/mp3s/cd3/01 - Track 1.mp3', commands[8].source)
+        self.assertEqual('/some/path/to/mp3s/cd3/02 - Track 2.mp3', commands[9].source)
+        self.assertEqual('/some/path/to/mp3s/cd3/03 - Track 3.mp3', commands[10].source)
+        self.assertEqual('/some/path/to/mp3s/cd3/04 - Track 4.mp3', commands[11].source)
+        self.assertEqual('/some/path/to/mp3s/cd4/01 - Track 1.mp3', commands[12].source)
+        self.assertEqual('/some/path/to/mp3s/cd4/02 - Track 2.mp3', commands[13].source)
+        self.assertEqual('/some/path/to/mp3s/cd4/03 - Track 3.mp3', commands[14].source)
+        self.assertEqual('/some/path/to/mp3s/cd4/04 - Track 4.mp3', commands[15].source)
+
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_numbers(self, config_mock, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
             ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'],
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         ]
         isfile_mock.return_value = False
         command_args = AddTagCommandArgs()
@@ -304,14 +357,19 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(3, commands[6].track_number)
         self.assertEqual(4, commands[7].track_number)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_totals(self, config_mock, isfile_mock, walk_mock):
+    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_totals(self, config_mock, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
             ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'],
+            ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3']
         ]
         isfile_mock.return_value = False
         command_args = AddTagCommandArgs()
