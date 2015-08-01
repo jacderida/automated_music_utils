@@ -166,7 +166,7 @@ class TagCommandParser(object):
         if len(tracks) != len(sources):
             raise CommandParsingError('The source must have the same number of tracks as the release.')
         for i, source in enumerate(sources):
-            commands.append(self._get_add_mp3_command_from_release_model(source, release_model, tracks[i]))
+            commands.append(self._get_add_tag_command_from_release_model(source, release_model, tracks[i]))
         return commands
 
     def parse_from_release_model_with_empty_source(self, source_path, release_model):
@@ -189,7 +189,7 @@ class TagCommandParser(object):
         track_number = 1
         for track in release_model.get_tracks():
             full_source_path = os.path.join(source_path, utils.get_track_name(track_number, "mp3"))
-            commands.append(self._get_add_mp3_command_from_release_model(full_source_path, release_model, track))
+            commands.append(self._get_add_tag_command_from_release_model(full_source_path, release_model, track))
             track_number += 1
         return commands
 
@@ -203,13 +203,13 @@ class TagCommandParser(object):
                     full_source_directory = os.path.join(root, directory)
                     for source_file in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith(".mp3")]:
                         full_source_path = os.path.join(full_source_directory, source_file)
-                        command = self._get_add_mp3_command_from_release_model(full_source_path, release_model, tracks[i])
+                        command = self._get_add_tag_command_from_release_model(full_source_path, release_model, tracks[i])
                         commands.append(command)
                         i += 1
             else:
                 for source_file in [f for f in sorted(files) if f.endswith(".mp3")]:
                     full_source = os.path.join(root, source_file)
-                    command = self._get_add_mp3_command_from_release_model(full_source, release_model, tracks[i])
+                    command = self._get_add_tag_command_from_release_model(full_source, release_model, tracks[i])
                     commands.append(command)
                     i += 1
             break
@@ -243,7 +243,7 @@ class TagCommandParser(object):
                 track_number += 1
         return commands
 
-    def _get_add_mp3_command_from_release_model(self, source, release_model, track):
+    def _get_add_tag_command_from_release_model(self, source, release_model, track):
         command_args = AddTagCommandArgs()
         if track.artist:
             command_args.artist = track.artist
