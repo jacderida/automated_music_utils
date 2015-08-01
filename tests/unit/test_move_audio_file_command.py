@@ -20,3 +20,11 @@ class MoveAudioFileCommandTest(unittest.TestCase):
         command.source = ''
         with self.assertRaisesRegexp(CommandValidationError, 'A source must be supplied for the move audio file command.'):
             command.validate()
+
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__validate__destination_is_empty__raises_command_validation_error(self, config_mock):
+        command = MoveAudioFileCommand(config_mock)
+        command.source = '/some/mp3/source/01 - Track 1.mp3'
+        command.destination = ''
+        with self.assertRaisesRegexp(CommandValidationError, 'A destination must be supplied for the move audio file command.'):
+            command.validate()

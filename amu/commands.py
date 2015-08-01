@@ -262,6 +262,8 @@ class MoveAudioFileCommand(Command):
     def validate(self):
         if not self._source:
             raise CommandValidationError('A source must be supplied for the move audio file command.')
+        if not self._destination:
+            raise CommandValidationError('A destination must be supplied for the move audio file command.')
 
     def execute(self):
         os.rename(self._source, self._destination)
