@@ -174,7 +174,6 @@ class AddMp3TagCommand(Command):
         self._genre = value
 
     def validate(self):
-        print self._source
         if not os.path.exists(self._source):
             raise CommandValidationError('The specified mp3 source does not exist.')
         if os.path.isdir(self._source):
@@ -239,3 +238,29 @@ class AddMp3TagCommand(Command):
             genre_frame = tag.new_frame("TCON")
             genre_frame.set_text(self._genre)
             tag.frames.append(genre_frame)
+
+class MoveAudioFileCommand(Command):
+    def __init__(self, config_provider):
+        super(MoveAudioFileCommand, self).__init__(config_provider)
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
+
+    def validate(self):
+        pass
+
+    def execute(self):
+        os.rename(self._source, self._destination)
