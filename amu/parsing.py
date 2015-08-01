@@ -137,7 +137,7 @@ class EncodeCommandParser(object):
         commands = []
         for root, directories, files in os.walk(source):
             if len(directories) > 0:
-                for directory in directories:
+                for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
                     full_destination_directory = os.path.join(destination, directory)
                     for source_wav in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.wav')]:

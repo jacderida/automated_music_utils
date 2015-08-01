@@ -96,6 +96,69 @@ class EncodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[8].source, '/some/path/to/wavs/cd2/04 - Track 4.wav')
         self.assertEqual(commands[8].destination, '/some/destination/cd2/04 - Track 4.mp3')
 
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    def test__parse_wav_to_mp3__source_is_multi_cd_release_and_walk_returns_directories_and_files_in_arbitrary_order__returns_18_correctly_specified_encode_wav_to_mp3_commands(self, config_mock, cd_ripper_mock, encoder_mock, isfile_mock, exists_mock, walk_mock, listdir_mock):
+        exists_mock.return_value = True
+        isfile_mock.return_value = False
+        walk_mock.return_value = [
+            ('/some/path/to/wavs', ('cd4', 'cd1', 'cd3', 'cd2'), ()),
+            ('/some/path/to/wavs/cd4', (), ('01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav', '05 - Track 5.wav')),
+            ('/some/path/to/wavs/cd1', (), ('01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav')),
+            ('/some/path/to/wavs/cd3', (), ('01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav', '05 - Track 5.wav')),
+            ('/some/path/to/wavs/cd2', (), ('01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav', '05 - Track 5.wav'],
+            ['01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav'],
+            ['01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav', '05 - Track 5.wav'],
+            ['01 - Track 1.wav', '02 - Track 2.wav', '03 - Track 3.wav', '04 - Track 4.wav']
+        ]
+        parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
+        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        self.assertEqual(18, len(commands))
+        self.assertEqual(commands[0].source, '/some/path/to/wavs/cd1/01 - Track 1.wav')
+        self.assertEqual(commands[0].destination, '/some/destination/cd1/01 - Track 1.mp3')
+        self.assertEqual(commands[1].source, '/some/path/to/wavs/cd1/02 - Track 2.wav')
+        self.assertEqual(commands[1].destination, '/some/destination/cd1/02 - Track 2.mp3')
+        self.assertEqual(commands[2].source, '/some/path/to/wavs/cd1/03 - Track 3.wav')
+        self.assertEqual(commands[2].destination, '/some/destination/cd1/03 - Track 3.mp3')
+        self.assertEqual(commands[3].source, '/some/path/to/wavs/cd1/04 - Track 4.wav')
+        self.assertEqual(commands[3].destination, '/some/destination/cd1/04 - Track 4.mp3')
+        self.assertEqual(commands[4].source, '/some/path/to/wavs/cd1/05 - Track 5.wav')
+        self.assertEqual(commands[4].destination, '/some/destination/cd1/05 - Track 5.mp3')
+        self.assertEqual(commands[5].source, '/some/path/to/wavs/cd2/01 - Track 1.wav')
+        self.assertEqual(commands[5].destination, '/some/destination/cd2/01 - Track 1.mp3')
+        self.assertEqual(commands[6].source, '/some/path/to/wavs/cd2/02 - Track 2.wav')
+        self.assertEqual(commands[6].destination, '/some/destination/cd2/02 - Track 2.mp3')
+        self.assertEqual(commands[7].source, '/some/path/to/wavs/cd2/03 - Track 3.wav')
+        self.assertEqual(commands[7].destination, '/some/destination/cd2/03 - Track 3.mp3')
+        self.assertEqual(commands[8].source, '/some/path/to/wavs/cd2/04 - Track 4.wav')
+        self.assertEqual(commands[8].destination, '/some/destination/cd2/04 - Track 4.mp3')
+        self.assertEqual(commands[9].source, '/some/path/to/wavs/cd3/01 - Track 1.wav')
+        self.assertEqual(commands[9].destination, '/some/destination/cd3/01 - Track 1.mp3')
+        self.assertEqual(commands[10].source, '/some/path/to/wavs/cd3/02 - Track 2.wav')
+        self.assertEqual(commands[10].destination, '/some/destination/cd3/02 - Track 2.mp3')
+        self.assertEqual(commands[11].source, '/some/path/to/wavs/cd3/03 - Track 3.wav')
+        self.assertEqual(commands[11].destination, '/some/destination/cd3/03 - Track 3.mp3')
+        self.assertEqual(commands[12].source, '/some/path/to/wavs/cd3/04 - Track 4.wav')
+        self.assertEqual(commands[12].destination, '/some/destination/cd3/04 - Track 4.mp3')
+        self.assertEqual(commands[13].source, '/some/path/to/wavs/cd3/05 - Track 5.wav')
+        self.assertEqual(commands[13].destination, '/some/destination/cd3/05 - Track 5.mp3')
+        self.assertEqual(commands[14].source, '/some/path/to/wavs/cd4/01 - Track 1.wav')
+        self.assertEqual(commands[14].destination, '/some/destination/cd4/01 - Track 1.mp3')
+        self.assertEqual(commands[15].source, '/some/path/to/wavs/cd4/02 - Track 2.wav')
+        self.assertEqual(commands[15].destination, '/some/destination/cd4/02 - Track 2.mp3')
+        self.assertEqual(commands[16].source, '/some/path/to/wavs/cd4/03 - Track 3.wav')
+        self.assertEqual(commands[16].destination, '/some/destination/cd4/03 - Track 3.mp3')
+        self.assertEqual(commands[17].source, '/some/path/to/wavs/cd4/04 - Track 4.wav')
+        self.assertEqual(commands[17].destination, '/some/destination/cd4/04 - Track 4.mp3')
+
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
