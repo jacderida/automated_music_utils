@@ -199,7 +199,7 @@ class TagCommandParser(object):
         tracks = release_model.get_tracks()
         for root, directories, files in os.walk(source_path):
             if len(directories) > 0:
-                for directory in directories:
+                for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
                     for source_file in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith(".mp3")]:
                         full_source_path = os.path.join(full_source_directory, source_file)

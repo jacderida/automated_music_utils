@@ -823,6 +823,47 @@ class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model__release_is_multi_cd_and_walk_returns_directories_in_arbitrary_order__source_is_set_correctly(self, config_mock, walk_mock, listdir_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Acid Mothers Temple & The Melting Paraiso UFO'
+        release_model.title = 'The Penultimate Galactic Bordello Also The World You Made'
+        release_model.label = 'Dirter Promotions'
+        release_model.catno = 'DPROMCD53'
+        release_model.format = 'CD, Album'
+        release_model.format_quantity = 4
+        release_model.country = 'UK'
+        release_model.year = '2004'
+        release_model.genre = 'Rock'
+        release_model.style = 'Psychedelic Rock, Experimental'
+        release_model.add_track_directly(None, 'The Beautiful Blue Ecstasy (Have You Seen The Blue Sky?)', 1, 1, 1, 4)
+        release_model.add_track_directly(None, 'The Seven Stigmata From Pussycat Nebula', 1, 1, 2, 4)
+        release_model.add_track_directly(None, "What's Your Name?", 1, 1, 3, 4)
+        release_model.add_track_directly(None, 'The Holly Mountain In The Counter-Clock World', 1, 1, 4, 4)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, ('cd4', 'cd2', 'cd1', 'cd3'), ()),
+            (source_path + '/cd4', (), ('01 - Track 1.mp3')),
+            (source_path + '/cd2', (), ('01 - Track 1.mp3')),
+            (source_path + '/cd1', (), ('01 - Track 1.mp3')),
+            (source_path + '/cd3', (), ('01 - Track 1.mp3')),
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.mp3'],
+            ['01 - Track 1.mp3'],
+            ['01 - Track 1.mp3'],
+            ['01 - Track 1.mp3']
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual('/some/path/to/mp3s/cd1/01 - Track 1.mp3', commands[0].source)
+        self.assertEqual('/some/path/to/mp3s/cd2/01 - Track 1.mp3', commands[1].source)
+        self.assertEqual('/some/path/to/mp3s/cd3/01 - Track 1.mp3', commands[2].source)
+        self.assertEqual('/some/path/to/mp3s/cd4/01 - Track 1.mp3', commands[3].source)
+
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__parse_from_release_model__release_is_multi_cd__titles_are_set_correctly(self, config_mock, walk_mock, listdir_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
