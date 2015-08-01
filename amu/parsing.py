@@ -136,15 +136,22 @@ class EncodeCommandParser(object):
     def _get_directory_command(self, source, destination):
         commands = []
         for root, directories, files in os.walk(source):
-            for source_wav in [f for f in sorted(files) if f.endswith(".wav")]:
-                multi_cd_directory = ''
-                if root != source:
-                    multi_cd_directory = os.path.basename(root)
-                command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
-                command.source = os.path.join(source, multi_cd_directory, source_wav)
-                command.destination = os.path.join(
-                    destination, multi_cd_directory, os.path.splitext(source_wav)[0] + ".mp3")
-                commands.append(command)
+            if len(directories) > 0:
+                for directory in directories:
+                    full_source_directory = os.path.join(root, directory)
+                    full_destination_directory = os.path.join(destination, directory)
+                    for source_wav in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.wav')]:
+                        command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+                        command.source = os.path.join(full_source_directory, source_wav)
+                        command.destination = os.path.join(full_destination_directory, os.path.splitext(source_wav)[0] + '.mp3')
+                        commands.append(command)
+            else:
+                for source_wav in [f for f in sorted(files) if f.endswith('.wav')]:
+                    command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+                    command.source = os.path.join(root, source_wav)
+                    command.destination = os.path.join(destination, os.path.splitext(source_wav)[0] + '.mp3')
+                    commands.append(command)
+            break
         return commands
 
 class TagCommandParser(object):
