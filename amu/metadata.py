@@ -25,6 +25,11 @@ class DiscogsMetadataService(object):
 
 class MaskReplacer(object):
     def replace_directory_mask(self, masked_directory, release_model):
+        mask_options = {
+            'l' : release_model.label,
+            'a' : release_model.artist,
+            'A' : release_model.title
+        }
         replaced_string = ''
         i = 0
         while i < len(masked_directory):
@@ -32,10 +37,7 @@ class MaskReplacer(object):
             if char == '%':
                 i += 1
                 mask = masked_directory[i]
-                if mask == 'l':
-                    replaced_string += release_model.label
-                elif mask == 'a':
-                    replaced_string += release_model.artist
+                replaced_string += mask_options[mask]
             else:
                 replaced_string += char
             i += 1
