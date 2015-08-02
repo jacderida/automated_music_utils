@@ -1,5 +1,7 @@
+"""
+A module for classes that are concerned with music metadata.
+"""
 import discogs_client
-import sys
 from discogs_client.exceptions import HTTPError
 from amu.models import ReleaseModel
 
@@ -20,3 +22,19 @@ class DiscogsMetadataService(object):
             if ex.status_code == 404:
                 raise ReleaseNotFoundError('There is no release with ID {0}.'.format(id))
             raise ex
+
+class MaskReplacer(object):
+    def replace_directory_mask(self, masked_directory, release_model):
+        replaced_string = ''
+        i = 0
+        while i < len(masked_directory):
+            char = masked_directory[i]
+            if char == '%':
+                i += 1
+                mask = masked_directory[i]
+                if mask == 'l':
+                    replaced_string += release_model.label
+            else:
+                replaced_string += char
+            i += 1
+        return replaced_string
