@@ -34,6 +34,8 @@ class MaskReplacer(object):
                 mask = masked_directory[i]
                 if mask == 'l':
                     replaced_string += release_model.label
+                elif mask == 'a':
+                    replaced_string += release_model.artist
             else:
                 replaced_string += char
             i += 1
