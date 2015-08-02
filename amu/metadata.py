@@ -32,7 +32,8 @@ class MaskReplacer(object):
             'c' : release_model.catno,
             'C' : release_model.country,
             'y' : release_model.year,
-            'g' : release_model.genre
+            'g' : release_model.genre,
+            's' : release_model.style
         }
         replaced_string = ''
         i = 0
