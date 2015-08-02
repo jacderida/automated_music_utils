@@ -30,7 +30,9 @@ class MaskReplacer(object):
             'a' : release_model.artist,
             'A' : release_model.title,
             'c' : release_model.catno,
-            'C' : release_model.country
+            'C' : release_model.country,
+            'y' : release_model.year,
+            'g' : release_model.genre
         }
         replaced_string = ''
         i = 0
