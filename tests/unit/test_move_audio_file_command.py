@@ -33,9 +33,11 @@ class MoveAudioFileCommandTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandValidationError, 'A source must be supplied for the move audio file command.'):
             command.validate()
 
+    @mock.patch('os.path.isdir')
     @mock.patch('os.path.exists')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__destination_is_empty__raises_command_validation_error(self, config_mock, exists_mock):
+    def test__validate__destination_is_empty__raises_command_validation_error(self, config_mock, exists_mock, isdir_mock):
+        isdir_mock.return_value = False
         exists_mock.return_value = True
         command = MoveAudioFileCommand(config_mock)
         command.source = '/some/mp3/source/01 - Track 1.mp3'
@@ -53,12 +55,26 @@ class MoveAudioFileCommandTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandValidationError, 'The source for the move audio file command must exist.'):
             command.validate()
 
+    @mock.patch('os.path.isdir')
     @mock.patch('os.path.exists')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__source_and_destination_have_different_extensions__raises_command_validation_error(self, config_mock, exists_mock):
+    def test__validate__source_and_destination_have_different_extensions__raises_command_validation_error(self, config_mock, exists_mock, isdir_mock):
+        isdir_mock.return_value = False
         exists_mock.return_value = True
         command = MoveAudioFileCommand(config_mock)
         command.source = '/some/mp3/source/01 - Track 1.wav'
         command.destination = '/some/other/mp3/destination/01 - Track 1.mp3'
         with self.assertRaisesRegexp(CommandValidationError, 'The move audio file command must operate on files of the same type.'):
+            command.validate()
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.path.exists')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__validate__source_is_directory__raises_command_validation_error(self, config_mock, exists_mock, isdir_mock):
+        exists_mock.return_value = True
+        isdir_mock.return_value = True
+        command = MoveAudioFileCommand(config_mock)
+        command.source = '/some/mp3/source'
+        command.destination = '/some/other/mp3/destination/01 - Track 1.mp3'
+        with self.assertRaisesRegexp(CommandValidationError, 'The source for the move audio file command cannot be a directory.'):
             command.validate()

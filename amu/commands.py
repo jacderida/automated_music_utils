@@ -264,6 +264,8 @@ class MoveAudioFileCommand(Command):
             raise CommandValidationError('A source must be supplied for the move audio file command.')
         if not os.path.exists(self._source):
             raise CommandValidationError('The source for the move audio file command must exist.')
+        if os.path.isdir(self._source):
+            raise CommandValidationError('The source for the move audio file command cannot be a directory.')
         if not self._destination:
             raise CommandValidationError('A destination must be supplied for the move audio file command.')
         source_extension = os.path.splitext(self._source)
