@@ -266,6 +266,11 @@ class MoveAudioFileCommand(Command):
             raise CommandValidationError('The source for the move audio file command must exist.')
         if not self._destination:
             raise CommandValidationError('A destination must be supplied for the move audio file command.')
+        source_extension = os.path.splitext(self._source)
+        destination_extension = os.path.splitext(self._destination)
+        if source_extension != destination_extension:
+            raise CommandValidationError('The move audio file command must operate on files of the same type.')
+
 
     def execute(self):
         os.rename(self._source, self._destination)
