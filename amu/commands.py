@@ -273,4 +273,7 @@ class MoveAudioFileCommand(Command):
 
 
     def execute(self):
+        directory = os.path.dirname(self._destination)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
         os.rename(self._source, self._destination)
