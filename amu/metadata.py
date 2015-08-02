@@ -28,7 +28,8 @@ class MaskReplacer(object):
         mask_options = {
             'l' : release_model.label,
             'a' : release_model.artist,
-            'A' : release_model.title
+            'A' : release_model.title,
+            'c' : release_model.catno
         }
         replaced_string = ''
         i = 0
