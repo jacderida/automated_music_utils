@@ -2,9 +2,10 @@ import os
 import tempfile
 import uuid
 from amu import utils
-from amu.commands import RipCdCommand
-from amu.commands import EncodeWavToMp3Command
 from amu.commands import AddMp3TagCommand
+from amu.commands import EncodeWavToMp3Command
+from amu.commands import RipCdCommand
+from amu.metadata import MaskReplacer
 
 
 class CommandParser(object):
@@ -16,6 +17,7 @@ class CommandParser(object):
         self._cd_ripper = cd_ripper
         self._encoder = encoder
         self._metadata_service = metadata_service
+        self._mask_replacer = MaskReplacer()
 
     def from_args(self, args):
         if args.command == 'rip':
@@ -36,6 +38,8 @@ class CommandParser(object):
     def _get_encode_command(self, args):
         if args.destination:
             destination = args.destination
+        elif args.discogs_id:
+            destination = 'masked_directory'
         else:
             destination = os.getcwd()
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
@@ -56,6 +60,9 @@ class CommandParser(object):
         return commands
 
     def _get_encode_cd_to_mp3_commands(self, destination, args):
+        if args.discogs_id:
+            release_model = self._metadata_service.get_release_by_id(args.discogs_id)
+            destination = self._mask_replacer.replace_directory_mask(destination, release_model)
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
         track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
