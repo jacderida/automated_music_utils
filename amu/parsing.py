@@ -62,7 +62,7 @@ class CommandParser(object):
     def _get_encode_cd_to_mp3_commands(self, destination, args):
         if args.discogs_id:
             release_model = self._metadata_service.get_release_by_id(args.discogs_id)
-            destination = self._mask_replacer.replace_directory_mask(destination, release_model)
+            destination = self._mask_replacer.replace_directory_mask(self._configuration_provider.get_directory_mask(), release_model)
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
         track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))

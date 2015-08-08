@@ -57,6 +57,9 @@ class ConfigurationProvider(object):
                 config_file.write(re.sub('REPLACE_BASE_DIR', destination_path, line))
         return temp_path
 
+    def get_directory_mask(self):
+        pass
+
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):
             raise ConfigurationError(
