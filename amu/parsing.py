@@ -40,14 +40,14 @@ class CommandParser(object):
         if args.destination:
             destination = args.destination
         elif args.discogs_id:
-            release_model = self._metadata_service.get_release_by_id(args.discogs_id)
+            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
             destination = self._mask_replacer.replace_directory_mask(self._configuration_provider.get_directory_mask(), release_model)
         else:
             destination = os.getcwd()
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
             commands = self._get_encode_cd_to_mp3_commands(destination, args, release_model)
         elif args.encoding_from == 'wav' and args.encoding_to == 'mp3':
-            commands = self._get_encode_wav_to_mp3_commands(args, destination)
+            commands = self._get_encode_wav_to_mp3_commands(args, destination, release_model)
         if args.keep_source:
             for command in commands:
                 command.keep_source = True
@@ -68,10 +68,10 @@ class CommandParser(object):
         commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
         if release_model:
             # The first command is a rip cd command, which we don't need.
-            commands.extend(self._get_release_tag_commands(args, commands[1:], source, destination))
+            commands.extend(self._get_release_tag_commands(args, commands[1:], source, destination, release_model))
         return commands
 
-    def _get_encode_wav_to_mp3_commands(self, args, destination):
+    def _get_encode_wav_to_mp3_commands(self, args, destination, release_model):
         if args.source:
             source = args.source
         else:
@@ -82,11 +82,10 @@ class CommandParser(object):
         if track_count == 0:
             raise CommandParsingError('The source directory has no wavs to encode')
         if args.discogs_id:
-            commands.extend(self._get_release_tag_commands(args, commands, source, destination))
+            commands.extend(self._get_release_tag_commands(args, commands, source, destination, release_model))
         return commands
 
-    def _get_release_tag_commands(self, args, commands, source, destination):
-        release_model = self._metadata_service.get_release_by_id(args.discogs_id)
+    def _get_release_tag_commands(self, args, commands, source, destination, release_model):
         release_track_count = len(release_model.get_tracks())
         track_count = len(commands)
         if track_count != release_track_count:

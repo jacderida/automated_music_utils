@@ -197,7 +197,6 @@ class CommandParserTest(unittest.TestCase):
             'wav',
             'mp3',
             '--source=/some/path/to/wavs',
-            '--destination=/some/path/to/mp3s',
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
@@ -241,7 +240,6 @@ class CommandParserTest(unittest.TestCase):
             'wav',
             'mp3',
             '--source=/some/path/to/wavs',
-            '--destination=/some/path/to/mp3s',
             '--discogs-id=451034'
         ])
         commands = []
@@ -300,7 +298,6 @@ class CommandParserTest(unittest.TestCase):
             'wav',
             'mp3',
             '--source=/some/path/to/wavs',
-            '--destination=/some/path/to/mp3s',
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
@@ -310,6 +307,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
         ]
+        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -824,6 +822,69 @@ class CommandParserTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandParsingError, 'The source has 11 tracks and the discogs release has 12. The number of tracks on both must be the same.'):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
             parser.from_args(args)
+
+    @mock.patch('amu.metadata.DiscogsMetadataService')
+    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock, metadata_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'cd',
+            'mp3',
+            '--discogs-id=3535'])
+        gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
+        number_of_tracks_mock.return_value = 12
+        encode_command_parser_mock.return_value = [
+            RipCdCommand(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock)
+        ]
+        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'Aphex Twin'
+        release_model.title = '...I Care Because You Do'
+        release_model.label = 'Warp Records'
+        release_model.catno = 'WARPCD30'
+        release_model.format = 'CD, Album'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '1995'
+        release_model.genre = 'Electronic'
+        release_model.style = 'IDM, Techno, Ambient, Experimental, Acid'
+        release_model.add_track_directly(None, 'Acrid Avid Jam Shred', 1, 12, 1, 1)
+        release_model.add_track_directly(None, 'The Waxen Pith', 2, 12, 1, 1)
+        release_model.add_track_directly(None, 'Wax The Nip', 3, 12, 1, 1)
+        release_model.add_track_directly(None, 'Icct Hedral (Edit)', 4, 12, 1, 1)
+        release_model.add_track_directly(None, 'Ventolin (Video Version)', 5, 12, 1, 1)
+        release_model.add_track_directly(None, 'Come On You Slags!', 6, 12, 1, 1)
+        release_model.add_track_directly(None, 'Start As You Mean To Go On', 7, 12, 1, 1)
+        release_model.add_track_directly(None, 'Wet Tip Hen Ax', 8, 12, 1, 1)
+        release_model.add_track_directly(None, 'Mookid', 9, 12, 1, 1)
+        release_model.add_track_directly(None, 'Alberto Balsalm', 10, 12, 1, 1)
+        release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
+        release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser.from_args(args)
+        metadata_mock.get_release_by_id.assert_called_once_with(3535)
 
     @mock.patch('amu.metadata.DiscogsMetadataService')
     @mock.patch('amu.parsing.TagCommandParser.parse_add_mp3_tag_command')
