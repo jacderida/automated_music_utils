@@ -375,6 +375,51 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         maskreplacer_mock.assert_called_once_with('/some/replaced/mask', release_model)
 
+    @mock.patch('amu.metadata.MaskReplacer.replace_directory_mask')
+    @mock.patch('amu.metadata.DiscogsMetadataService')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, metadata_mock, maskreplacer_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--discogs-id=451034'
+        ])
+        encode_command_parser_mock.return_value = [
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+        ]
+        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser.from_args(args)
+        metadata_mock.get_release_by_id.assert_called_once_with(451034)
+
     @mock.patch('amu.metadata.DiscogsMetadataService')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     @mock.patch('amu.encode.LameEncoder')
