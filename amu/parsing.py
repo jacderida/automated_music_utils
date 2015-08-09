@@ -39,11 +39,12 @@ class CommandParser(object):
         release_model = None
         if args.destination:
             destination = args.destination
-        elif args.discogs_id:
-            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
-            destination = self._mask_replacer.replace_directory_mask(self._configuration_provider.get_directory_mask(), release_model)
         else:
             destination = os.getcwd()
+        if args.discogs_id:
+            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
+            if not args.destination:
+                destination = self._mask_replacer.replace_directory_mask(self._configuration_provider.get_directory_mask(), release_model)
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
             commands = self._get_encode_cd_to_mp3_commands(destination, args, release_model)
         elif args.encoding_from == 'wav' and args.encoding_to == 'mp3':
