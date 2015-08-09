@@ -68,7 +68,7 @@ class CommandParser(object):
         commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
         if release_model:
             # The first command is a rip cd command, which we don't need.
-            commands.extend(self._get_release_tag_commands(args, commands[1:], source, destination, release_model))
+            commands.extend(self._get_release_tag_commands(args, commands[1:], destination, release_model))
         return commands
 
     def _get_encode_wav_to_mp3_commands(self, args, destination, release_model):
@@ -82,10 +82,10 @@ class CommandParser(object):
         if track_count == 0:
             raise CommandParsingError('The source directory has no wavs to encode')
         if args.discogs_id:
-            commands.extend(self._get_release_tag_commands(args, commands, source, destination, release_model))
+            commands.extend(self._get_release_tag_commands(args, commands, destination, release_model))
         return commands
 
-    def _get_release_tag_commands(self, args, commands, source, destination, release_model):
+    def _get_release_tag_commands(self, args, commands, destination, release_model):
         release_track_count = len(release_model.get_tracks())
         track_count = len(commands)
         if track_count != release_track_count:
