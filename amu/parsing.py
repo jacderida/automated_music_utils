@@ -45,8 +45,11 @@ class CommandParser(object):
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
             if not args.destination:
                 destination = self._mask_replacer.replace_directory_mask(self._configuration_provider.get_directory_mask(), release_model)
+        return self._get_encode_commands(args, destination, release_model)
+
+    def _get_encode_commands(self, args, destination, release_model):
         if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
-            commands = self._get_encode_cd_to_mp3_commands(destination, args, release_model)
+            commands = self._get_encode_cd_to_mp3_commands(args, destination, release_model)
         elif args.encoding_from == 'wav' and args.encoding_to == 'mp3':
             commands = self._get_encode_wav_to_mp3_commands(args, destination, release_model)
         if args.keep_source:
@@ -62,7 +65,7 @@ class CommandParser(object):
         commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
         return commands
 
-    def _get_encode_cd_to_mp3_commands(self, destination, args, release_model):
+    def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
         track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
@@ -82,7 +85,7 @@ class CommandParser(object):
         track_count = len(commands)
         if track_count == 0:
             raise CommandParsingError('The source directory has no wavs to encode')
-        if args.discogs_id:
+        if release_model:
             commands.extend(self._get_release_tag_commands(args, commands, destination, release_model))
         return commands
 
