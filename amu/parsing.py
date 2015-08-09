@@ -61,7 +61,7 @@ class CommandParser(object):
         commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
         return commands
 
-    def _get_encode_cd_to_mp3_commands(self, destination, args, release_model=None):
+    def _get_encode_cd_to_mp3_commands(self, destination, args, release_model):
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
         track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
