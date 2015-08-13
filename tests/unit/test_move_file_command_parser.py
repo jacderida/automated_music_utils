@@ -93,7 +93,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
 
     @mock.patch('amu.encode.LameEncoder')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__4_encode_commands__source_is_correctly_specified(self, config_mock, encoder_mock):
+    def test__parse_from_encode_commands__4_encode_commands__destination_is_correctly_specified(self, config_mock, encoder_mock):
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'

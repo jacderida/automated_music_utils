@@ -312,12 +312,12 @@ class MoveAudioFileCommandParser(object):
         while i < len(encode_commands):
             command = MoveAudioFileCommand(self._configuration_provider)
             command.source = encode_commands[i].destination
-            command.destination = self._get_track_name(encode_commands[i].destination, tracks[i])
+            command.destination = self._get_destination(encode_commands[i].destination, tracks[i])
             commands.append(command)
             i += 1
         return commands
 
-    def _get_track_name(self, destination, track):
+    def _get_destination(self, destination, track):
         directory_path = os.path.dirname(destination)
         extension = os.path.splitext(destination)[1][1:] # ignore the . that splitext returns
         return "{0}/{1} - {2}.{3}".format(directory_path, '0' + str(track.track_number), track.title, extension)
