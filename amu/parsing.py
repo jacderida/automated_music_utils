@@ -320,7 +320,12 @@ class MoveAudioFileCommandParser(object):
     def _get_destination(self, destination, track):
         directory_path = os.path.dirname(destination)
         extension = os.path.splitext(destination)[1][1:] # ignore the . that splitext returns
-        return "{0}/{1} - {2}.{3}".format(directory_path, '0' + str(track.track_number), track.title, extension)
+        track_number = ''
+        if track.track_number < 10:
+            track_number = '0' + str(track.track_number)
+        else:
+            track_number = track.track_number
+        return "{0}/{1} - {2}.{3}".format(directory_path, track_number, track.title, extension)
 
 class AddTagCommandArgs(object):
     def __init__(self):
