@@ -4,6 +4,7 @@ import uuid
 from amu import utils
 from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
+from amu.commands import MoveAudioFileCommand
 from amu.commands import RipCdCommand
 from amu.metadata import MaskReplacer
 
@@ -299,6 +300,27 @@ class TagCommandParser(object):
                 raise CommandParsingError('If a track number has been supplied, a track total must also be supplied.')
             command.track_number = command_args.track_number
             command.track_total = command_args.track_total
+
+class MoveAudioFileCommandParser(object):
+    def __init__(self, configuration_provider):
+        self._configuration_provider = configuration_provider
+
+    def parse_from_encode_commands(self, encode_commands, release_model):
+        i = 0
+        commands = []
+        tracks = release_model.get_tracks()
+        while i < len(encode_commands):
+            command = MoveAudioFileCommand(self._configuration_provider)
+            command.source = encode_commands[i].destination
+            command.destination = self._get_track_name(encode_commands[i].destination, tracks[i])
+            commands.append(command)
+            i += 1
+        return commands
+
+    def _get_track_name(self, destination, track):
+        directory_path = os.path.dirname(destination)
+        extension = os.path.splitext(destination)[1][1:] # ignore the . that splitext returns
+        return "{0}/{1} - {2}.{3}".format(directory_path, '0' + str(track.track_number), track.title, extension)
 
 class AddTagCommandArgs(object):
     def __init__(self):

@@ -242,6 +242,8 @@ class AddMp3TagCommand(Command):
 class MoveAudioFileCommand(Command):
     def __init__(self, config_provider):
         super(MoveAudioFileCommand, self).__init__(config_provider)
+        self._source = ''
+        self._destination = ''
 
     @property
     def source(self):
