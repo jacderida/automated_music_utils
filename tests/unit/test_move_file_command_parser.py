@@ -2,6 +2,7 @@ import mock
 import unittest
 from amu.commands import EncodeWavToMp3Command
 from amu.models import ReleaseModel
+from amu.parsing import CommandParsingError
 from amu.parsing import MoveAudioFileCommandParser
 
 
@@ -226,3 +227,40 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/10 - Alberto Balsalm.mp3', commands[9].destination)
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/11 - Cow Cud Is A Twin.mp3', commands[10].destination)
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/12 - Next Heap With.mp3', commands[11].destination)
+
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_encode_commands__3_encode_commands_and_release_has_4_tracks__throws_command_parsing_error(self, config_mock, encoder_mock):
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
+        command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
+        command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
+        command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
+        commands.append(command3)
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        with self.assertRaisesRegexp(CommandParsingError, 'The number of encode commands must be the same as the number of tracks on the release.'):
+            parser = MoveAudioFileCommandParser(config_mock)
+            commands = parser.parse_from_encode_commands(commands, release_model)

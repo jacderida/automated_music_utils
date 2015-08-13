@@ -309,6 +309,8 @@ class MoveAudioFileCommandParser(object):
         i = 0
         commands = []
         tracks = release_model.get_tracks()
+        if len(tracks) != len(encode_commands):
+            raise CommandParsingError('The number of encode commands must be the same as the number of tracks on the release.')
         while i < len(encode_commands):
             command = MoveAudioFileCommand(self._configuration_provider)
             command.source = encode_commands[i].destination
