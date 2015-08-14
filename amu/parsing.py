@@ -67,13 +67,17 @@ class CommandParser(object):
         return commands
 
     def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
+        commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
         track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-        commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
+        encode_commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
+        commands.extend(encode_commands)
         if release_model:
             # The first command is a rip cd command, which we don't need.
-            commands.extend(self._get_release_tag_commands(args, commands[1:], destination, release_model))
+            commands.extend(self._get_release_tag_commands(args, encode_commands[1:], destination, release_model))
+            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
+            commands.extend(move_file_parser.parse_from_encode_commands(encode_commands[1:], release_model))
         return commands
 
     def _get_encode_wav_to_mp3_commands(self, args, destination, release_model):

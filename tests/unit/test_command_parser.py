@@ -5,9 +5,10 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import RipCdCommand
-from amu.commands import EncodeWavToMp3Command
 from amu.commands import AddMp3TagCommand
+from amu.commands import EncodeWavToMp3Command
+from amu.commands import MoveAudioFileCommand
+from amu.commands import RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser
 from amu.parsing import CommandParsingError
@@ -1172,6 +1173,70 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, AddMp3TagCommand)]
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/custom/destination', 12)
+        self.assertEqual(12, len(commands))
+
+    @mock.patch('amu.metadata.DiscogsMetadataService')
+    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.rip.RubyRipperCdRipper')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__from_args__encode_cd_to_mp3_command__12_move_audio_file_commands_are_generated(self, config_mock, cd_ripper_mock, encoder_mock, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock, metadata_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'cd',
+            'mp3',
+            '--destination=/some/custom/destination',
+            '--discogs-id=3535'])
+        gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
+        number_of_tracks_mock.return_value = 12
+        encode_command_parser_mock.return_value = [
+            RipCdCommand(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock)
+        ]
+        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'Aphex Twin'
+        release_model.title = '...I Care Because You Do'
+        release_model.label = 'Warp Records'
+        release_model.catno = 'WARPCD30'
+        release_model.format = 'CD, Album'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '1995'
+        release_model.genre = 'Electronic'
+        release_model.style = 'IDM, Techno, Ambient, Experimental, Acid'
+        release_model.add_track_directly(None, 'Acrid Avid Jam Shred', 1, 12, 1, 1)
+        release_model.add_track_directly(None, 'The Waxen Pith', 2, 12, 1, 1)
+        release_model.add_track_directly(None, 'Wax The Nip', 3, 12, 1, 1)
+        release_model.add_track_directly(None, 'Icct Hedral (Edit)', 4, 12, 1, 1)
+        release_model.add_track_directly(None, 'Ventolin (Video Version)', 5, 12, 1, 1)
+        release_model.add_track_directly(None, 'Come On You Slags!', 6, 12, 1, 1)
+        release_model.add_track_directly(None, 'Start As You Mean To Go On', 7, 12, 1, 1)
+        release_model.add_track_directly(None, 'Wet Tip Hen Ax', 8, 12, 1, 1)
+        release_model.add_track_directly(None, 'Mookid', 9, 12, 1, 1)
+        release_model.add_track_directly(None, 'Alberto Balsalm', 10, 12, 1, 1)
+        release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
+        release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
         self.assertEqual(12, len(commands))
 
     @mock.patch('amu.metadata.DiscogsMetadataService')
