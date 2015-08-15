@@ -85,13 +85,17 @@ class CommandParser(object):
             source = args.source
         else:
             source = os.getcwd()
+        commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
-        commands = encode_command_parser.parse_wav_to_mp3(source, destination)
-        track_count = len(commands)
+        encode_commands = encode_command_parser.parse_wav_to_mp3(source, destination)
+        commands.extend(encode_commands)
+        track_count = len(encode_commands)
         if track_count == 0:
             raise CommandParsingError('The source directory has no wavs to encode')
         if release_model:
-            commands.extend(self._get_release_tag_commands(args, commands, destination, release_model))
+            commands.extend(self._get_release_tag_commands(args, encode_commands, destination, release_model))
+            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
+            commands.extend(move_file_parser.parse_from_encode_commands(encode_commands, release_model))
         return commands
 
     def _get_release_tag_commands(self, args, commands, destination, release_model):
