@@ -60,8 +60,10 @@ class ConfigurationProvider(object):
                 config_file.write(re.sub('REPLACE_BASE_DIR', destination_path, line))
         return temp_path
 
-    def get_configured_destination(self):
-        pass
+    def get_destination_with_mask_replaced(self, release_model):
+        config = ConfigParser.ConfigParser()
+        config.read('.amu_config')
+        return config.get('directories', 'base_directory')
 
     def get_directory_mask(self):
         pass

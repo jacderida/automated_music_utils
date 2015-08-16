@@ -7,6 +7,7 @@ from amu import utils
 from amu.config import ConfigurationError
 from amu.config import ConfigurationProvider
 from amu.metadata import MaskReplacer
+from amu.models import ReleaseModel
 
 
 class ConfigurationProviderTest(unittest.TestCase):
@@ -305,3 +306,26 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_encoding_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')
+
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_configured_destination__config_file_has_base_directory__returns_correct_value(self, config_get_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        config_get_mock.return_value = '/path/to/music'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        result = config_provider.get_destination_with_mask_replaced(release_model)
+        self.assertEqual('/path/to/music', result)
