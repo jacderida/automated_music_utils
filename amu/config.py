@@ -63,7 +63,7 @@ class ConfigurationProvider(object):
     def get_destination_with_mask_replaced(self, release_model):
         config = ConfigParser.ConfigParser()
         config.read('.amu_config')
-        config.get('masks', 'default')
+        self._mask_replacer.replace_directory_mask(config.get('masks', 'default'), release_model)
         return config.get('directories', 'base_directory')
 
     def get_directory_mask(self):
