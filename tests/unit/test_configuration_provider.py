@@ -6,11 +6,12 @@ from mock import patch
 from amu import utils
 from amu.config import ConfigurationError
 from amu.config import ConfigurationProvider
+from amu.metadata import MaskReplacer
 
 
 class ConfigurationProviderTest(unittest.TestCase):
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_on_path__returns_ruby_ripper_command(self):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         with patch('amu.config.subprocess.call') as mock:
             mock.return_value = 0
             result = config_provider.get_ruby_ripper_path()
@@ -21,7 +22,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_path_is_set_on_environment_variable__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = \
             '/opt/rubyripper/rubyripper_cli.rb'
@@ -35,7 +36,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__environment_variable_has_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = \
             '/opt/rubyripper/rubyripper_cli.rb'
@@ -48,7 +49,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock, config_get_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         path_exists_mock.return_value = True
@@ -64,7 +65,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -78,7 +79,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__invalid_config_file__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -93,7 +94,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__config_file_specifies_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -105,7 +106,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__returns_correct_path(self, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         result = config_provider.get_ruby_ripper_config_file()
@@ -114,7 +115,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__correct_variable_used(self, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider.get_ruby_ripper_config_file()
@@ -123,7 +124,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__environment_variable_has_incorrect_path__throws_configuration_error(self, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
@@ -144,7 +145,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         file_handle = open_mock.return_value.__enter__.return_value
         file_handle.readlines.return_value = sample_file_contents
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_temp_config_file_for_ripper('/any/path')
         sub_mock.assert_called_with('REPLACE_BASE_DIR', '/any/path', 'basedir=REPLACE_BASE_DIR')
 
@@ -157,7 +158,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_temp_config_file_for_ripper('/any/path')
         open_mock.assert_called_with(utils.AnyStringWith('/tmp'), 'w')
 
@@ -169,7 +170,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         open_mock.return_value = MagicMock(spec=file)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_temp_config_file_for_ripper('/any/path')
         gettempdir_mock.assert_called_once_with()
 
@@ -183,7 +184,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         stored_args_mock = utils.get_mock_with_stored_call_args(open_mock)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_temp_config_file_for_ripper('/any/path')
         temp_path = stored_args_mock.call_args[0][0]
         parsed_uuid = temp_path.split('/tmp/')[1]
@@ -191,13 +192,13 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     def test__get_temp_config_file_for_ripper__empty_destination_path__throws_configuration_exception(self):
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider()
+            config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_temp_config_file_for_ripper('')
 
     def test__get_lame_path__lame_is_on_path__lame_returned(self):
         with patch('amu.config.subprocess.call') as mock:
             mock.return_value = 0
-            config_provider = ConfigurationProvider()
+            config_provider = ConfigurationProvider(MaskReplacer())
             result = config_provider.get_lame_path()
             self.assertEqual('lame', result)
             mock.assert_called_with(['which', 'lame'])
@@ -210,7 +211,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = \
             '/some/path/to/lame'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_lame_path()
         self.assertEqual(
             '/some/path/to/lame', result)
@@ -225,7 +226,7 @@ class ConfigurationProviderTest(unittest.TestCase):
             '/some/incorrect/path/to/lame'
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider()
+            config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_lame_path()
 
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -237,7 +238,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = None
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/some/path/to/lame'
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_lame_path()
         self.assertEqual('/some/path/to/lame', result)
         config_get_mock.assert_called_with('encoder', 'path')
@@ -249,7 +250,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_lame_path__lame_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -268,7 +269,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider()
+            config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_lame_path()
 
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
@@ -284,13 +285,13 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.side_effect = [True, False]
         config_get_mock.return_value = '/some/path/to/lame'
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider()
+            config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_lame_path()
 
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
     def test__get_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock):
         config_get_mock.return_value = '-V0'
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_encoding_setting()
         self.assertEqual('-V0', result)
         config_get_mock.assert_called_with('encoder', 'encoding_setting')
@@ -301,6 +302,6 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_encoding_setting__encoding_setting_is_in_config_file__correct_config_file_is_used(self, expanduser_mock, config_get_mock, config_read_mock):
         expanduser_mock.return_value = '/home/user/'
         config_get_mock.return_value = '-V0'
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_encoding_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import argparse
-import os
 import sys
 from amu.config import ConfigurationProvider
 from amu.encode import LameEncoder
 from amu.metadata import DiscogsMetadataService
+from amu.metadata import MaskReplacer
 from amu.parsing import CommandParser
 from amu.rip import RubyRipperCdRipper
 
@@ -63,7 +63,7 @@ class CliDriver(object):
 
     def main(self):
         """ The main entry point for the CLI driver """
-        config_provider = ConfigurationProvider()
+        config_provider = ConfigurationProvider(MaskReplacer())
         parser = CommandParser(
             config_provider,
             RubyRipperCdRipper(config_provider),

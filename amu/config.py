@@ -12,6 +12,9 @@ class ConfigurationError(Exception):
         self.message = message
 
 class ConfigurationProvider(object):
+    def __init__(self, mask_replacer):
+        self._mask_replacer = mask_replacer
+
     def get_lame_path(self):
         if not subprocess.call(['which', 'lame']):
             return 'lame'
@@ -56,6 +59,9 @@ class ConfigurationProvider(object):
             for line in lines:
                 config_file.write(re.sub('REPLACE_BASE_DIR', destination_path, line))
         return temp_path
+
+    def get_configured_destination(self):
+        pass
 
     def get_directory_mask(self):
         pass
