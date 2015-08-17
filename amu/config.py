@@ -64,6 +64,8 @@ class ConfigurationProvider(object):
         config = ConfigParser.ConfigParser()
         config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
         config.read(config_path)
+        if not os.path.exists(config_path):
+            raise ConfigurationError('The .amu_config file does not exist in your home directory.')
         replaced_mask = self._mask_replacer.replace_directory_mask(config.get('masks', 'default'), release_model)
         base_directory = os.path.expanduser(config.get('directories', 'base_directory'))
         return os.path.join(base_directory, replaced_mask)

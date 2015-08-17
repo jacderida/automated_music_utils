@@ -265,12 +265,12 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
-    def test__get_lame_path__invalid_config_file__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock):
+    def test__get_lame_path__config_file_does_not_exist__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock):
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
-        with self.assertRaises(ConfigurationError):
+        with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_lame_path()
 
@@ -308,8 +308,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_encoding_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
+    @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_base_directory__the_correct_config_value_is_read(self, config_get_mock):
+    def test__get_configured_destination__config_file_has_base_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -326,6 +327,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
+        path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
         config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_destination_with_mask_replaced(release_model)
@@ -333,8 +335,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         self.assertEqual('directories', mask_call[1][0])
         self.assertEqual('base_directory', mask_call[1][1])
 
+    @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_correct_config_value_is_read(self, config_get_mock):
+    def test__get_configured_destination__config_file_has_default_mask__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -351,6 +354,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
+        path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
         config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_destination_with_mask_replaced(release_model)
@@ -358,8 +362,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         self.assertEqual('masks', mask_call[1][0])
         self.assertEqual('default', mask_call[1][1])
 
+    @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_mask_replacer_should_be_used(self, config_get_mock):
+    def test__get_configured_destination__config_file_has_default_mask__the_mask_replacer_should_be_used(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -376,14 +381,16 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
+        path_exists_mock.return_value = True
         mask_replacer_mock = Mock()
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
         config_provider = ConfigurationProvider(mask_replacer_mock)
         config_provider.get_destination_with_mask_replaced(release_model)
         mask_replacer_mock.replace_directory_mask.assert_called_once_with('directory_mask', release_model)
 
+    @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_correct_destination_should_be_returned(self, config_get_mock):
+    def test__get_configured_destination__config_file_has_default_mask__the_correct_destination_should_be_returned(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -400,15 +407,17 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
+        path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
         config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_destination_with_mask_replaced(release_model)
         self.assertEqual('/path/to/music/directory_mask', result)
 
+    @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock):
+    def test__get_configured_destination__config_file_has_default_mask__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -426,14 +435,16 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
         config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_destination_with_mask_replaced(release_model)
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
+    @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__base_directory_has_user_home_reference__the_base_directory_should_be_expanded(self, config_get_mock, expanduser_mock):
+    def test__get_configured_destination__base_directory_has_user_home_reference__the_base_directory_should_be_expanded(self, config_get_mock, expanduser_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -451,7 +462,33 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         expanduser_mock.side_effect = ['/home/user/', '/home/user/Music']
+        path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '~/Music']
         config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_destination_with_mask_replaced(release_model)
         self.assertEqual('/home/user/Music/directory_mask', result)
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    def test__get_configured_destination__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = False
+        with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_destination_with_mask_replaced(release_model)
