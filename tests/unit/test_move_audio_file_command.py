@@ -64,7 +64,7 @@ class MoveAudioFileCommandTest(unittest.TestCase):
         command = MoveAudioFileCommand(config_mock)
         command.source = '/some/mp3/source/01 - Track 1.wav'
         command.destination = '/some/other/mp3/destination/01 - Track 1.mp3'
-        with self.assertRaisesRegexp(CommandValidationError, 'The move audio file command must operate on files of the same type.'):
+        with self.assertRaisesRegexp(CommandValidationError, 'The move audio file command must operate on files of the same type. Source is wav and destination is mp3.'):
             command.validate()
 
     @mock.patch('os.path.isdir')

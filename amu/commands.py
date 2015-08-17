@@ -270,14 +270,16 @@ class MoveAudioFileCommand(Command):
             raise CommandValidationError('The source for the move audio file command cannot be a directory.')
         if not self._destination:
             raise CommandValidationError('A destination must be supplied for the move audio file command.')
-        source_extension = os.path.splitext(self._source)
-        destination_extension = os.path.splitext(self._destination)
+        source_extension = os.path.splitext(self._source)[1][1:]
+        destination_extension = os.path.splitext(self._destination)[1][1:]
         if source_extension != destination_extension:
-            raise CommandValidationError('The move audio file command must operate on files of the same type.')
-
+            raise CommandValidationError(
+                'The move audio file command must operate on files of the same type. Source is {0} and destination is {1}.'.format(
+                    source_extension, destination_extension))
 
     def execute(self):
+        print "[move] Moving file {0} to {1}".format(self.source, self.destination)
         directory = os.path.dirname(self._destination)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        os.rename(self._source, self._destination)
+        os.rename(self.source, self.destination)
