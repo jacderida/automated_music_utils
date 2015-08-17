@@ -45,7 +45,7 @@ class CommandParser(object):
         if args.discogs_id:
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
             if not args.destination:
-                destination = self._mask_replacer.replace_directory_mask(self._configuration_provider.get_directory_mask(), release_model)
+                destination = self._configuration_provider.get_destination_with_mask_replaced(release_model)
         return self._get_encode_commands(args, destination, release_model)
 
     def _get_encode_commands(self, args, destination, release_model):

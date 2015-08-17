@@ -64,9 +64,6 @@ class ConfigurationProvider(object):
         base_directory = os.path.expanduser(config.get('directories', 'base_directory'))
         return os.path.join(base_directory, replaced_mask)
 
-    def get_directory_mask(self):
-        pass
-
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):
             raise ConfigurationError(
