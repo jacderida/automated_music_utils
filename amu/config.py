@@ -25,7 +25,7 @@ class ConfigurationProvider(object):
         return self._get_verified_path_from_config_file('encoder', 'lame')
 
     def get_encoding_setting(self):
-        config = ConfigParser.ConfigParser()
+        config = self._get_config_parser()
         config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
         config.read(config_path)
         return config.get('encoder', 'encoding_setting')
