@@ -61,11 +61,7 @@ class ConfigurationProvider(object):
         return temp_path
 
     def get_destination_with_mask_replaced(self, release_model):
-        config = ConfigParser.ConfigParser()
-        config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
-        config.read(config_path)
-        if not os.path.exists(config_path):
-            raise ConfigurationError('The .amu_config file does not exist in your home directory.')
+        config = self._get_config_parser()
         replaced_mask = self._mask_replacer.replace_directory_mask(config.get('masks', 'default'), release_model)
         base_directory = os.path.expanduser(config.get('directories', 'base_directory'))
         return os.path.join(base_directory, replaced_mask)
@@ -82,12 +78,7 @@ class ConfigurationProvider(object):
         return path_from_env_variable
 
     def _get_verified_path_from_config_file(self, config_section, program):
-        config = ConfigParser.ConfigParser()
-        config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
-        if not os.path.exists(config_path):
-            raise ConfigurationError(
-                'The .amu_config file does not exist in your home directory.')
-        config.read(config_path)
+        config = self._get_config_parser()
         path_from_config = config.get(config_section, 'path')
         if not os.path.exists(path_from_config):
             raise ConfigurationError(
@@ -95,3 +86,12 @@ class ConfigurationProvider(object):
                 file is incorrect. Please provide a valid path for
                 {0}.""".format(program))
         return path_from_config
+
+    def _get_config_parser(self):
+        config = ConfigParser.ConfigParser()
+        config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
+        if not os.path.exists(config_path):
+            raise ConfigurationError(
+                'The .amu_config file does not exist in your home directory.')
+        config.read(config_path)
+        return config
