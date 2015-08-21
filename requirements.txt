@@ -7,3 +7,4 @@ xunitmerge==1.0.3
 rednose==0.4.1
 discogs_client
 pytagger
+mutagen
