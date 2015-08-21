@@ -11,3 +11,10 @@ else
     pip install -r requirements.txt --proxy=$HTTP_PROXY
 fi
 export PYTHONPATH=$present_path # For use with pylint.
+
+if [[ ! -e "tests/integration/data/song.mp3" ]]; then
+    mkdir tests/integration/data
+    cd tests/integration/data
+    curl -O http://jacderida-misc.s3.amazonaws.com/song.mp3
+    cd $present_path
+fi
