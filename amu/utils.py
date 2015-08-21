@@ -6,6 +6,7 @@ import subprocess
 from copy import deepcopy
 from tagger import ID3v2
 from mock import DEFAULT, Mock
+from mutagen.id3 import ID3
 
 
 class AnyStringWith(str):
@@ -48,20 +49,19 @@ def get_id3_tag_data(path):
     Until I figure out how to use it properly, I'm just going to leave this as a known issue.
     """
     tag_data = {}
-    id3 = ID3v2(path)
-    for frame in id3.frames:
-        if frame.fid == "TPE1":
-            tag_data["artist"] = frame.strings[0].replace('\x00', '')
-        elif frame.fid == "TIT2":
-            tag_data["title"] = frame.strings[0].replace('\x00', '')
-        elif frame.fid == "TALB":
-            tag_data["album"] = frame.strings[0].replace('\x00', '')
-        elif frame.fid == "TYER":
-            tag_data["year"] = frame.strings[0].replace('\x00', '')
-        elif frame.fid == "TRCK":
-            tag_data["trackno"] = frame.strings[0].replace('\x00', '')
-        elif frame.fid == "TCON":
-            tag_data["genre"] = frame.strings[0].replace('\x00', '')
+    tag = ID3(path)
+    if tag.has_key('TPE1'):
+        tag_data['artist'] = tag.getall('TPE1')[0]
+    if tag.has_key('TIT2'):
+        tag_data['title'] = tag.getall('TIT2')[0]
+    if tag.has_key('TALB'):
+        tag_data['album'] = tag.getall('TALB')[0]
+    if tag.has_key('TDRC'):
+        tag_data['year'] = tag.getall('TDRC')[0]
+    if tag.has_key('TRCK'):
+        tag_data['trackno'] = tag.getall('TRCK')[0]
+    if tag.has_key('TCON'):
+        tag_data['genre'] = tag.getall('TCON')[0]
     return tag_data
 
 def get_track_name(track_number, extension):
