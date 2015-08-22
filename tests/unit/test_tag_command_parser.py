@@ -1921,6 +1921,31 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(4, commands[3].track_total)
 
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__disc_numbers_are_specified_correctly(self, config_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
+        self.assertEqual(1, commands[0].disc_number)
+        self.assertEqual(1, commands[1].disc_number)
+        self.assertEqual(1, commands[2].disc_number)
+        self.assertEqual(1, commands[3].disc_number)
+
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__parse_from_release_model_with_empty_source__release_has_4_tracks__year_is_specified_correctly(self, config_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
