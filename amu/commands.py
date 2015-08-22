@@ -1,5 +1,6 @@
 import os
-from tagger import ID3v2
+from mutagen import File
+from mutagen.id3 import ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TRCK
 from amu.encode import LameEncoder
 from amu.rip import RubyRipperCdRipper
 
@@ -192,52 +193,68 @@ class AddMp3TagCommand(Command):
     def execute(self):
         print "[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.".format(
             self.source, self.artist, self.album, self.title, self.year, self.genre)
-        tag = ID3v2(self._source)
+        tag = self._get_tag()
         self._add_artist_frame(tag)
         self._add_title_frame(tag)
         self._add_album_frame(tag)
         self._add_year_frame(tag)
         self._add_track_number_frame(tag)
         self._add_genre_frame(tag)
-        tag.commit()
+        tag.save()
+
+    def _get_tag(self):
+        """
+        This exists to handle mp3s that have no tags. It's horrendous, but
+        I couldn't see a way to do a conversion between the EasyID3 type and
+        a normal ID3 type.
+
+        The steps are:
+            * Attempt to load ID3 tag;
+            * That fails, so get an EasyID3 tag (easy=True);
+            * Add a blank tag;
+            * Add a placeholder artist;
+            * Save the file;
+            * Reload as an ID3 object;
+
+        If you try and save without the placeholder, it doesn't write any tags (which makes sense),
+        hence the need for the placeholder.
+        """
+        try:
+            tag = ID3(self._source)
+            return tag
+        except ID3NoHeaderError:
+            tag = File(self._source, easy=True)
+            tag.add_tags()
+            tag['artist'] = 'placeholder'
+            tag.save()
+            tag = ID3(self._source)
+            return tag
 
     def _add_artist_frame(self, tag):
-        artist_frame = tag.new_frame("TPE1")
-        artist_frame.set_text(self._artist)
-        tag.frames.append(artist_frame)
+        tag.add(TPE1(encoding=3, text=self._artist))
 
     def _add_title_frame(self, tag):
-        title_frame = tag.new_frame("TIT2")
-        title_frame.set_text(self._title)
-        tag.frames.append(title_frame)
+        tag.add(TIT2(encoding=3, text=self._title))
 
     def _add_album_frame(self, tag):
-        album_frame = tag.new_frame("TALB")
-        album_frame.set_text(self._album)
-        tag.frames.append(album_frame)
+        tag.add(TALB(encoding=3, text=self._album))
 
     def _add_year_frame(self, tag):
         if self._year:
-            year_frame = tag.new_frame("TYER")
-            year_frame.set_text(self._year)
-            tag.frames.append(year_frame)
+            tag.add(TDRC(encoding=3, text=self._year))
 
     def _add_track_number_frame(self, tag):
-        track_number_frame = tag.new_frame("TRCK")
         track_number_string = str(self._track_number)
         track_total_string = str(self._track_total)
         if self._track_number < 10:
             track_number_string = "0{0}".format(self._track_number)
         if self._track_total < 10:
             track_total_string = "0{0}".format(self._track_total)
-        track_number_frame.set_text("{0}/{1}".format(track_number_string, track_total_string))
-        tag.frames.append(track_number_frame)
+        tag.add(TRCK(encoding=3, text='{0}/{1}'.format(track_number_string, track_total_string)))
 
     def _add_genre_frame(self, tag):
         if self._genre:
-            genre_frame = tag.new_frame("TCON")
-            genre_frame.set_text(self._genre)
-            tag.frames.append(genre_frame)
+            tag.add(TCON(encoding=3, text=self._genre))
 
 class MoveAudioFileCommand(Command):
     def __init__(self, config_provider):

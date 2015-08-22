@@ -4,7 +4,7 @@ import os
 import shutil
 import subprocess
 from copy import deepcopy
-from tagger import ID3v2
+from mutagen.id3 import ID3NoHeaderError
 from mock import DEFAULT, Mock
 from mutagen.id3 import ID3
 
@@ -44,12 +44,14 @@ def get_id3_tag_data(path):
     """
     Gets the ID3 tag from an MP3.
 
-    For some unknown reason, the way I'm using the pytagger library causes the null character (x00),
-    which is then converted to a string, to be written out to the value of the frame for the tag.
-    Until I figure out how to use it properly, I'm just going to leave this as a known issue.
+    It's possible for this code to deal with MP3s that have no tags, which is the reason
+    for the exception handling.
     """
     tag_data = {}
-    tag = ID3(path)
+    try:
+        tag = ID3(path)
+    except ID3NoHeaderError:
+        return tag_data
     if tag.has_key('TPE1'):
         tag_data['artist'] = tag.getall('TPE1')[0]
     if tag.has_key('TIT2'):
