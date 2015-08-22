@@ -284,6 +284,7 @@ class TagCommandParser(object):
         command_args.title = track.title
         command_args.year = int(release_model.year)
         command_args.genre = release_model.genre
+        command_args.comment = '{0} ({1})'.format(release_model.label, release_model.catno)
         command_args.track_number = track.track_number
         command_args.track_total = track.track_total
         return self._get_add_mp3_command(source, command_args)
