@@ -299,6 +299,7 @@ class TagCommandParser(object):
         command.genre = command_args.genre
         command.comment = command_args.comment
         self._set_track_information(command, command_args)
+        self._set_disc_information(command, command_args)
         return command
 
     def _set_track_information(self, command, command_args):
@@ -310,6 +311,10 @@ class TagCommandParser(object):
                 raise CommandParsingError('If a track number has been supplied, a track total must also be supplied.')
             command.track_number = command_args.track_number
             command.track_total = command_args.track_total
+
+    def _set_disc_information(self, command, command_args):
+        if command_args.disc_number == 0:
+            command.disc_number = 1
 
 class MoveAudioFileCommandParser(object):
     def __init__(self, configuration_provider):

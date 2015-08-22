@@ -110,6 +110,8 @@ class AddMp3TagCommand(Command):
         self._comment = ''
         self._track_number = 0
         self._track_total = 0
+        self._disc_number = 0
+        self._disc_total = 0
 
     @property
     def source(self):
@@ -166,6 +168,22 @@ class AddMp3TagCommand(Command):
     @track_total.setter
     def track_total(self, value):
         self._track_total = value
+
+    @property
+    def disc_number(self):
+        return self._disc_number
+
+    @disc_number.setter
+    def disc_number(self, value):
+        self._disc_number = value
+
+    @property
+    def disc_total(self):
+        return self._disc_total
+
+    @disc_total.setter
+    def disc_total(self, value):
+        self._disc_total = value
 
     @property
     def genre(self):
