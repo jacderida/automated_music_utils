@@ -293,6 +293,8 @@ class TagCommandParser(object):
         command_args.comment = '{0} ({1})'.format(release_model.label, release_model.catno)
         command_args.track_number = track.track_number
         command_args.track_total = track.track_total
+        command_args.disc_number = track.disc_number
+        command_args.disc_total = track.disc_total
         return self._get_add_mp3_command(source, command_args)
 
     def _get_add_mp3_command(self, source, command_args):
