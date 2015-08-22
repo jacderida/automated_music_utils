@@ -345,6 +345,7 @@ class AddTagCommandArgs(object):
         self._album = ''
         self._year = 0
         self._genre = ''
+        self._comment = ''
         self._track_number = 0
         self._track_total = 0
 
@@ -412,6 +413,14 @@ class AddTagCommandArgs(object):
     def genre(self, value):
         self._genre = value
 
+    @property
+    def comment(self):
+        return self._comment
+
+    @comment.setter
+    def comment(self, value):
+        self._comment = value
+
     @staticmethod
     def from_args(args):
         command_args = AddTagCommandArgs()
@@ -420,6 +429,7 @@ class AddTagCommandArgs(object):
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
         command_args.genre = AddTagCommandArgs._get_value_from_args(args.genre)
+        command_args.comment = AddTagCommandArgs._get_value_from_args(args.comment)
         command_args.year = AddTagCommandArgs._get_numeric_value_from_args(args.year)
         command_args.track_number = AddTagCommandArgs._get_numeric_value_from_args(args.track_number)
         command_args.track_total = AddTagCommandArgs._get_numeric_value_from_args(args.track_total)
