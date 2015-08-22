@@ -247,7 +247,10 @@ class TagCommandParser(object):
     def _get_directory_command(self, command_args):
         commands = []
         for root, directories, files in os.walk(command_args.source):
-            if len(directories) > 0:
+            directory_len = len(directories)
+            if directory_len > 0:
+                disc_number = 1
+                disc_total = directory_len
                 for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
                     mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith(".mp3")]
@@ -255,11 +258,14 @@ class TagCommandParser(object):
                     track_number = 1
                     for source_file in mp3_files:
                         full_source_path = os.path.join(full_source_directory, source_file)
+                        command_args.disc_number = disc_number
+                        command_args.disc_total = disc_total
                         command = self._get_add_mp3_command(full_source_path, command_args)
                         command.track_number = track_number
                         command.track_total = track_total
                         commands.append(command)
                         track_number += 1
+                    disc_number += 1
             else:
                 mp3_files = [f for f in sorted(files) if f.endswith(".mp3")]
                 track_total = len(mp3_files)
