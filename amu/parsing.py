@@ -296,6 +296,7 @@ class TagCommandParser(object):
         command.title = command_args.title
         command.year = command_args.year
         command.genre = command_args.genre
+        command.comment = command_args.comment
         self._set_track_information(command, command_args)
         return command
 
