@@ -284,6 +284,10 @@ class AddMp3TagCommand(Command):
     def _add_disc_number_frame(self, tag):
         disc_number_string = str(self._disc_number)
         disc_total_string = str(self._disc_total)
+        if self._disc_number < 10:
+            disc_number_string = "0{0}".format(self._disc_number)
+        if self._disc_total < 10:
+            disc_total_string = "0{0}".format(self._disc_total)
         tag.add(TPOS(encoding=3, text='{0}/{1}'.format(disc_number_string, disc_total_string)))
 
     def _add_genre_frame(self, tag):
