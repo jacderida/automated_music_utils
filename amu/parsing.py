@@ -315,6 +315,7 @@ class TagCommandParser(object):
     def _set_disc_information(self, command, command_args):
         if command_args.disc_number == 0:
             command.disc_number = 1
+            command.disc_total = 1
 
 class MoveAudioFileCommandParser(object):
     def __init__(self, configuration_provider):
