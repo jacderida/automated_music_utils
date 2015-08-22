@@ -106,6 +106,15 @@ class AddMp3TagCommandTest(unittest.TestCase):
         self.assertFalse(tag_data.has_key('genre'))
 
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__execute__set_the_comment_on_the_id3_tag__tag_should_have_correct_comment(self, config_mock):
+        command = AddMp3TagCommand(config_mock)
+        command.source = 'tests/integration/data/test_data.mp3'
+        command.comment = 'Nightwind Records (NW001)'
+        command.execute()
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['comment'], u'Nightwind Records (NW001)')
+
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__execute__set_all_fields_on_the_id3_tag__tag_should_have_all_fields_set(self, config_mock):
         command = AddMp3TagCommand(config_mock)
         command.source = 'tests/integration/data/test_data.mp3'
@@ -116,6 +125,7 @@ class AddMp3TagCommandTest(unittest.TestCase):
         command.track_number = 5
         command.track_total = 6
         command.genre = 'Techno'
+        command.comment = 'Nightwind Records (NW001)'
         command.execute()
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['artist'], u'Aphex Twin')
@@ -124,3 +134,4 @@ class AddMp3TagCommandTest(unittest.TestCase):
         self.assertEqual(tag_data['year'], u'2015')
         self.assertEqual(tag_data['trackno'], u'05/06')
         self.assertEqual(tag_data['genre'], u'Techno')
+        self.assertEqual(tag_data['comment'], u'Nightwind Records (NW001)')

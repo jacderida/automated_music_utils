@@ -1,6 +1,6 @@
 import os
 from mutagen import File
-from mutagen.id3 import ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TRCK
+from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TRCK
 from amu.encode import LameEncoder
 from amu.rip import RubyRipperCdRipper
 
@@ -107,6 +107,7 @@ class AddMp3TagCommand(Command):
         self._album = ''
         self._year = ''
         self._genre = ''
+        self._comment = ''
         self._track_number = 0
         self._track_total = 0
 
@@ -174,6 +175,14 @@ class AddMp3TagCommand(Command):
     def genre(self, value):
         self._genre = value
 
+    @property
+    def comment(self):
+        return self._comment
+
+    @comment.setter
+    def comment(self, value):
+        self._comment = value
+
     def validate(self):
         if not os.path.exists(self._source):
             raise CommandValidationError('The specified mp3 source does not exist.')
@@ -200,6 +209,7 @@ class AddMp3TagCommand(Command):
         self._add_year_frame(tag)
         self._add_track_number_frame(tag)
         self._add_genre_frame(tag)
+        self._add_comment_frame(tag)
         tag.save()
 
     def _get_tag(self):
@@ -209,12 +219,12 @@ class AddMp3TagCommand(Command):
         a normal ID3 type.
 
         The steps are:
-            * Attempt to load ID3 tag;
-            * That fails, so get an EasyID3 tag (easy=True);
-            * Add a blank tag;
-            * Add a placeholder artist;
-            * Save the file;
-            * Reload as an ID3 object;
+            * Attempt to load ID3 tag
+            * Get an EasyID3 tag (easy=True)
+            * Add a blank tag
+            * Add a placeholder artist
+            * Save the file
+            * Reload as an ID3 object
 
         If you try and save without the placeholder, it doesn't write any tags (which makes sense),
         hence the need for the placeholder.
@@ -255,6 +265,10 @@ class AddMp3TagCommand(Command):
     def _add_genre_frame(self, tag):
         if self._genre:
             tag.add(TCON(encoding=3, text=self._genre))
+
+    def _add_comment_frame(self, tag):
+        if self._comment:
+            tag.add(COMM(encoding=3, lang='eng', desc='comm', text=self._comment))
 
 class MoveAudioFileCommand(Command):
     def __init__(self, config_provider):

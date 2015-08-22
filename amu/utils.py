@@ -64,6 +64,8 @@ def get_id3_tag_data(path):
         tag_data['trackno'] = tag.getall('TRCK')[0]
     if tag.has_key('TCON'):
         tag_data['genre'] = tag.getall('TCON')[0]
+    if tag.has_key('COMM:comm:eng'):
+        tag_data['comment'] = tag.getall('COMM')[0]
     return tag_data
 
 def get_track_name(track_number, extension):
