@@ -1,6 +1,6 @@
 import os
 from mutagen import File
-from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TRCK
+from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPOS, TRCK
 from amu.encode import LameEncoder
 from amu.rip import RubyRipperCdRipper
 
@@ -226,6 +226,7 @@ class AddMp3TagCommand(Command):
         self._add_album_frame(tag)
         self._add_year_frame(tag)
         self._add_track_number_frame(tag)
+        self._add_disc_number_frame(tag)
         self._add_genre_frame(tag)
         self._add_comment_frame(tag)
         tag.save()
@@ -279,6 +280,11 @@ class AddMp3TagCommand(Command):
         if self._track_total < 10:
             track_total_string = "0{0}".format(self._track_total)
         tag.add(TRCK(encoding=3, text='{0}/{1}'.format(track_number_string, track_total_string)))
+
+    def _add_disc_number_frame(self, tag):
+        disc_number_string = str(self._disc_number)
+        disc_total_string = str(self._disc_total)
+        tag.add(TPOS(encoding=3, text='{0}/{1}'.format(disc_number_string, disc_total_string)))
 
     def _add_genre_frame(self, tag):
         if self._genre:

@@ -62,6 +62,8 @@ def get_id3_tag_data(path):
         tag_data['year'] = tag.getall('TDRC')[0]
     if tag.has_key('TRCK'):
         tag_data['trackno'] = tag.getall('TRCK')[0]
+    if tag.has_key('TPOS'):
+        tag_data['discno'] = tag.getall('TPOS')[0]
     if tag.has_key('TCON'):
         tag_data['genre'] = tag.getall('TCON')[0]
     if tag.has_key('COMM:comm:eng'):
