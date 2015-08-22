@@ -224,9 +224,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.title = 'Vordhosbn'
         command_args.track_number = 2
         command_args.track_total = 10
+        command_args.disc_number = 1
+        command_args.disc_total = 1
         parser = TagCommandParser(config_mock)
         commands = parser.parse_add_mp3_tag_command(command_args)
-        self.assertEqual(2, commands[0].track_number)
+        self.assertEqual(1, commands[0].disc_number)
 
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
