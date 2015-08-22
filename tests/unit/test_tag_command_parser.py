@@ -883,6 +883,39 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__disc_total_is_set_on_tracks(self, config_mock, walk_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Legowelt'
+        release_model.title = 'Pimpshifter'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
+        ]
+
+        parser = TagCommandParser(config_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual(1, commands[0].disc_total)
+        self.assertEqual(1, commands[1].disc_total)
+        self.assertEqual(1, commands[2].disc_total)
+        self.assertEqual(1, commands[3].disc_total)
+        self.assertEqual(1, commands[4].disc_total)
+        self.assertEqual(1, commands[5].disc_total)
+
+    @mock.patch('os.walk')
+    @mock.patch('amu.config.ConfigurationProvider')
     def test__parse_from_release_model__release_has_single_artist_and_6_tracks__source_is_set_correctly(self, config_mock, walk_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Legowelt'
