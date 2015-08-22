@@ -454,6 +454,7 @@ class AddTagCommandArgs(object):
         command_args.track_number = AddTagCommandArgs._get_numeric_value_from_args(args.track_number)
         command_args.track_total = AddTagCommandArgs._get_numeric_value_from_args(args.track_total)
         command_args.disc_number = AddTagCommandArgs._get_numeric_value_from_args(args.disc_number)
+        command_args.disc_total = AddTagCommandArgs._get_numeric_value_from_args(args.disc_total)
         return command_args
 
     @staticmethod
