@@ -433,3 +433,23 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_args(args)
         self.assertEqual('', command_args.comment)
+
+    def test__from_args__when_the_comment_has_a_space_in_the_name__the_comment_should_be_specified_without_surrounding_quotes(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+            '--artist=Legowelt',
+            '--album=Sturmvogel',
+            '--title=Pimpshifter',
+            '--year=2000',
+            '--genre=Electronic',
+            '--track-number=1',
+            '--track-total=6',
+            '--comment="Warp Records (WARPCD92)"'
+        ])
+        command_args = AddTagCommandArgs.from_args(args)
+        self.assertEqual('Warp Records (WARPCD92)', command_args.comment)
