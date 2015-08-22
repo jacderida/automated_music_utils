@@ -317,6 +317,8 @@ class TagCommandParser(object):
             command.disc_number = 1
             command.disc_total = 1
         else:
+            if command_args.disc_total == 0:
+                raise CommandParsingError('If a disc number has been supplied, a disc total must also be supplied.')
             command.disc_number = command_args.disc_number
             command.disc_total = command_args.disc_total
 

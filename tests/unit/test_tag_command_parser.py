@@ -247,6 +247,22 @@ class TagCommandParserTest(unittest.TestCase):
         commands = parser.parse_add_mp3_tag_command(command_args)
         self.assertEqual(1, commands[0].disc_total)
 
+    @mock.patch('os.path.isfile')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_add_mp3_tag_command__source_is_file_and_disc_number_is_specified_but_disc_total_is_not__command_parsing_error_is_raised(self, config_mock, isfile_mock):
+        isfile_mock.return_value = True
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/song.mp3'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        command_args.title = 'Vordhosbn'
+        command_args.track_number = 2
+        command_args.track_total = 5
+        command_args.disc_number = 1
+        parser = TagCommandParser(config_mock)
+        with self.assertRaisesRegexp(CommandParsingError, 'If a disc number has been supplied, a disc total must also be supplied.'):
+            parser.parse_add_mp3_tag_command(command_args)
+
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
