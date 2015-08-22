@@ -55,6 +55,8 @@ class CliDriver(object):
         tag_parser.add_argument('--genre', help='The year to use for the tag.')
         tag_parser.add_argument('--track-number', help='The track number to use for the tag.')
         tag_parser.add_argument('--track-total', help='The track total to use for the tag.')
+        tag_parser.add_argument('--disc-number', help='The disc number to use for the tag.')
+        tag_parser.add_argument('--disc-total', help='The disc total to use for the tag.')
         tag_parser.add_argument('--comment', help='The comment for the tag.')
         return parser
 
