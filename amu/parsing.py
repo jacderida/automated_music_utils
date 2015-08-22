@@ -345,11 +345,13 @@ class AddTagCommandArgs(object):
         self._artist = ''
         self._title = ''
         self._album = ''
-        self._year = 0
+        self._year = ''
         self._genre = ''
         self._comment = ''
         self._track_number = 0
         self._track_total = 0
+        self._disc_number = 0
+        self._disc_total = 0
 
     @property
     def source(self):
@@ -408,6 +410,22 @@ class AddTagCommandArgs(object):
         self._track_total = value
 
     @property
+    def disc_number(self):
+        return self._disc_number
+
+    @disc_number.setter
+    def disc_number(self, value):
+        self._disc_number = value
+
+    @property
+    def disc_total(self):
+        return self._disc_total
+
+    @disc_total.setter
+    def disc_total(self, value):
+        self._disc_total = value
+
+    @property
     def genre(self):
         return self._genre
 
@@ -435,6 +453,7 @@ class AddTagCommandArgs(object):
         command_args.year = AddTagCommandArgs._get_numeric_value_from_args(args.year)
         command_args.track_number = AddTagCommandArgs._get_numeric_value_from_args(args.track_number)
         command_args.track_total = AddTagCommandArgs._get_numeric_value_from_args(args.track_total)
+        command_args.disc_number = AddTagCommandArgs._get_numeric_value_from_args(args.disc_number)
         return command_args
 
     @staticmethod
