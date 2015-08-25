@@ -17,9 +17,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(release.title, 'Selected Ambient Works 85-92')
         self.assertEqual(release.label, 'Apollo')
         self.assertEqual(release.catno, 'AMB3922RM')
-        self.assertEqual(release.format, 'CD, Album, Remastered, Reissue')
+        self.assertEqual(release.format, 'CD, Album, Reissue, Remastered')
         self.assertEqual(release.country, 'Belgium')
-        self.assertEqual(release.year, '1992')
+        self.assertEqual(release.original_year, '1992')
+        self.assertEqual(release.year, '2008')
         self.assertEqual(release.genre, 'Electronic')
 
     def test__from_discogs_release__release_has_single_disc__the_track_number_and_totals_should_be_assigned_correctly(self):
@@ -271,12 +272,13 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(12, tracks[23].track_total)
         self.assertEqual('Untitled', tracks[23].title)
 
-    def test__from_discogs_release__release_is_a_reissue__release_year_from_master_is_used(self):
+    def test__from_discogs_release__release_is_a_reissue__original_year_and_release_year_are_assigned_correctly(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(1303737)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.year, '1992')
+        self.assertEqual(release.original_year, '1992')
+        self.assertEqual(release.year, '2008')
 
     def test__from_discogs_release__release_artist_is_anv__anv_is_resolved(self):
         client = discogs_client.Client('amu/0.1')
@@ -299,12 +301,13 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.artist, 'Aphex Twin / Gavin Bryars')
 
-    def test__from_discogs_release__release_has_no_master__the_date_for_the_current_release_is_used(self):
+    def test__from_discogs_release__release_has_no_master__original_year_and_release_year_are_assigned_correctly(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(202433)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.year, '1995')
+        self.assertEqual(release.original_year, '1995')
 
     def test__from_discogs_release__release_has_multiple_genres__the_full_list_of_genres_are_used(self):
         client = discogs_client.Client('amu/0.1')
@@ -388,7 +391,9 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(480352)
         discogs_release.refresh()
-        tracks = ReleaseModel.from_discogs_release(discogs_release).get_tracks()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        tracks = release_model.get_tracks()
+        self.assertEqual('Various', release_model.artist)
         self.assertEqual('Franck Sarrio', tracks[0].artist)
         self.assertEqual('Subliminal Criminal', tracks[1].artist)
         self.assertEqual('AU', tracks[2].artist)

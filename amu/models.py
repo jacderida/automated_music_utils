@@ -86,6 +86,7 @@ class ReleaseModel(object):
         self._format_quantity = 0
         self._country = ''
         self._year = ''
+        self._original_year = ''
         self._genre = ''
         self._style = ''
         self._tracks = []
@@ -104,23 +105,23 @@ class ReleaseModel(object):
         release_model.artist = ArtistHelper.get_artists(release.data["artists"])
         release_model.title = release.title
         release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
-        release_model.year = ReleaseModel._get_date_from_discogs_model(release)
         release_model.catno = ReleaseModel._get_cat_numbers_from_discogs_model(release)
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
         release_model.format_quantity = ReleaseModel._get_format_quantity_from_discogs_model(release.formats)
         release_model.country = release.country
         release_model.genre = ReleaseModel._get_genre_from_discogs_model(release.genres)
+        ReleaseModel._get_date_from_discogs_model(release_model, release)
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
 
     @staticmethod
-    def _get_date_from_discogs_model(release):
-        date = 'Unknown'
+    def _get_date_from_discogs_model(release_model, release):
+        release_model.year = 'Unknown'
+        if release.year != 0:
+            release_model.year = str(release.year)
+            release_model.original_year = str(release.year)
         if release.master != None:
-            date = str(release.master.main_release.year)
-        elif release.year != 0:
-            date = str(release.year)
-        return date
+            release_model.original_year = str(release.master.main_release.year)
 
     @staticmethod
     def get_artists_from_discogs_model(artist_data):
@@ -328,6 +329,14 @@ class ReleaseModel(object):
     @year.setter
     def year(self, value):
         self._year = value
+
+    @property
+    def original_year(self):
+        return self._original_year
+
+    @original_year.setter
+    def original_year(self, value):
+        self._original_year = value
 
     @property
     def genre(self):
