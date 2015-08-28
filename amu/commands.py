@@ -218,7 +218,7 @@ class AddMp3TagCommand(Command):
             raise CommandValidationError('The track number cannot be greater than the track total.')
 
     def execute(self):
-        print "[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.".format(
+        print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(
             self.source, self.artist, self.album, self.title, self.year, self.genre)
         tag = self._get_tag()
         self._add_artist_frame(tag)
@@ -337,7 +337,7 @@ class MoveAudioFileCommand(Command):
                     source_extension, destination_extension))
 
     def execute(self):
-        print "[move] Moving file {0} to {1}".format(self.source, self.destination)
+        print u'[move] Moving file {0} to {1}'.format(self.source, self.destination)
         directory = os.path.dirname(self._destination)
         if not os.path.exists(directory):
             os.makedirs(directory)

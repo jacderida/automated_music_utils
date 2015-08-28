@@ -356,7 +356,7 @@ class MoveAudioFileCommandParser(object):
             track_number = '0' + str(track.track_number)
         else:
             track_number = track.track_number
-        return "{0}/{1} - {2}.{3}".format(directory_path, track_number, track.title, extension)
+        return u'{0}/{1} - {2}.{3}'.format(directory_path, track_number, track.title, extension)
 
 class AddTagCommandArgs(object):
     def __init__(self):
