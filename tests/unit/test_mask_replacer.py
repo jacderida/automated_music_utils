@@ -1,4 +1,5 @@
 import unittest
+from amu.metadata import InvalidMaskError
 from amu.metadata import MaskReplacer
 from amu.models import ReleaseModel
 
@@ -225,3 +226,24 @@ class MaskReplacerTest(unittest.TestCase):
         replaced_directory = mask_replacer.replace_directory_mask('/music/%g/%s/%l/[%c] %a - %A (%C, %y)', release_model)
         self.assertEqual('/music/Electronic/Electro/Bunker Records/[BUNKER 3002] Legowelt - Pimpshifter (Netherlands, 2000)', replaced_directory)
 
+    def test__replace_directory_mask__invalid_mask_specified__raises_invalid_mask_error(self):
+        release_model = ReleaseModel()
+        release_model.artist = 'Legowelt'
+        release_model.title = 'Pimpshifter'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+
+        with self.assertRaisesRegexp(InvalidMaskError, 'The mask x is not in the list of valid masks.'):
+            mask_replacer = MaskReplacer()
+            replaced_directory = mask_replacer.replace_directory_mask('/music/%g/%s/%l/[%c] %a - %A (%C, %x)', release_model)

@@ -11,6 +11,11 @@ class ReleaseNotFoundError(Exception):
         super(ReleaseNotFoundError, self).__init__(message)
         self.message = message
 
+class InvalidMaskError(Exception):
+    def __init__(self, message):
+        super(InvalidMaskError, self).__init__(message)
+        self.message = message
+
 class DiscogsMetadataService(object):
     def get_release_by_id(self, id):
         try:
@@ -43,8 +48,14 @@ class MaskReplacer(object):
             if char == '%':
                 i += 1
                 mask = masked_directory[i]
-                replaced_string += mask_options[mask]
+                replaced_string += self._get_replaced_mask(mask_options, mask)
             else:
                 replaced_string += char
             i += 1
         return replaced_string
+
+    def _get_replaced_mask(self, mask_options, mask):
+        try:
+            return mask_options[mask]
+        except KeyError:
+            raise InvalidMaskError('The mask {0} is not in the list of valid masks.'.format(mask))
