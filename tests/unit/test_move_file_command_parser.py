@@ -592,3 +592,44 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         parser = MoveAudioFileCommandParser(config_mock)
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
+
+    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.config.ConfigurationProvider')
+    def test__parse_from_encode_commands__track_has_double_quote_in_title__the_double_quote_is_replaced_with_a_space(self, config_mock, encoder_mock):
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
+        command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
+        command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
+        command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
+        command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
+        commands.append(command4)
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+
+        parser = MoveAudioFileCommandParser(config_mock)
+        command = parser.parse_from_encode_commands(commands, release_model)[3]
+        self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
