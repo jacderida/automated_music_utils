@@ -1,3 +1,5 @@
+import re
+
 class TrackModel(object):
     def __init__(self):
         self._artist = ''
@@ -392,6 +394,7 @@ class ArtistHelper(object):
                 artists_string += artist["anv"]
             else:
                 artists_string += artist["name"]
+            artists_string = ArtistHelper._remove_number_from_duplicate_artist(artists_string)
             join = artist["join"]
             if join:
                 if join == ",":
@@ -408,3 +411,18 @@ class ArtistHelper(object):
             """
             return stripped_artists[0:-1]
         return artists_string
+
+    @staticmethod
+    def _remove_number_from_duplicate_artist(artist):
+        """
+        Discogs deals with duplicate artists by appending a number to the artist.
+        For example, if there are 2 artists named 'Aphex Twin', there will be an
+        entry for Aphex Twin and Aphex Twin (2).
+
+        This code detects that and then strips it off.
+        """
+        match = re.search('.*(\(\d+\))', artist)
+        if match:
+            artist = artist[0:match.start(1)].strip()
+        return artist
+
