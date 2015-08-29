@@ -93,6 +93,10 @@ class ReleaseModel(object):
         self._style = ''
         self._tracks = []
 
+    def __repr__(self):
+        rep = "Artist: {0}".format(self._artist)
+        return rep
+
     @staticmethod
     def from_discogs_release(release):
         """ Converts a release from a discogs model to a simpler model
