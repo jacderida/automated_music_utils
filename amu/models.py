@@ -99,7 +99,8 @@ class ReleaseModel(object):
         Title: {2}
         Label: {3}
         Cat No: {4}
-        """.format(self.discogs_id, self.artist, self.title, self.label, self.catno)
+        Format: {5}
+        """.format(self.discogs_id, self.artist, self.title, self.label, self.catno, self.format)
 
     @staticmethod
     def from_discogs_release(release):
