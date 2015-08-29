@@ -57,7 +57,7 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
 
-        with captured_output() as (out, err):
+        with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('ID: 12345', output)
@@ -81,7 +81,7 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
 
-        with captured_output() as (out, err):
+        with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('Artist: Legowelt', output)
@@ -105,7 +105,7 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
 
-        with captured_output() as (out, err):
+        with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('Title: Pimpshifter', output)
@@ -129,7 +129,7 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
 
-        with captured_output() as (out, err):
+        with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('Label: Bunker Records', output)
@@ -153,7 +153,7 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
 
-        with captured_output() as (out, err):
+        with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('Cat No: BUNKER 3002', output)
@@ -177,7 +177,31 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
 
-        with captured_output() as (out, err):
+        with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('Format: Vinyl', output)
+
+    def test__repr__populated_release_model__should_print_out_the_country(self):
+        release_model = ReleaseModel()
+        release_model.discogs_id = 12345
+        release_model.artist = 'Legowelt'
+        release_model.title = 'Pimpshifter'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+
+        with captured_output() as (out, _):
+            print release_model
+            output = out.getvalue().strip()
+            self.assertIn('Country: Netherlands', output)
