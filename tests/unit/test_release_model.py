@@ -158,7 +158,7 @@ class ReleaseModelTest(unittest.TestCase):
             output = out.getvalue().strip()
             self.assertIn('Cat No: BUNKER 3002', output)
 
-    def test__repr__populated_release_model__should_print_out_the_catno(self):
+    def test__repr__populated_release_model__should_print_out_the_format(self):
         release_model = ReleaseModel()
         release_model.discogs_id = 12345
         release_model.artist = 'Legowelt'
