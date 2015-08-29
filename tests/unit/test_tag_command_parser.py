@@ -751,7 +751,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__year_is_set_on_tracks(self, config_mock, walk_mock):
+    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__original_year_is_set_on_tracks(self, config_mock, walk_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Legowelt'
         release_model.title = 'Pimpshifter'
@@ -759,6 +759,7 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.catno = 'BUNKER 3002'
         release_model.format = 'Vinyl'
         release_model.country = 'Netherlands'
+        release_model.original_year = '1999'
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
@@ -775,12 +776,12 @@ class TagCommandParserTest(unittest.TestCase):
 
         parser = TagCommandParser(config_mock)
         commands = parser.parse_from_release_model(source_path, release_model)
-        self.assertEqual('2000', commands[0].year)
-        self.assertEqual('2000', commands[1].year)
-        self.assertEqual('2000', commands[2].year)
-        self.assertEqual('2000', commands[3].year)
-        self.assertEqual('2000', commands[4].year)
-        self.assertEqual('2000', commands[5].year)
+        self.assertEqual('1999', commands[0].year)
+        self.assertEqual('1999', commands[1].year)
+        self.assertEqual('1999', commands[2].year)
+        self.assertEqual('1999', commands[3].year)
+        self.assertEqual('1999', commands[4].year)
+        self.assertEqual('1999', commands[5].year)
 
     @mock.patch('os.walk')
     @mock.patch('amu.config.ConfigurationProvider')
@@ -1971,7 +1972,7 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(1, commands[3].disc_total)
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__year_is_specified_correctly(self, config_mock):
+    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__original_year_is_specified_correctly(self, config_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -1980,6 +1981,7 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.format = 'Vinyl'
         release_model.format_quantity = 1
         release_model.country = 'UK'
+        release_model.original_year = '2004'
         release_model.year = '2005'
         release_model.genre = 'Electronic'
         release_model.style = 'Breakbeat, House, Acid, Electro'
@@ -1990,10 +1992,10 @@ class TagCommandParserTest(unittest.TestCase):
 
         parser = TagCommandParser(config_mock)
         commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
-        self.assertEqual('2005', commands[0].year)
-        self.assertEqual('2005', commands[1].year)
-        self.assertEqual('2005', commands[2].year)
-        self.assertEqual('2005', commands[3].year)
+        self.assertEqual('2004', commands[0].year)
+        self.assertEqual('2004', commands[1].year)
+        self.assertEqual('2004', commands[2].year)
+        self.assertEqual('2004', commands[3].year)
 
     @mock.patch('amu.config.ConfigurationProvider')
     def test__parse_from_release_model_with_empty_source__release_has_artists_on_tracks__artists_are_specified_correctly(self, config_mock):
@@ -2469,7 +2471,7 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(1, commands[5].disc_total)
 
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_release_model_with_sources__release_has_6_tracks__year_is_specified_correctly(self, config_mock):
+    def test__parse_from_release_model_with_sources__release_has_6_tracks__original_year_is_specified_correctly(self, config_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Various'
         release_model.title = 'Bronson Quest'
@@ -2477,6 +2479,7 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.catno = 'BUNKER 3047'
         release_model.format = 'Vinyl'
         release_model.country = 'Netherlands'
+        release_model.original_year = '2004'
         release_model.year = '2005'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
@@ -2497,9 +2500,9 @@ class TagCommandParserTest(unittest.TestCase):
 
         parser = TagCommandParser(config_mock)
         commands = parser.parse_from_release_model_with_sources(release_model, sources)
-        self.assertEqual('2005', commands[0].year)
-        self.assertEqual('2005', commands[1].year)
-        self.assertEqual('2005', commands[2].year)
-        self.assertEqual('2005', commands[3].year)
-        self.assertEqual('2005', commands[4].year)
-        self.assertEqual('2005', commands[5].year)
+        self.assertEqual('2004', commands[0].year)
+        self.assertEqual('2004', commands[1].year)
+        self.assertEqual('2004', commands[2].year)
+        self.assertEqual('2004', commands[3].year)
+        self.assertEqual('2004', commands[4].year)
+        self.assertEqual('2004', commands[5].year)
