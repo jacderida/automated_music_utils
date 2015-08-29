@@ -94,8 +94,9 @@ class ReleaseModel(object):
         self._tracks = []
 
     def __repr__(self):
-        rep = "Artist: {0}".format(self._artist)
-        return rep
+        return """ID: {0}
+        Artist: {1}
+        """.format(self.discogs_id, self.artist)
 
     @staticmethod
     def from_discogs_release(release):
