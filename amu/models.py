@@ -97,7 +97,8 @@ class ReleaseModel(object):
         return """ID: {0}
         Artist: {1}
         Title: {2}
-        """.format(self.discogs_id, self.artist, self.title)
+        Label: {3}
+        """.format(self.discogs_id, self.artist, self.title, self.label)
 
     @staticmethod
     def from_discogs_release(release):
