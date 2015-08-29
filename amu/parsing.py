@@ -333,6 +333,7 @@ class TagCommandParser(object):
 class MoveAudioFileCommandParser(object):
     def __init__(self, configuration_provider):
         self._configuration_provider = configuration_provider
+        self._forbidden_characters = ('/')
 
     def parse_from_encode_commands(self, encode_commands, release_model):
         i = 0
@@ -356,7 +357,13 @@ class MoveAudioFileCommandParser(object):
             track_number = '0' + str(track.track_number)
         else:
             track_number = track.track_number
-        return u'{0}/{1} - {2}.{3}'.format(directory_path, track_number, track.title, extension)
+        replaced_title = ''
+        for char in track.title:
+            if char in self._forbidden_characters:
+                replaced_title += ' '
+            else:
+                replaced_title += char
+        return u'{0}/{1} - {2}.{3}'.format(directory_path, track_number, replaced_title, extension)
 
 class AddTagCommandArgs(object):
     def __init__(self):
