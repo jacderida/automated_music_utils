@@ -102,7 +102,10 @@ class ReleaseModel(object):
         Format: {5}
         Country: {6}
         Released: {7}
-        """.format(self.discogs_id, self.artist, self.title, self.label, self.catno, self.format, self.country, self.year)
+        Originally Released: {8}
+        """.format(
+            self.discogs_id, self.artist, self.title, self.label,
+            self.catno, self.format, self.country, self.year, self.original_year)
 
     @staticmethod
     def from_discogs_release(release):
