@@ -101,7 +101,8 @@ class ReleaseModel(object):
         Cat No: {4}
         Format: {5}
         Country: {6}
-        """.format(self.discogs_id, self.artist, self.title, self.label, self.catno, self.format, self.country)
+        Released: {7}
+        """.format(self.discogs_id, self.artist, self.title, self.label, self.catno, self.format, self.country, self.year)
 
     @staticmethod
     def from_discogs_release(release):
