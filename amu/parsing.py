@@ -357,13 +357,17 @@ class MoveAudioFileCommandParser(object):
             track_number = '0' + str(track.track_number)
         else:
             track_number = track.track_number
+        return u'{0}/{1} - {2}.{3}'.format(
+            directory_path, track_number, self._get_track_title_without_forbidden_characters(track.title), extension)
+
+    def _get_track_title_without_forbidden_characters(self, track_title):
         replaced_title = ''
-        for char in track.title:
+        for char in track_title:
             if char in self._forbidden_characters:
                 replaced_title += ' '
             else:
                 replaced_title += char
-        return u'{0}/{1} - {2}.{3}'.format(directory_path, track_number, replaced_title, extension)
+        return replaced_title
 
 class AddTagCommandArgs(object):
     def __init__(self):
