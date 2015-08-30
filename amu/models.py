@@ -10,7 +10,8 @@ class TrackModel(object):
         self._disc_total = 0
 
     def __repr__(self):
-        return u'{0}'.format(self._get_padded_number_string(self.track_number))
+        return u'{0}/{1}'.format(
+            self._get_padded_number_string(self.track_number), self._get_padded_number_string(self.track_total))
 
     def _get_padded_number_string(self, number):
         if number < 10:
