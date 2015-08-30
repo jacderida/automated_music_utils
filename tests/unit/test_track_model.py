@@ -67,3 +67,17 @@ class TrackModelTest(unittest.TestCase):
             print track_model
             output = out.getvalue().strip()
             self.assertIn('Xtal', output)
+
+    def test__repr__track_with_single_digit_disc_number__should_print_the_padded_disc_number(self):
+        track_model = TrackModel()
+        track_model.title = 'Xtal'
+        track_model.track_number = 1
+        track_model.track_total = 10
+        track_model.disc_number = 1
+        track_model.disc_total = 1
+
+        with captured_output() as (out, _):
+            print track_model
+            output = out.getvalue().strip()
+            disc_number = output[-2:]
+            self.assertEqual('01', disc_number)
