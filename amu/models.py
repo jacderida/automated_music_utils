@@ -9,6 +9,14 @@ class TrackModel(object):
         self._disc_number = 0
         self._disc_total = 0
 
+    def __repr__(self):
+        return u'{0}'.format(self._get_padded_number_string(self.track_number))
+
+    def _get_padded_number_string(self, number):
+        if number < 10:
+            return u'0{0}'.format(number)
+        return number
+
     @staticmethod
     def from_discogs_track(track, track_number, track_total, disc_number, disc_total):
         """ Converts a discogs track to a track in our domain.
