@@ -79,8 +79,8 @@ class TrackModelTest(unittest.TestCase):
         with captured_output() as (out, _):
             print track_model
             output = out.getvalue().strip()
-            disc_number = output[-2:]
-            self.assertEqual('01', disc_number)
+            disc_info = output[-5:]
+            self.assertEqual('01/01', disc_info)
 
     def test__repr__track_with_double_digit_disc_number__should_print_the_disc_number(self):
         track_model = TrackModel()
@@ -93,5 +93,33 @@ class TrackModelTest(unittest.TestCase):
         with captured_output() as (out, _):
             print track_model
             output = out.getvalue().strip()
-            disc_number = output[-2:]
-            self.assertEqual('10', disc_number)
+            disc_info = output[-5:]
+            self.assertEqual('10/10', disc_info)
+
+    def test__repr__track_with_single_digit_disc_total__should_print_the_padded_disc_total(self):
+        track_model = TrackModel()
+        track_model.title = 'Xtal'
+        track_model.track_number = 1
+        track_model.track_total = 10
+        track_model.disc_number = 2
+        track_model.disc_total = 2
+
+        with captured_output() as (out, _):
+            print track_model
+            output = out.getvalue().strip()
+            disc_info = output[-5:]
+            self.assertEqual('02/02', disc_info)
+
+    def test__repr__track_with_double_digit_disc_total__should_print_the_disc_total(self):
+        track_model = TrackModel()
+        track_model.title = 'Xtal'
+        track_model.track_number = 1
+        track_model.track_total = 10
+        track_model.disc_number = 20
+        track_model.disc_total = 20
+
+        with captured_output() as (out, _):
+            print track_model
+            output = out.getvalue().strip()
+            disc_info = output[-5:]
+            self.assertEqual('20/20', disc_info)
