@@ -1,7 +1,7 @@
 import unittest
-from tests.helpers import captured_output
 from amu.models import ReleaseModel
 from amu.models import TrackModel
+from tests.helpers import captured_output
 
 class ReleaseModelTest(unittest.TestCase):
     """Test suite for ReleaseModel. """
@@ -328,7 +328,6 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
-        print release_model
 
         with captured_output() as (out, _):
             print release_model

@@ -169,12 +169,15 @@ class ReleaseModel(object):
     @staticmethod
     def _get_format_from_discogs_model(formats):
         discogs_format = formats[0]
-        format_string = "{0}, ".format(discogs_format["name"])
-        descriptions = discogs_format["descriptions"]
-        for i, description in enumerate(descriptions):
-            format_string += description
-            if i < len(descriptions) - 1:
-                format_string += ", "
+        format_string = '{0}, '.format(discogs_format['name'])
+        if discogs_format.has_key('descriptions'):
+            descriptions = discogs_format['descriptions']
+            for i, description in enumerate(descriptions):
+                format_string += description
+                if i < len(descriptions) - 1:
+                    format_string += ', '
+        if format_string[-2:] == ', ':
+            return format_string[0:-2]
         return format_string
 
     @staticmethod

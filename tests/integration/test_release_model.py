@@ -442,3 +442,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual('Syncom Data', tracks[5].artist)
         self.assertEqual('Rude 66', tracks[6].artist)
         self.assertEqual('Hank', tracks[7].artist)
+
+    def test__from_discogs_release__release_has_no_descriptions_in_format__the_format_should_be_parsed_correctly(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(34031)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release_model.format, 'CD')
