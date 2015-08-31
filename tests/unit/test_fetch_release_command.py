@@ -3,6 +3,7 @@ from mock import Mock
 from amu.commands import CommandValidationError
 from amu.commands import FetchReleaseCommand
 from amu.models import ReleaseModel
+from tests.helpers import captured_output
 
 
 class FetchReleaseCommandTest(unittest.TestCase):
@@ -40,3 +41,32 @@ class FetchReleaseCommandTest(unittest.TestCase):
         command.discogs_id = 12345
         command.execute()
         metadata_service_mock.get_release_by_id.assert_called_once_with(12345)
+
+    def test__execute__a_valid_id_is_used__the_release_model_should_be_printed(self):
+        config_service_mock = Mock()
+        metadata_service_mock = Mock()
+        release_model = ReleaseModel()
+        release_model.discogs_id = 12345
+        release_model.artist = 'Legowelt'
+        release_model.title = 'Pimpshifter'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+        metadata_service_mock.get_release_by_id.return_value = release_model
+
+        with captured_output() as (out, _):
+            command = FetchReleaseCommand(config_service_mock, metadata_service_mock)
+            command.discogs_id = 12345
+            command.execute()
+            output = out.getvalue().strip()
+            self.assertIn('ID: 12345', output)
