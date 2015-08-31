@@ -4,6 +4,7 @@ import uuid
 from amu import utils
 from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
+from amu.commands import FetchReleaseCommand
 from amu.commands import MoveAudioFileCommand
 from amu.commands import RipCdCommand
 from amu.metadata import MaskReplacer
@@ -27,6 +28,13 @@ class CommandParser(object):
             return self._get_encode_command(args)
         elif args.command == 'tag':
             return self._get_tag_command(args)
+        elif args.command == 'fetch':
+            return self._get_fetch_command(args)
+
+    def _get_fetch_command(self, args):
+        command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)
+        command.discogs_id = args.discogs_id
+        return [command]
 
     def _get_rip_command(self, args):
         command = RipCdCommand(self._configuration_provider, self._cd_ripper)

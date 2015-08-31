@@ -7,11 +7,13 @@ from amu import utils
 from amu.clidriver import CliDriver
 from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
+from amu.commands import FetchReleaseCommand
 from amu.commands import MoveAudioFileCommand
 from amu.commands import RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser
 from amu.parsing import CommandParsingError
+from mock import Mock
 
 
 class CommandParserTest(unittest.TestCase):
@@ -1231,3 +1233,12 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
         self.assertEqual('/some/current/working/directory', command_args.source)
+
+    def test__from_args__when_a_fetch_release_command_is_specified__it_should_return_a_fetch_release_command(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['fetch', '123456'])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = parser.from_args(args)
+        self.assertIsInstance(commands[0], FetchReleaseCommand)

@@ -20,7 +20,7 @@ class CliDriver(object):
         parser = argparse.ArgumentParser()
         subparsers = parser.add_subparsers(dest='command')
         fetch_parser = subparsers.add_parser('fetch', help='fetches and displays a release from discogs')
-        fetch_parser.add_argument('id', help='the ID of the release')
+        fetch_parser.add_argument('discogs_id', help='the ID of the release')
         rip_parser = subparsers.add_parser('rip', help='rips the current CD to WAV')
         rip_parser.add_argument('--destination', help='optional destination for the CD rip')
         search_parser = subparsers.add_parser(
