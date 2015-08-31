@@ -11,10 +11,10 @@ class TrackModel(object):
 
     def __repr__(self):
         if self.artist:
-            return u'{0}/{1}\t\t{2}\t\t\t\t{3}\t\t\t{4}/{5}'.format(
+            return u'{0}/{1}\t{2}\t\t\t\t{3}\t\t\t{4}/{5}'.format(
                 self._get_padded_number_string(self.track_number), self._get_padded_number_string(self.track_total),
                 self.artist, self.title, self._get_padded_number_string(self.disc_number), self._get_padded_number_string(self.disc_total))
-        return u'{0}/{1}\t\t{2}\t\t\t{3}/{4}'.format(
+        return u'{0}/{1}\t{2}\t\t\t{3}/{4}'.format(
             self._get_padded_number_string(self.track_number), self._get_padded_number_string(self.track_total),
             self.title, self._get_padded_number_string(self.disc_number), self._get_padded_number_string(self.disc_total))
 
