@@ -33,7 +33,7 @@ class CommandParser(object):
 
     def _get_fetch_command(self, args):
         command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)
-        command.discogs_id = args.discogs_id
+        command.discogs_id = int(args.discogs_id)
         return [command]
 
     def _get_rip_command(self, args):

@@ -1242,3 +1242,12 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         self.assertIsInstance(commands[0], FetchReleaseCommand)
+
+    def test__from_args__when_a_fetch_release_command_is_specified__the_command_should_have_the_discogs_id(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args(['fetch', '123456'])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = parser.from_args(args)
+        self.assertEqual(commands[0].discogs_id, 123456)
