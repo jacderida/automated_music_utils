@@ -11,10 +11,10 @@ class TrackModel(object):
 
     def __repr__(self):
         if self.artist:
-            return u'{0}/{1}\t\t{2}\t\t\t\t{3}\t\t{4}/{5}'.format(
+            return u'{0}/{1}\t\t{2}\t\t\t\t{3}\t\t\t{4}/{5}'.format(
                 self._get_padded_number_string(self.track_number), self._get_padded_number_string(self.track_total),
                 self.artist, self.title, self._get_padded_number_string(self.disc_number), self._get_padded_number_string(self.disc_total))
-        return u'{0}/{1}\t\t{2}\t\t{3}/{4}'.format(
+        return u'{0}/{1}\t\t{2}\t\t\t{3}/{4}'.format(
             self._get_padded_number_string(self.track_number), self._get_padded_number_string(self.track_total),
             self.title, self._get_padded_number_string(self.disc_number), self._get_padded_number_string(self.disc_total))
 
@@ -39,8 +39,8 @@ class TrackModel(object):
         track_model.disc_number = disc_number
         track_model.disc_total = disc_total
         track_model.title = track.title
-        if "artists" in track.data:
-            track_model.artist = ArtistHelper.get_artists(track.data["artists"])
+        if 'artists' in track.data:
+            track_model.artist = ArtistHelper.get_artists(track.data['artists'])
         return track_model
 
     @property
@@ -129,7 +129,8 @@ Tracklist:
     def _get_string_based_tracklist(self):
         tracklist = ''
         for track in self.get_tracks():
-            tracklist += track.__repr__()
+            tracklist += '\t'
+            tracklist += track.__repr__() # Ok, I know I really shouldn't do this.
             tracklist += '\n'
         return tracklist
 
@@ -169,16 +170,16 @@ Tracklist:
     def get_artists_from_discogs_model(artist_data):
         artists_string = ''
         for artist in artist_data:
-            if artist["anv"]:
-                artists_string += artist["anv"]
+            if artist['anv']:
+                artists_string += artist['anv']
             else:
-                artists_string += artist["name"]
-            join = artist["join"]
+                artists_string += artist['name']
+            join = artist['join']
             if join:
-                if join == ",":
-                    artists_string += "{0} ".format(join)
+                if join == ',':
+                    artists_string += '{0} '.format(join)
                 else:
-                    artists_string += " {0} ".format(join)
+                    artists_string += ' {0} '.format(join)
         return artists_string
 
     @staticmethod
@@ -198,7 +199,7 @@ Tracklist:
     @staticmethod
     def _get_format_quantity_from_discogs_model(formats):
         discogs_format = formats[0]
-        return int(discogs_format["qty"])
+        return int(discogs_format['qty'])
 
     @staticmethod
     def _get_genre_from_discogs_model(genres):
@@ -208,7 +209,7 @@ Tracklist:
         for i, genre in enumerate(genres):
             genre_string += genre
             if i < len(genres) - 1:
-                genre_string += ", "
+                genre_string += ', '
         return genre_string
 
     @staticmethod
@@ -433,17 +434,17 @@ class ArtistHelper(object):
     def get_artists(artist_data):
         artists_string = ''
         for artist in artist_data:
-            if artist["anv"]:
-                artists_string += artist["anv"]
+            if artist['anv']:
+                artists_string += artist['anv']
             else:
-                artists_string += artist["name"]
+                artists_string += artist['name']
             artists_string = ArtistHelper._remove_number_from_duplicate_artist(artists_string)
-            join = artist["join"]
+            join = artist['join']
             if join:
-                if join == ",":
-                    artists_string += "{0} ".format(join)
+                if join == ',':
+                    artists_string += '{0} '.format(join)
                 else:
-                    artists_string += " {0} ".format(join)
+                    artists_string += ' {0} '.format(join)
         stripped_artists = artists_string.strip()
         if stripped_artists[-1] == ',':
             """
@@ -468,4 +469,3 @@ class ArtistHelper(object):
         if match:
             artist = artist[0:match.start(1)].strip()
         return artist
-

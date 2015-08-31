@@ -359,4 +359,4 @@ class ReleaseModelTest(unittest.TestCase):
             output = out.getvalue().strip()
             tracklist_start_pos = output.find('Tracklist:')
             count = output.count('\n', tracklist_start_pos)
-            self.assertEqual(6, count) # There won't be a newline for the last track.
+            self.assertEqual(6, count)
