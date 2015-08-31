@@ -109,20 +109,29 @@ class ReleaseModel(object):
 
     def __repr__(self):
         return """ID: {0}
-        Artist: {1}
-        Title: {2}
-        Label: {3}
-        Cat No: {4}
-        Format: {5}
-        Country: {6}
-        Released: {7}
-        Originally Released: {8}
-        Genre: {9}
-        Style: {10}
+Artist: {1}
+Title: {2}
+Label: {3}
+Cat No: {4}
+Format: {5}
+Country: {6}
+Released: {7}
+Originally Released: {8}
+Genre: {9}
+Style: {10}
+Tracklist:
+{11}
         """.format(
             self.discogs_id, self.artist, self.title, self.label,
             self.catno, self.format, self.country, self.year, self.original_year,
-            self.genre, self.style)
+            self.genre, self.style, self._get_string_based_tracklist())
+
+    def _get_string_based_tracklist(self):
+        tracklist = ''
+        for track in self.get_tracks():
+            tracklist += track.__repr__()
+            tracklist += '\n'
+        return tracklist
 
     @staticmethod
     def from_discogs_release(release):
