@@ -224,7 +224,6 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
-        print release_model
 
         with captured_output() as (out, _):
             print release_model
@@ -250,7 +249,6 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
-        print release_model
 
         with captured_output() as (out, _):
             print release_model
@@ -276,14 +274,13 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
-        print release_model
 
         with captured_output() as (out, _):
             print release_model
             output = out.getvalue().strip()
             self.assertIn('Genre: Electronic', output)
 
-    def test__repr__populated_release_model__should_print_out_the_genre(self):
+    def test__repr__populated_release_model__should_print_out_the_style(self):
         release_model = ReleaseModel()
         release_model.discogs_id = 12345
         release_model.artist = 'Legowelt'
@@ -302,7 +299,6 @@ class ReleaseModelTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
-        print release_model
 
         with captured_output() as (out, _):
             print release_model
