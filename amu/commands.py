@@ -364,4 +364,4 @@ class FetchReleaseCommand(Command):
             raise CommandValidationError('The fetch command must use a valid integer for the discogs ID.')
 
     def execute(self):
-        pass
+        release_model = self._metadata_service.get_release_by_id(self.discogs_id)
