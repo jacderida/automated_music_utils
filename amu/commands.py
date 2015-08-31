@@ -342,3 +342,26 @@ class MoveAudioFileCommand(Command):
         if not os.path.exists(directory):
             os.makedirs(directory)
         os.rename(self.source, self.destination)
+
+class FetchReleaseCommand(Command):
+    def __init__(self, config_provider, metadata_service):
+        super(FetchReleaseCommand, self).__init__(config_provider)
+        self._metadata_service = metadata_service
+        self._discogs_id = 0
+
+    @property
+    def discogs_id(self):
+        return self._discogs_id
+
+    @discogs_id.setter
+    def discogs_id(self, value):
+        self._discogs_id = value
+
+    def validate(self):
+        try:
+            int(self.discogs_id)
+        except ValueError:
+            raise CommandValidationError('The fetch command must use a valid integer for the discogs ID.')
+
+    def execute(self):
+        pass
