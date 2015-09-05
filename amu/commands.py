@@ -366,3 +366,32 @@ class FetchReleaseCommand(Command):
     def execute(self):
         release_model = self._metadata_service.get_release_by_id(self.discogs_id)
         print release_model
+
+class AddArtworkCommand(Command):
+    def __init__(self, config_provider, tagger):
+        super(AddArtworkCommand).__init__(config_provider, tagger)
+        self._tagger = tagger
+        self._source = ''
+        self._destination = ''
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
+
+    def validate(self):
+        pass
+
+    def execute(self):
+        pass
