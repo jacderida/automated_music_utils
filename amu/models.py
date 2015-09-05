@@ -438,6 +438,7 @@ class ArtistHelper(object):
                 artists_string += artist['anv']
             else:
                 artists_string += artist['name']
+            artists_string = ArtistHelper._apply_the_suffix(artists_string)
             artists_string = ArtistHelper._remove_number_from_duplicate_artist(artists_string)
             join = artist['join']
             if join:
@@ -455,6 +456,12 @@ class ArtistHelper(object):
             """
             return stripped_artists[0:-1]
         return artists_string
+
+    @staticmethod
+    def _apply_the_suffix(artist):
+        if artist[0:3] == u'The':
+            return u'{0}, The'.format(artist[4:])
+        return artist
 
     @staticmethod
     def _remove_number_from_duplicate_artist(artist):

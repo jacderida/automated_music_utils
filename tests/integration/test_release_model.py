@@ -449,3 +449,17 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release_model = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release_model.format, 'CD')
+
+    def test__from_discogs_release__release_has_artist_beginning_with_the__artist_should_be_changed_to_use_the_suffix(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(691856)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual('Beatles, The', release_model.artist)
+
+    def test__from_discogs_release__track_has_artist_beginning_with_the__artist_should_be_changed_to_use_the_suffix(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(339157)
+        discogs_release.refresh()
+        track_model = ReleaseModel.from_discogs_release(discogs_release).get_tracks()[5]
+        self.assertEqual('Other People Place, The', track_model.artist)
