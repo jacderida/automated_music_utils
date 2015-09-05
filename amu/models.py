@@ -437,8 +437,7 @@ class ArtistHelper(object):
             if artist['anv']:
                 artists_string += artist['anv']
             else:
-                artists_string += artist['name']
-            artists_string = ArtistHelper._apply_the_suffix(artists_string)
+                artists_string += ArtistHelper._apply_the_suffix(artist['name'])
             artists_string = ArtistHelper._remove_number_from_duplicate_artist(artists_string)
             join = artist['join']
             if join:

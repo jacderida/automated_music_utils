@@ -457,6 +457,20 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         release_model = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual('Beatles, The', release_model.artist)
 
+    def test__from_discogs_release__release_has_multiple_artists_and_one_beginning_with_the__artist_should_be_changed_to_use_the_suffix(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(781647)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual('Murat & Advent, The', release_model.artist)
+
+    def test__from_discogs_release__release_has_multiple_the_artists__artist_should_be_changed_to_use_the_suffix(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(105438)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual('Bug, The Vs Rootsman, The Featuring He-Man', release_model.artist)
+
     def test__from_discogs_release__track_has_artist_beginning_with_the__artist_should_be_changed_to_use_the_suffix(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(339157)
