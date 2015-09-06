@@ -395,6 +395,8 @@ class AddArtworkCommand(Command):
             raise CommandValidationError('A source must be supplied for the add artwork command.')
         if not os.path.exists(self.source):
             raise CommandValidationError('A valid source must be supplied for the add artwork command.')
+        if not self.destination:
+            raise CommandValidationError('A destination must be supplied for the add artwork command.')
 
     def execute(self):
         pass
