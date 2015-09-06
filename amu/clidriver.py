@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import argparse
 import sys
+from amu.audio import LameEncoder, RubyRipperCdRipper
 from amu.config import ConfigurationProvider
-from amu.encode import LameEncoder
 from amu.metadata import DiscogsMetadataService
 from amu.metadata import MaskReplacer
 from amu.parsing import CommandParser
-from amu.rip import RubyRipperCdRipper
 
 
 def main():

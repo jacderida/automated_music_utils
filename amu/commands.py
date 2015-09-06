@@ -1,8 +1,7 @@
 import os
 from mutagen import File
 from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPOS, TRCK
-from amu.encode import LameEncoder
-from amu.rip import RubyRipperCdRipper
+from amu.audio import LameEncoder, RubyRipperCdRipper
 
 class CommandValidationError(Exception):
     def __init__(self, message):
