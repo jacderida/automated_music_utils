@@ -21,3 +21,11 @@ class Mp3TaggerTest(unittest.TestCase):
         size = os.path.getsize('tests/integration/data/cover.jpg')
         self.assertEqual('image/jpeg', artwork_data[0])
         self.assertEqual(size, artwork_data[1])
+
+    def test__apply_artwork__cover_is_png__artwork_should_be_applied(self):
+        tagger = Mp3Tagger()
+        tagger.apply_artwork('tests/integration/data/cover.png', 'tests/integration/data/test_data.mp3')
+        artwork_data = get_mp3_artwork_data('tests/integration/data/test_data.mp3')
+        size = os.path.getsize('tests/integration/data/cover.png')
+        self.assertEqual('image/png', artwork_data[0])
+        self.assertEqual(size, artwork_data[1])

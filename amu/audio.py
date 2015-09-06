@@ -66,8 +66,13 @@ class RubyRipperCdRipper(object):
 
 class Mp3Tagger(object):
     def apply_artwork(self, source, destination):
+        artwork_type = os.path.splitext(source)[1][1:]
+        if artwork_type == 'jpg':
+            mime_type = 'image/jpeg'
+        elif artwork_type == 'png':
+            mime_type = 'image/png'
         tag = self._get_tag(destination)
-        tag.add(APIC(encoding=3, mime='image/jpeg', type=3, desc=u'cover', data=open(source).read()))
+        tag.add(APIC(encoding=3, mime=mime_type, type=3, desc=u'cover', data=open(source).read()))
         tag.save()
 
     def _get_tag(self, source):
