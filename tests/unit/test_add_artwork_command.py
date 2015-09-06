@@ -19,15 +19,25 @@ class AddArtworkCommandTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandValidationError, 'A valid source must be supplied for the add artwork command.'):
             config_mock, tagger_mock = (Mock(),)*2
             command = AddArtworkCommand(config_mock, tagger_mock)
-            command.source = '/path/to/audio.mp3'
+            command.source = '/path/to/cover.jpg'
             command.validate()
 
     @mock.patch('os.path.exists')
-    def test__validate__destination_does_not_exist__raises_command_validation_error(self, exists_mock):
+    def test__validate__destination_is_empty__raises_command_validation_error(self, exists_mock):
         exists_mock.return_value = True
         with self.assertRaisesRegexp(CommandValidationError, 'A destination must be supplied for the add artwork command.'):
             config_mock, tagger_mock = (Mock(),)*2
             command = AddArtworkCommand(config_mock, tagger_mock)
-            command.source = '/path/to/audio.mp3'
+            command.source = '/path/to/cover.jpg'
             command.destination = ''
+            command.validate()
+
+    @mock.patch('os.path.exists')
+    def test__validate__destination_does_not_exist__raises_command_validation_error(self, exists_mock):
+        exists_mock.side_effect = [True, False]
+        with self.assertRaisesRegexp(CommandValidationError, 'A valid destination must be supplied for the add artwork command.'):
+            config_mock, tagger_mock = (Mock(),)*2
+            command = AddArtworkCommand(config_mock, tagger_mock)
+            command.source = '/path/to/cover.jpg'
+            command.destination = '/path/to/audio.mp3'
             command.validate()
