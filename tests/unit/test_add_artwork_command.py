@@ -41,3 +41,11 @@ class AddArtworkCommandTest(unittest.TestCase):
             command.source = '/path/to/cover.jpg'
             command.destination = '/path/to/audio.mp3'
             command.validate()
+
+    def test__execute__valid_source_and_destination__calls_tagger_to_apply_artwork(self):
+        config_mock, tagger_mock = (Mock(),)*2
+        command = AddArtworkCommand(config_mock, tagger_mock)
+        command.source = '/path/to/cover.jpg'
+        command.destination = '/path/to/audio.mp3'
+        command.execute()
+        tagger_mock.apply_artwork.assert_called_once_with('/path/to/cover.jpg', '/path/to/audio.mp3')

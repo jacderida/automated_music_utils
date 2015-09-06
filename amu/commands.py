@@ -401,4 +401,4 @@ class AddArtworkCommand(Command):
             raise CommandValidationError('A valid destination must be supplied for the add artwork command.')
 
     def execute(self):
-        pass
+        self._tagger.apply_artwork(self.source, self.destination)
