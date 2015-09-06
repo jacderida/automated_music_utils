@@ -36,3 +36,9 @@ class Mp3TaggerTest(unittest.TestCase):
         size = os.path.getsize('tests/integration/data/cover.jpeg')
         self.assertEqual('image/jpeg', artwork_data[0])
         self.assertEqual(size, artwork_data[1])
+
+    def test__apply_artwork__source_is_empty__artwork_should_be_applied(self):
+        with self.assertRaisesRegexp(ValueError, 'A cover art source must be supplied.'):
+            tagger = Mp3Tagger()
+            tagger.apply_artwork('', 'tests/integration/data/test_data.mp3')
+
