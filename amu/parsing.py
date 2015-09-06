@@ -77,9 +77,8 @@ class CommandParser(object):
     def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
         commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
-        track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-        encode_commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
+        encode_commands = encode_command_parser.parse_cd_rip(source, destination)
         commands.extend(encode_commands)
         if release_model:
             # The first command is a rip cd command, which we don't need.
@@ -124,7 +123,7 @@ class EncodeCommandParser(object):
         self._cd_ripper = cd_ripper
         self._encoder = encoder
 
-    def parse_cd_rip(self, rip_destination, destination, track_count):
+    def parse_cd_rip(self, rip_destination, destination):
         if not rip_destination:
             raise CommandParsingError('The rip destination cannot be empty')
         if not destination:
@@ -214,7 +213,8 @@ class TagCommandParser(object):
         commands = []
         track_number = 1
         for track in release_model.get_tracks():
-            full_source_path = os.path.join(source_path, utils.get_track_name(track_number, "mp3"))
+            track_name = utils.get_track_name(track_number, "mp3")
+            full_source_path = os.path.join(source_path, track_name)
             commands.append(self._get_add_tag_command_from_release_model(full_source_path, release_model, track))
             track_number += 1
         return commands

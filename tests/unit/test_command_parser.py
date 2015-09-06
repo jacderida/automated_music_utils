@@ -5,14 +5,9 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import AddMp3TagCommand
-from amu.commands import EncodeWavToMp3Command
-from amu.commands import FetchReleaseCommand
-from amu.commands import MoveAudioFileCommand
-from amu.commands import RipCdCommand
+from amu.commands import AddMp3TagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RipCdCommand
 from amu.models import ReleaseModel
-from amu.parsing import CommandParser
-from amu.parsing import CommandParsingError
+from amu.parsing import CommandParser, CommandParsingError
 from mock import Mock
 
 
@@ -268,7 +263,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -309,7 +304,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -433,7 +428,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -475,7 +470,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -498,10 +493,9 @@ class CommandParserTest(unittest.TestCase):
         commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
         self.assertEqual(4, len(commands))
 
-    @mock.patch('amu.audio.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__when_encode_cd_to_mp3_command_is_specified__it_should_use_the_encoder_command_parser(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__when_encode_cd_to_mp3_command_is_specified__it_should_use_the_encoder_command_parser(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -512,7 +506,6 @@ class CommandParserTest(unittest.TestCase):
             '--destination=/some/destination'
         ])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 2
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -520,16 +513,15 @@ class CommandParserTest(unittest.TestCase):
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
-        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/destination', 2)
+        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/destination')
         self.assertEqual(3, len(commands))
         self.assertIsInstance(commands[0], RipCdCommand)
         self.assertIsInstance(commands[1], EncodeWavToMp3Command)
         self.assertIsInstance(commands[2], EncodeWavToMp3Command)
 
-    @mock.patch('amu.audio.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__when_encode_cd_to_mp3_command_is_specified__it_should_use_a_directory_with_a_guid_for_the_rip_destination(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__when_encode_cd_to_mp3_command_is_specified__it_should_use_a_directory_with_a_guid_for_the_rip_destination(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -540,7 +532,6 @@ class CommandParserTest(unittest.TestCase):
             '--destination=/some/destination'
         ])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 2
         stored_args_mock = utils.get_mock_with_stored_call_args(encode_command_parser_mock)
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
@@ -553,16 +544,14 @@ class CommandParserTest(unittest.TestCase):
         parsed_uuid = temp_path.split('/tmp/')[1]
         self.assertEqual(4, uuid.UUID(parsed_uuid).get_version())
 
-    @mock.patch('amu.audio.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_no_optional_destination__destination_should_be_current_working_directory(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_no_optional_destination__destination_should_be_current_working_directory(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 2
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -570,11 +559,10 @@ class CommandParserTest(unittest.TestCase):
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
-        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), os.getcwd(), 2)
+        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), os.getcwd())
 
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_keep_source_set__keep_source_should_be_true(self, encode_command_parser_mock, number_of_tracks_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_keep_source_set__keep_source_should_be_true(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -584,7 +572,6 @@ class CommandParserTest(unittest.TestCase):
             'mp3',
             '--keep-source'
         ])
-        number_of_tracks_mock.return_value = 2
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -595,14 +582,12 @@ class CommandParserTest(unittest.TestCase):
         self.assertTrue(commands[1].keep_source)
         self.assertTrue(commands[2].keep_source)
 
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_rip_to_mp3_command_without_keep_source_specified__keep_source_should_be_false(self, encode_command_parser_mock, number_of_tracks_mock):
+    def test__from_args__encode_rip_to_mp3_command_without_keep_source_specified__keep_source_should_be_false(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
-        number_of_tracks_mock.return_value = 2
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -613,16 +598,14 @@ class CommandParserTest(unittest.TestCase):
         self.assertFalse(commands[1].keep_source)
         self.assertFalse(commands[2].keep_source)
 
-    @mock.patch('amu.audio.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__it_should_return_12_tag_mp3_commands(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__it_should_return_12_tag_mp3_commands(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -638,6 +621,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
         ]
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/music/destination/'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -668,10 +652,9 @@ class CommandParserTest(unittest.TestCase):
         commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
         self.assertEqual(12, len(commands))
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__add_tag_sources_should_be_specified_correctly(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__add_tag_sources_should_be_specified_correctly(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -681,7 +664,6 @@ class CommandParserTest(unittest.TestCase):
             'mp3',
             '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -739,10 +721,9 @@ class CommandParserTest(unittest.TestCase):
         self.assertEqual('/some/replaced/mask/11 - Track 11.mp3', commands[10].source)
         self.assertEqual('/some/replaced/mask/12 - Track 12.mp3', commands[11].source)
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_use_the_correct_destination(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_use_the_correct_destination(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -752,7 +733,6 @@ class CommandParserTest(unittest.TestCase):
             'mp3',
             '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -797,16 +777,14 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
-        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/replaced/mask', 12)
+        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/replaced/mask')
 
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, encode_command_parser_mock, number_of_tracks_mock):
+    def test__from_args__encode_cd_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=3535'])
-        number_of_tracks_mock.return_value = 11
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -821,7 +799,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -852,10 +830,9 @@ class CommandParserTest(unittest.TestCase):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
             parser.from_args(args)
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -865,7 +842,6 @@ class CommandParserTest(unittest.TestCase):
             'mp3',
             '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -881,7 +857,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/music/destination/'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -912,10 +888,9 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         metadata_mock.get_release_by_id.assert_called_once_with(3535)
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -926,7 +901,6 @@ class CommandParserTest(unittest.TestCase):
             '--destination=/some/custom/destination',
             '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -942,7 +916,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -971,13 +945,12 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, AddMp3TagCommand)]
-        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/custom/destination', 12)
+        encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/custom/destination')
         self.assertEqual(12, len(commands))
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
-    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
-    def test__from_args__encode_cd_to_mp3_command__12_move_audio_file_commands_are_generated(self, encode_command_parser_mock, number_of_tracks_mock, gettempdir_mock):
+    def test__from_args__encode_cd_to_mp3_command__12_move_audio_file_commands_are_generated(self, encode_command_parser_mock, gettempdir_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -988,7 +961,6 @@ class CommandParserTest(unittest.TestCase):
             '--destination=/some/custom/destination',
             '--discogs-id=3535'])
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
-        number_of_tracks_mock.return_value = 12
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
@@ -1004,7 +976,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
         ]
-        config_mock.get_directory_mask.return_value = '/some/replaced/mask'
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
