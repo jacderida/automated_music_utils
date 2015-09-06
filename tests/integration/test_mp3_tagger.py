@@ -3,7 +3,6 @@ import os
 import shutil
 import unittest
 from amu.audio import Mp3Tagger
-from amu.utils import get_id3_tag_data
 from tests.helpers import get_mp3_artwork_data
 
 
@@ -28,4 +27,12 @@ class Mp3TaggerTest(unittest.TestCase):
         artwork_data = get_mp3_artwork_data('tests/integration/data/test_data.mp3')
         size = os.path.getsize('tests/integration/data/cover.png')
         self.assertEqual('image/png', artwork_data[0])
+        self.assertEqual(size, artwork_data[1])
+
+    def test__apply_artwork__cover_is_jpeg__artwork_should_be_applied(self):
+        tagger = Mp3Tagger()
+        tagger.apply_artwork('tests/integration/data/cover.jpeg', 'tests/integration/data/test_data.mp3')
+        artwork_data = get_mp3_artwork_data('tests/integration/data/test_data.mp3')
+        size = os.path.getsize('tests/integration/data/cover.jpeg')
+        self.assertEqual('image/jpeg', artwork_data[0])
         self.assertEqual(size, artwork_data[1])
