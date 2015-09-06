@@ -369,7 +369,7 @@ class FetchReleaseCommand(Command):
 
 class AddArtworkCommand(Command):
     def __init__(self, config_provider, tagger):
-        super(AddArtworkCommand).__init__(config_provider, tagger)
+        super(AddArtworkCommand, self).__init__(config_provider)
         self._tagger = tagger
         self._source = ''
         self._destination = ''
@@ -391,7 +391,8 @@ class AddArtworkCommand(Command):
         self._destination = value
 
     def validate(self):
-        pass
+        if not self.source:
+            raise CommandValidationError('A source must be supplied for the add artwork command.')
 
     def execute(self):
         pass
