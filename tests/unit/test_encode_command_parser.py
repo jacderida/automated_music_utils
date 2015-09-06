@@ -202,10 +202,12 @@ class EncodeCommandParserTest(unittest.TestCase):
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
             parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/destination/')
 
-    def test__parse_cd_to_mp3__cd_has_5_tracks__it_should_generate_a_correctly_specified_rip_cd_command_and_5_correctly_specified_encode_wav_to_mp3_commands(self):
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    def test__parse_cd_rip__cd_has_5_tracks__it_should_generate_a_correctly_specified_rip_cd_command_and_5_correctly_specified_encode_wav_to_mp3_commands(self, number_of_tracks_mock):
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_cd_rip('/tmp/rip/destination', '/some/destination', 5)
+        number_of_tracks_mock.return_value = 5
+        commands = parser.parse_cd_rip('/tmp/rip/destination', '/some/destination')
         self.assertEqual(6, len(commands))
         self.assertIsInstance(commands[0], RipCdCommand)
         self.assertEqual(commands[0].destination, '/tmp/rip/destination')
@@ -225,30 +227,30 @@ class EncodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[5].source, '/tmp/rip/destination/05 - Track 5.wav')
         self.assertEqual(commands[5].destination, '/some/destination/05 - Track 5.mp3')
 
-    def test__parse_cd_to_mp3__cd_has_12_tracks__the_track_numbers_should_be_padded_correctly(self):
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    def test__parse_cd_rip__cd_has_12_tracks__the_track_numbers_should_be_padded_correctly(self, number_of_tracks_mock):
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
+        number_of_tracks_mock.return_value = 12
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_cd_rip('/tmp/rip/destination', '/some/destination', 12)
+        commands = parser.parse_cd_rip('/tmp/rip/destination', '/some/destination')
         self.assertEqual(13, len(commands))
         self.assertEqual(commands[1].source, '/tmp/rip/destination/01 - Track 1.wav')
         self.assertEqual(commands[1].destination, '/some/destination/01 - Track 1.mp3')
         self.assertEqual(commands[10].source, '/tmp/rip/destination/10 - Track 10.wav')
         self.assertEqual(commands[10].destination, '/some/destination/10 - Track 10.mp3')
 
-    def test__parse_cd_to_mp3__rip_destination_is_empty__throws_command_parsing_exception(self):
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    def test__parse_cd_rip__rip_destination_is_empty__throws_command_parsing_exception(self, number_of_tracks_mock):
         with self.assertRaisesRegexp(CommandParsingError, 'The rip destination cannot be empty'):
+            number_of_tracks_mock.return_value = 5
             config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-            parser.parse_cd_rip('', '/some/destination', 5)
+            parser.parse_cd_rip('', '/some/destination')
 
-    def test__parse_cd_to_mp3__destination_is_empty__throws_command_parsing_exception(self):
+    @mock.patch('amu.utils.get_number_of_tracks_on_cd')
+    def test__parse_cd_rip__destination_is_empty__throws_command_parsing_exception(self, number_of_tracks_mock):
         with self.assertRaisesRegexp(CommandParsingError, 'The destination cannot be empty'):
+            number_of_tracks_mock.return_value = 5
             config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-            parser.parse_cd_rip('/tmp/rip/destination', '', 5)
-
-    def test__parse_cd_to_mp3__track_count_is_less_than_one__throws_command_parsing_exception(self):
-        with self.assertRaisesRegexp(CommandParsingError, 'The track count must be greather than or equal to 1'):
-            config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
-            parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-            parser.parse_cd_rip('/tmp/rip/destination', '/some/destination', 0)
+            parser.parse_cd_rip('/tmp/rip/destination', '')
