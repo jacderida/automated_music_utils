@@ -50,4 +50,9 @@ class Mp3TaggerTest(unittest.TestCase):
     def test__apply_artwork__source_does_not_exist__raises_tagger_error(self):
         with self.assertRaisesRegexp(TaggerError, 'The cover art source does not exist.'):
             tagger = Mp3Tagger()
-            tagger.apply_artwork('/some/non/existent/source.jpg', 'tests/integration/data/test_data.flac')
+            tagger.apply_artwork('/some/non/existent/source.jpg', 'tests/integration/data/test_data.mp3')
+
+    def test__apply_artwork__destination_does_not_exist__raises_tagger_error(self):
+        with self.assertRaisesRegexp(TaggerError, 'The cover art destination does not exist.'):
+            tagger = Mp3Tagger()
+            tagger.apply_artwork('tests/integration/data/cover.jpg', '/some/non/existent/destination.mp3')
