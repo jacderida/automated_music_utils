@@ -9,6 +9,10 @@ from amu.metadata import MaskReplacer
 from mutagen import File
 from mutagen.id3 import APIC, ID3, ID3NoHeaderError
 
+class TaggerError(Exception):
+    def __init__(self, message):
+        super(TaggerError, self).__init__(message)
+        self.message = message
 
 class LameEncoder(object):
     def __init__(self, config_provider):
@@ -70,6 +74,8 @@ class Mp3Tagger(object):
             raise ValueError('A cover art source must be supplied.')
         if not destination:
             raise ValueError('A destination must be supplied to apply cover art to.')
+        if not os.path.exists(source):
+            raise TaggerError('The cover art source does not exist.')
         artwork_type = os.path.splitext(source)[1][1:]
         if artwork_type == 'jpg' or artwork_type == 'jpeg':
             mime_type = 'image/jpeg'

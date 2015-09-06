@@ -2,7 +2,7 @@ import mock
 import os
 import shutil
 import unittest
-from amu.audio import Mp3Tagger
+from amu.audio import Mp3Tagger, TaggerError
 from tests.helpers import get_mp3_artwork_data
 
 
@@ -46,3 +46,8 @@ class Mp3TaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, 'A destination must be supplied to apply cover art to.'):
             tagger = Mp3Tagger()
             tagger.apply_artwork('tests/integration/data/cover.jpg', '')
+
+    def test__apply_artwork__source_does_not_exist__raises_tagger_error(self):
+        with self.assertRaisesRegexp(TaggerError, 'The cover art source does not exist.'):
+            tagger = Mp3Tagger()
+            tagger.apply_artwork('/some/non/existent/source.jpg', 'tests/integration/data/test_data.flac')
