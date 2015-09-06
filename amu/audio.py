@@ -68,6 +68,8 @@ class Mp3Tagger(object):
     def apply_artwork(self, source, destination):
         if not source:
             raise ValueError('A cover art source must be supplied.')
+        if not destination:
+            raise ValueError('A destination must be supplied to apply cover art to.')
         artwork_type = os.path.splitext(source)[1][1:]
         if artwork_type == 'jpg' or artwork_type == 'jpeg':
             mime_type = 'image/jpeg'
