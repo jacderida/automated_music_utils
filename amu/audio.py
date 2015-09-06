@@ -6,6 +6,8 @@ import uuid
 from amu import utils
 from amu.config import ConfigurationError, ConfigurationProvider
 from amu.metadata import MaskReplacer
+from mutagen import File
+from mutagen.id3 import APIC, ID3, ID3NoHeaderError
 
 
 class LameEncoder(object):
@@ -61,3 +63,37 @@ class RubyRipperCdRipper(object):
         utils.copy_content_to_directory(temp_path, expanded_destination)
         shutil.rmtree(temp_path)
         os.remove(temp_config_path)
+
+class Mp3Tagger(object):
+    def apply_artwork(self, source, destination):
+        tag = self._get_tag(destination)
+        tag.add(APIC(encoding=3, mime='image/jpeg', type=3, desc=u'cover', data=open(source).read()))
+        tag.save()
+
+    def _get_tag(self, source):
+        """
+        This exists to handle mp3s that have no tags. It's horrendous, but
+        I couldn't see a way to do a conversion between the EasyID3 type and
+        a normal ID3 type.
+
+        The steps are:
+            * Attempt to load ID3 tag
+            * Get an EasyID3 tag (easy=True)
+            * Add a blank tag
+            * Add a placeholder artist
+            * Save the file
+            * Reload as an ID3 object
+
+        If you try and save without the placeholder, it doesn't write any tags (which makes sense),
+        hence the need for the placeholder.
+        """
+        try:
+            tag = ID3(source)
+            return tag
+        except ID3NoHeaderError:
+            tag = File(source, easy=True)
+            tag.add_tags()
+            tag['artist'] = 'placeholder'
+            tag.save()
+            tag = ID3(source)
+            return tag

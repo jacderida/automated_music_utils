@@ -1,3 +1,5 @@
+import re
+import subprocess
 import sys
 from contextlib import contextmanager
 from StringIO import StringIO
@@ -12,3 +14,12 @@ def captured_output():
         yield sys.stdout, sys.stderr
     finally:
         sys.stdout, sys.stderr = old_out, old_err
+
+def get_mp3_artwork_data(mp3_source):
+    subprocess_args = ['mid3v2', '--list', mp3_source]
+    result = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
+    output = [x for x in result.stdout.readlines() if "APIC" in x][0]
+    match = re.search('\(([^)]+)\)', output)
+    splits = match.groups(0)[0].split(',')
+    size_string = splits[1].strip()
+    return (splits[0].strip(), int(size_string[0:size_string.index(' ')]))
