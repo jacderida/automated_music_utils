@@ -56,3 +56,10 @@ class Mp3TaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(TaggerError, 'The cover art destination does not exist.'):
             tagger = Mp3Tagger()
             tagger.apply_artwork('tests/integration/data/cover.jpg', '/some/non/existent/destination.mp3')
+
+    @mock.patch('os.path.exists')
+    def test__apply_artwork__destination_is_not_mp3__raises_tagger_error(self, exists_mock):
+        with self.assertRaisesRegexp(TaggerError, 'The destination must be an mp3.'):
+            exists_mock.side_effect = [True, True]
+            tagger = Mp3Tagger()
+            tagger.apply_artwork('tests/integration/data/cover.jpg', '/some/non/existent/destination.flac')

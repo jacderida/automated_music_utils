@@ -78,6 +78,9 @@ class Mp3Tagger(object):
             raise TaggerError('The cover art source does not exist.')
         if not os.path.exists(destination):
             raise TaggerError('The cover art destination does not exist.')
+        audio_type = os.path.splitext(destination)[1][1:]
+        if audio_type != 'mp3':
+            raise TaggerError('The destination must be an mp3.')
         artwork_type = os.path.splitext(source)[1][1:]
         if artwork_type == 'jpg' or artwork_type == 'jpeg':
             mime_type = 'image/jpeg'
