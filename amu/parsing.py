@@ -385,6 +385,8 @@ class ArtworkCommandParser(object):
     def parse_add_artwork_command(self, source, destination):
         if os.path.isdir(source):
             images = [f for f in [image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')] if f.startswith('cover')]
+            if len(images) == 0:
+                raise CommandParsingError('The source directory contains no cover jpg or png.')
             cover = os.path.join(source, images[0])
         else:
             cover = source

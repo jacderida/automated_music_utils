@@ -3,6 +3,7 @@ import unittest
 from mock import Mock
 from amu.commands import AddArtworkCommand
 from amu.parsing import ArtworkCommandParser
+from amu.parsing import CommandParsingError
 
 class ArtworkCommandParserTest(unittest.TestCase):
     def test__parse_add_artwork_command__source_is_file__an_add_artwork_command_should_be_returned(self):
@@ -52,3 +53,15 @@ class ArtworkCommandParserTest(unittest.TestCase):
         parser = ArtworkCommandParser(config_mock, tagger_mock)
         commands = parser.parse_add_artwork_command(source, destination)
         self.assertEqual('/some/source/cover.png', commands[0].source)
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    def test__parse_add_artwork_command__source_is_directory_with_no_covers__raises_command_parsing_error(self, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/destination/audio.mp3'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.return_value = True
+        listdir_mock.return_value = ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3']
+        with self.assertRaisesRegexp(CommandParsingError, 'The source directory contains no cover jpg or png.'):
+            parser = ArtworkCommandParser(config_mock, tagger_mock)
+            parser.parse_add_artwork_command(source, destination)
