@@ -68,32 +68,57 @@ class ArtworkCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isdir')
     @mock.patch('os.listdir')
-    def test__parse_add_artwork_command__destination_is_directory__returns_3_add_artwork_commands(self, listdir_mock, isdir_mock):
+    @mock.patch('os.walk')
+    def test__parse_add_artwork_command__destination_is_directory__returns_3_add_artwork_commands(self, walk_mock, listdir_mock, isdir_mock):
         source = '/some/source'
         destination = '/some/source'
         config_mock, tagger_mock = (Mock(),)*2
         isdir_mock.side_effect = [True, True]
-        listdir_mock.side_effect = [
-            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg'],
-            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']
-        ]
+        walk_mock.return_value = [('/some/source', (), ('01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3'))]
+        listdir_mock.side_effect = [['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']]
         parser = ArtworkCommandParser(config_mock, tagger_mock)
         commands = parser.parse_add_artwork_command(source, destination)
         self.assertEqual(3, len(commands))
 
     @mock.patch('os.path.isdir')
     @mock.patch('os.listdir')
-    def test__parse_add_artwork_command__destination_is_directory__destination_should_be_set_correctly_on_commands(self, listdir_mock, isdir_mock):
+    @mock.patch('os.walk')
+    def test__parse_add_artwork_command__destination_is_directory__destination_should_be_set_correctly_on_commands(self, walk_mock, listdir_mock, isdir_mock):
         source = '/some/source'
         destination = '/some/source'
         config_mock, tagger_mock = (Mock(),)*2
         isdir_mock.side_effect = [True, True]
-        listdir_mock.side_effect = [
-            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg'],
-            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']
-        ]
+        walk_mock.return_value = [('/some/source', (), ('01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3'))]
+        listdir_mock.return_value = ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']
         parser = ArtworkCommandParser(config_mock, tagger_mock)
         commands = parser.parse_add_artwork_command(source, destination)
         self.assertEqual('/some/source/01 - Track 01.mp3', commands[0].destination)
         self.assertEqual('/some/source/02 - Track 02.mp3', commands[1].destination)
         self.assertEqual('/some/source/03 - Track 03.mp3', commands[2].destination)
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
+    def test__parse_add_artwork_command__destination_is_multi_cd__destination_should_be_set_correctly_on_commands(self, walk_mock, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/source'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.side_effect = [True, True]
+        walk_mock.return_value = [
+            ('/some/source', ('cd1', 'cd2'), ()),
+            ('/some/source/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3')),
+            ('/some/source/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg'],
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3'],
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3']
+        ]
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_artwork_command(source, destination)
+        self.assertEqual('/some/source/cd1/01 - Track 01.mp3', commands[0].destination)
+        self.assertEqual('/some/source/cd1/02 - Track 02.mp3', commands[1].destination)
+        self.assertEqual('/some/source/cd1/03 - Track 03.mp3', commands[2].destination)
+        self.assertEqual('/some/source/cd2/01 - Track 01.mp3', commands[3].destination)
+        self.assertEqual('/some/source/cd2/02 - Track 02.mp3', commands[4].destination)
+        self.assertEqual('/some/source/cd2/03 - Track 03.mp3', commands[5].destination)
