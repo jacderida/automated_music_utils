@@ -63,6 +63,8 @@ class CliDriver(object):
         artwork_parser.add_argument(
             'action', choices=['add', 'remove'], help='The artwork action to be performed. The artwork can be added or removed.')
         artwork_parser.add_argument(
+            'type', choices=['mp3', 'flac'], help='The type of file to apply the artwork to.')
+        artwork_parser.add_argument(
             '--source', help='The destination file or directory to apply the artwork to. If there is no source then any artwork in the current directory will be used.')
         artwork_parser.add_argument(
             '--destination', help='The destination file or directory to apply the artwork to. If there is no destination then the current directory will be used.')
