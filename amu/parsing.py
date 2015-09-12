@@ -37,8 +37,12 @@ class CommandParser(object):
 
     def _get_artwork_command(self, args):
         if args.action == 'add' and args.type == 'mp3':
+            if not args.source:
+                source = os.getcwd()
+            else:
+                source = args.source
             parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
-            return parser.parse_add_artwork_command(args.source, args.destination)
+            return parser.parse_add_artwork_command(source, args.destination)
 
     def _get_fetch_command(self, args):
         command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)
