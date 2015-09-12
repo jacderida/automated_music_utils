@@ -383,39 +383,48 @@ class ArtworkCommandParser(object):
         self._tagger = tagger
 
     def parse_add_artwork_command(self, source, destination):
-        if os.path.isdir(source):
-            images = [f for f in [image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')] if f.startswith('cover')]
-            if len(images) == 0:
-                raise CommandParsingError('The source directory contains no cover jpg or png.')
-            cover = os.path.join(source, images[0])
-        else:
-            cover = source
+        cover = self._get_cover_path(source)
         if os.path.isdir(destination):
             commands = []
             for root, directories, files in os.walk(destination):
                 directory_len = len(directories)
                 if directory_len > 0:
-                    for directory in directories:
-                        full_destination_directory = os.path.join(root, directory)
-                        audio_files = [f for f in os.listdir(full_destination_directory) if f.endswith('.mp3')]
-                        for audio_file in audio_files:
-                            command = AddArtworkCommand(self._configuration_provider, self._tagger)
-                            command.source = cover
-                            command.destination = os.path.join(full_destination_directory, audio_file)
-                            commands.append(command)
+                    commands.extend(self._get_multi_cd_commands(root, directories, cover))
                 else:
-                    audio_files = [f for f in files if f.endswith('.mp3')]
-                    for audio_file in audio_files:
-                        command = AddArtworkCommand(self._configuration_provider, self._tagger)
-                        command.source = cover
-                        command.destination = os.path.join(destination, audio_file)
-                        commands.append(command)
+                    commands.extend(self._get_single_cd_commands(files, cover, destination))
                 break
             return commands
+        return [self._get_add_artwork_command(source, destination)]
+
+    def _get_multi_cd_commands(self, root, directories, cover):
+        commands = []
+        for directory in directories:
+            full_destination_directory = os.path.join(root, directory)
+            audio_files = [f for f in os.listdir(full_destination_directory) if f.endswith('.mp3')]
+            for audio_file in audio_files:
+                commands.append(self._get_add_artwork_command(cover, os.path.join(full_destination_directory, audio_file)))
+        return commands
+
+    def _get_single_cd_commands(self, files, cover, destination):
+        commands = []
+        audio_files = [f for f in files if f.endswith('.mp3')]
+        for audio_file in audio_files:
+            commands.append(self._get_add_artwork_command(cover, os.path.join(destination, audio_file)))
+        return commands
+
+    def _get_cover_path(self, source):
+        if os.path.isdir(source):
+            images = [f for f in [image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')] if f.startswith('cover')]
+            if len(images) == 0:
+                raise CommandParsingError('The source directory contains no cover jpg or png.')
+            return os.path.join(source, images[0])
+        return source
+
+    def _get_add_artwork_command(self, source, destination):
         command = AddArtworkCommand(self._configuration_provider, self._tagger)
-        command.source = cover
+        command.source = source
         command.destination = destination
-        return [command]
+        return command
 
 class AddTagCommandArgs(object):
     def __init__(self):
