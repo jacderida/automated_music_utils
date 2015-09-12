@@ -2,6 +2,7 @@ import os
 import tempfile
 import uuid
 from amu import utils
+from amu.commands import AddArtworkCommand
 from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
 from amu.commands import FetchReleaseCommand
@@ -375,6 +376,17 @@ class MoveAudioFileCommandParser(object):
             else:
                 replaced_title += char
         return replaced_title
+
+class ArtworkCommandParser(object):
+    def __init__(self, configuration_provider, tagger):
+        self._configuration_provider = configuration_provider
+        self._tagger = tagger
+
+    def parse_add_artwork_command(self, source, destination):
+        command = AddArtworkCommand(self._configuration_provider, self._tagger)
+        command.source = source
+        command.destination = destination
+        return [command]
 
 class AddTagCommandArgs(object):
     def __init__(self):
