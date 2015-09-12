@@ -384,7 +384,8 @@ class ArtworkCommandParser(object):
 
     def parse_add_artwork_command(self, source, destination):
         if os.path.isdir(source):
-            cover = os.path.join(source, 'cover.jpg')
+            images = [f for f in [image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')] if f.startswith('cover')]
+            cover = os.path.join(source, images[0])
         else:
             cover = source
         command = AddArtworkCommand(self._configuration_provider, self._tagger)

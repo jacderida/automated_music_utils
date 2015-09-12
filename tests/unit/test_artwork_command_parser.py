@@ -30,11 +30,25 @@ class ArtworkCommandParserTest(unittest.TestCase):
         self.assertEqual(destination, commands[0].destination)
 
     @mock.patch('os.path.isdir')
-    def test__parse_add_artwork_command__source_is_directory_with_cover_jpg__add_artwork_command_should_have_source_set_as_cover_jpg(self, isdir_mock):
+    @mock.patch('os.listdir')
+    def test__parse_add_artwork_command__source_is_directory_with_cover_jpg__add_artwork_command_should_have_source_set_as_cover_jpg(self, listdir_mock, isdir_mock):
         source = '/some/source'
         destination = '/some/destination/audio.mp3'
         config_mock, tagger_mock = (Mock(),)*2
         isdir_mock.return_value = True
+        listdir_mock.return_value = ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']
         parser = ArtworkCommandParser(config_mock, tagger_mock)
         commands = parser.parse_add_artwork_command(source, destination)
         self.assertEqual('/some/source/cover.jpg', commands[0].source)
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    def test__parse_add_artwork_command__source_is_directory_with_cover_png__add_artwork_command_should_have_source_set_as_cover_jpg(self, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/destination/audio.mp3'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.return_value = True
+        listdir_mock.return_value = ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.png']
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_artwork_command(source, destination)
+        self.assertEqual('/some/source/cover.png', commands[0].source)
