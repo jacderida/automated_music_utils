@@ -65,3 +65,35 @@ class ArtworkCommandParserTest(unittest.TestCase):
         with self.assertRaisesRegexp(CommandParsingError, 'The source directory contains no cover jpg or png.'):
             parser = ArtworkCommandParser(config_mock, tagger_mock)
             parser.parse_add_artwork_command(source, destination)
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    def test__parse_add_artwork_command__destination_is_directory__returns_3_add_artwork_commands(self, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/source'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.side_effect = [True, True]
+        listdir_mock.side_effect = [
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg'],
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']
+        ]
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_artwork_command(source, destination)
+        self.assertEqual(3, len(commands))
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    def test__parse_add_artwork_command__destination_is_directory__destination_should_be_set_correctly_on_commands(self, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/source'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.side_effect = [True, True]
+        listdir_mock.side_effect = [
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg'],
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg']
+        ]
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_artwork_command(source, destination)
+        self.assertEqual('/some/source/01 - Track 01.mp3', commands[0].destination)
+        self.assertEqual('/some/source/02 - Track 02.mp3', commands[1].destination)
+        self.assertEqual('/some/source/03 - Track 03.mp3', commands[2].destination)

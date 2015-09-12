@@ -390,6 +390,15 @@ class ArtworkCommandParser(object):
             cover = os.path.join(source, images[0])
         else:
             cover = source
+        if os.path.isdir(destination):
+            commands = []
+            audio_files = [f for f in os.listdir(destination) if f.endswith('.mp3')]
+            for audio_file in audio_files:
+                command = AddArtworkCommand(self._configuration_provider, self._tagger)
+                command.source = cover
+                command.destination = os.path.join(destination, audio_file)
+                commands.append(command)
+            return commands
         command = AddArtworkCommand(self._configuration_provider, self._tagger)
         command.source = cover
         command.destination = destination
