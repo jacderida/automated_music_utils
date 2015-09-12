@@ -122,3 +122,30 @@ class ArtworkCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/source/cd2/01 - Track 01.mp3', commands[3].destination)
         self.assertEqual('/some/source/cd2/02 - Track 02.mp3', commands[4].destination)
         self.assertEqual('/some/source/cd2/03 - Track 03.mp3', commands[5].destination)
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
+    def test__parse_add_artwork_command__destination_is_multi_cd__source_should_be_set_correctly_on_commands(self, walk_mock, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/source'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.side_effect = [True, True]
+        walk_mock.return_value = [
+            ('/some/source', ('cd1', 'cd2'), ()),
+            ('/some/source/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3')),
+            ('/some/source/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3', 'cover.jpg'],
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3'],
+            ['01 - Track 01.mp3', '02 - Track 02.mp3', '03 - Track 03.mp3']
+        ]
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_artwork_command(source, destination)
+        self.assertEqual('/some/source/cover.jpg', commands[0].source)
+        self.assertEqual('/some/source/cover.jpg', commands[1].source)
+        self.assertEqual('/some/source/cover.jpg', commands[2].source)
+        self.assertEqual('/some/source/cover.jpg', commands[3].source)
+        self.assertEqual('/some/source/cover.jpg', commands[4].source)
+        self.assertEqual('/some/source/cover.jpg', commands[5].source)
