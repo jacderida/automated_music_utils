@@ -2,6 +2,7 @@ import os
 import tempfile
 import uuid
 from amu import utils
+from amu.audio import Mp3Tagger
 from amu.commands import AddArtworkCommand
 from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
@@ -31,6 +32,13 @@ class CommandParser(object):
             return self._get_tag_command(args)
         elif args.command == 'fetch':
             return self._get_fetch_command(args)
+        elif args.command == 'artwork':
+            return self._get_artwork_command(args)
+
+    def _get_artwork_command(self, args):
+        if args.action == 'add' and args.type == 'mp3':
+            parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
+            return parser.parse_add_artwork_command(args.source, args.destination)
 
     def _get_fetch_command(self, args):
         command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)

@@ -5,7 +5,7 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import AddMp3TagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RipCdCommand
+from amu.commands import AddArtworkCommand, AddMp3TagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser, CommandParsingError
 from mock import Mock
@@ -1103,3 +1103,18 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         self.assertEqual(commands[0].discogs_id, 123456)
+
+    def test__from_args__when_an_add_artwork_to_mp3_command_is_specified__it_should_return_an_add_artwork_command(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'artwork',
+            'add',
+            'mp3',
+            '--source=/some/source/cover.jpg',
+            '--destination=/some/destination/audio.mp3'
+        ])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = parser.from_args(args)
+        self.assertIsInstance(commands[0], AddArtworkCommand)
