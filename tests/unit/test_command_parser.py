@@ -1118,3 +1118,19 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         self.assertIsInstance(commands[0], AddArtworkCommand)
+
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_add_artwork_command')
+    def test__from_args__when_an_add_artwork_to_mp3_command_is_specified__it_should_use_the_artwork_command_parser(self, artwork_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'artwork',
+            'add',
+            'mp3',
+            '--source=/some/source/cover.jpg',
+            '--destination=/some/destination/audio.mp3'
+        ])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = parser.from_args(args)
+        artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination/audio.mp3')
