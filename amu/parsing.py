@@ -383,8 +383,12 @@ class ArtworkCommandParser(object):
         self._tagger = tagger
 
     def parse_add_artwork_command(self, source, destination):
+        if os.path.isdir(source):
+            cover = os.path.join(source, 'cover.jpg')
+        else:
+            cover = source
         command = AddArtworkCommand(self._configuration_provider, self._tagger)
-        command.source = source
+        command.source = cover
         command.destination = destination
         return [command]
 
