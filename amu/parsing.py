@@ -297,7 +297,7 @@ class TagCommandParser(object):
         command_args.title = track.title
         command_args.year = release_model.original_year
         command_args.genre = release_model.genre
-        command_args.comment = '{0} ({1})'.format(release_model.label, release_model.catno)
+        command_args.comment = u'{0} ({1})'.format(release_model.label, release_model.catno)
         command_args.track_number = track.track_number
         command_args.track_total = track.track_total
         command_args.disc_number = track.disc_number
