@@ -413,9 +413,17 @@ class ArtworkCommandParser(object):
         return [self._get_add_artwork_command(source, destination)]
 
     def parse_from_encode_commands(self, encode_commands):
+        source = os.path.dirname(encode_commands[0].source)
+        images = [
+            f for f in [
+                image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')
+            ] if f.startswith('cover')
+        ]
+        cover = os.path.join(source, images[0])
         commands = []
         for encode_command in encode_commands:
             command = AddArtworkCommand(self._configuration_provider, self._tagger)
+            command.source = cover
             commands.append(command)
         return commands
 
