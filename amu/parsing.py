@@ -424,6 +424,7 @@ class ArtworkCommandParser(object):
         for encode_command in encode_commands:
             command = AddArtworkCommand(self._configuration_provider, self._tagger)
             command.source = cover
+            command.destination = encode_command.destination
             commands.append(command)
         return commands
 
