@@ -275,3 +275,31 @@ class ArtworkCommandParserTest(unittest.TestCase):
         self.assertEqual(artwork_commands[1].destination, '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3')
         self.assertEqual(artwork_commands[2].destination, '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3')
         self.assertEqual(artwork_commands[3].destination, '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3')
+
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__4_encode_commands_source_has_no_cover__returns_empty_list(self, listdir_mock):
+        config_mock, tagger_mock, encoder_mock = (Mock(),)*3
+        listdir_mock.return_value = [
+            '01 - Track 01.wav', '02 - Track 02.wav', '03 - Track 03.wav', '04 - Track 04.wav'
+        ]
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
+        command1.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
+        command2.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
+        command3.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
+        command4.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
+        commands.append(command4)
+
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        artwork_commands = parser.parse_from_encode_commands(commands)
+        self.assertEqual(0, len(artwork_commands))
