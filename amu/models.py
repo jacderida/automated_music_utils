@@ -294,8 +294,8 @@ Tracklist:
         disc_number = 1
         for track in tracklist:
             if track.position:
-                if '-' in track.position:
-                    discogs_disc_number = int(track.position.split('-')[0])
+                if '-' in track.position or '.' in track.position:
+                    discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)
                     if discogs_disc_number != disc_number:
                         disc_number += 1
                         track_totals_per_disc.append(track_total - 1)
@@ -303,6 +303,15 @@ Tracklist:
                     track_total += 1
         track_totals_per_disc.append(track_total - 1)
         return track_totals_per_disc
+
+    @staticmethod
+    def _get_disc_number_from_position(position):
+        split = position.split('-')
+        if len(split) > 1:
+            return int(split[0])
+        split = position.split('.')
+        if len(split) > 1:
+            return int(split[0])
 
     @property
     def discogs_id(self):

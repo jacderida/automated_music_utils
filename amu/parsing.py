@@ -412,6 +412,9 @@ class ArtworkCommandParser(object):
             return commands
         return [self._get_add_artwork_command(source, destination)]
 
+    def parse_from_encode_commands(self, commands):
+        pass
+
     def _get_multi_cd_commands(self, root, directories, cover):
         commands = []
         for directory in directories:
