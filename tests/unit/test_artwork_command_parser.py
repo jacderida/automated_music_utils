@@ -2,6 +2,7 @@ import mock
 import unittest
 from mock import Mock
 from amu.commands import AddArtworkCommand
+from amu.commands import EncodeWavToMp3Command
 from amu.parsing import ArtworkCommandParser
 from amu.parsing import CommandParsingError
 
@@ -149,3 +150,31 @@ class ArtworkCommandParserTest(unittest.TestCase):
         self.assertEqual('/some/source/cover.jpg', commands[3].source)
         self.assertEqual('/some/source/cover.jpg', commands[4].source)
         self.assertEqual('/some/source/cover.jpg', commands[5].source)
+
+    def test__parse_from_encode_commands__4_encode_commands_and_source_has_cover_jpg__returns_4_add_artwork_commands(self):
+        config_mock, tagger_mock, encoder_mock = (Mock(),)*3
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
+        command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
+        command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
+        command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
+        command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
+        commands.append(command4)
+
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        artwork_commands = parser.parse_from_encode_commands(commands)
+        self.assertEqual(4, len(artwork_commands))
+        self.assertIsInstance(artwork_commands[0], AddArtworkCommand)
+        self.assertIsInstance(artwork_commands[1], AddArtworkCommand)
+        self.assertIsInstance(artwork_commands[2], AddArtworkCommand)
+        self.assertIsInstance(artwork_commands[3], AddArtworkCommand)
