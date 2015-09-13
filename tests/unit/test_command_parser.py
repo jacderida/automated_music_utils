@@ -1137,7 +1137,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_add_artwork_command')
     @mock.patch('os.getcwd')
-    def test__from_args__when_an_add_artwork_to_mp3_command_with_no_source_is_specified__it_should_use_the_current_directory_as_source(self, getcwd_mock, artwork_parser_mock):
+    def test__from_args__when_an_add_artwork_to_mp3_command_with_no_source_specified__it_should_use_the_current_directory_as_source(self, getcwd_mock, artwork_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -1151,3 +1151,20 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         artwork_parser_mock.assert_called_once_with('/some/source', '/some/destination/audio.mp3')
+
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_add_artwork_command')
+    @mock.patch('os.getcwd')
+    def test__from_args__when_an_add_artwork_to_mp3_command_with_no_destination_specified__it_should_use_the_current_directory_as_destination(self, getcwd_mock, artwork_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'artwork',
+            'add',
+            'mp3',
+            '--source=/some/source/cover.jpg'
+        ])
+        getcwd_mock.return_value = '/some/destination'
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser.from_args(args)
+        artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination')
