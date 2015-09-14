@@ -149,9 +149,10 @@ class CommandParserTest(unittest.TestCase):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
             parser.from_args(args)
 
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_4_tag_mp3_commands(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_4_tag_mp3_commands(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -166,6 +167,12 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock)
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
         ]
 
         release_model = ReleaseModel()
@@ -189,9 +196,10 @@ class CommandParserTest(unittest.TestCase):
         commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
         self.assertEqual(4, len(commands))
 
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_sources_from_the_encode_commands_should_be_used(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_sources_from_the_encode_commands_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -219,6 +227,12 @@ class CommandParserTest(unittest.TestCase):
         command4.destination = '/some/path/to/mp3s/04 - Track 04.mp3'
         commands.append(command4)
         encode_command_parser_mock.return_value = commands
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
+        ]
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -286,9 +300,10 @@ class CommandParserTest(unittest.TestCase):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
             parser.from_args(args)
 
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -303,6 +318,12 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
         ]
         config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
@@ -327,9 +348,10 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         metadata_mock.get_release_by_id.assert_called_once_with(451034)
 
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_be_called_correctly(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_be_called_correctly(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -344,6 +366,12 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
             EncodeWavToMp3Command(config_mock, encoder_mock),
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
         ]
         config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
@@ -368,8 +396,155 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/path/to/wavs', '/some/replaced/mask')
 
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_config_provider_should_supply_the_destination(self, encode_command_parser_mock):
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_config_provider_should_supply_the_destination(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--discogs-id=451034'
+        ])
+        encode_command_parser_mock.return_value = [
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
+        ]
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser.from_args(args)
+        config_mock.get_destination_with_mask_replaced.assert_called_once_with(release_model)
+
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--destination=/some/custom/destination',
+            '--discogs-id=451034'
+        ])
+        encode_command_parser_mock.return_value = [
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
+        ]
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = [x for x in parser.from_args(args) if isinstance(x, AddMp3TagCommand)]
+        self.assertEqual(4, len(commands))
+
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__4_move_audio_file_commands_are_generated(self, encode_command_parser_mock, artwork_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--destination=/some/custom/destination',
+            '--discogs-id=451034'
+        ])
+        encode_command_parser_mock.return_value = [
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavToMp3Command(config_mock, encoder_mock),
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
+        ]
+        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
+        self.assertEqual(4, len(commands))
+
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_add_artwork_command_parser_is_called_correctly(self, encode_command_parser_mock, artwork_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -378,6 +553,7 @@ class CommandParserTest(unittest.TestCase):
             'wav',
             'mp3',
             '--source=/some/path/to/wavs',
+            '--destination=/some/custom/destination',
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
@@ -407,91 +583,11 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
-        config_mock.get_destination_with_mask_replaced.assert_called_once_with(release_model)
-
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        driver = CliDriver()
-        arg_parser = driver.get_argument_parser()
-        args = arg_parser.parse_args([
-            'encode',
-            'wav',
-            'mp3',
-            '--source=/some/path/to/wavs',
-            '--destination=/some/custom/destination',
-            '--discogs-id=451034'
-        ])
-        encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-        ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
-
-        release_model = ReleaseModel()
-        release_model.artist = 'AFX'
-        release_model.title = 'Analord 08'
-        release_model.label = 'Rephlex'
-        release_model.catno = 'ANALORD 08'
-        release_model.format = 'Vinyl'
-        release_model.format_quantity = 1
-        release_model.country = 'UK'
-        release_model.year = '2005'
-        release_model.genre = 'Electronic'
-        release_model.style = 'Breakbeat, House, Acid, Electro'
-        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
-        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
-        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
-        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
-        metadata_mock.get_release_by_id.return_value = release_model
-
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if isinstance(x, AddMp3TagCommand)]
-        self.assertEqual(4, len(commands))
-
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
-    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__4_move_audio_file_commands_are_generated(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        driver = CliDriver()
-        arg_parser = driver.get_argument_parser()
-        args = arg_parser.parse_args([
-            'encode',
-            'wav',
-            'mp3',
-            '--source=/some/path/to/wavs',
-            '--destination=/some/custom/destination',
-            '--discogs-id=451034'
-        ])
-        encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-        ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
-
-        release_model = ReleaseModel()
-        release_model.artist = 'AFX'
-        release_model.title = 'Analord 08'
-        release_model.label = 'Rephlex'
-        release_model.catno = 'ANALORD 08'
-        release_model.format = 'Vinyl'
-        release_model.format_quantity = 1
-        release_model.country = 'UK'
-        release_model.year = '2005'
-        release_model.genre = 'Electronic'
-        release_model.style = 'Breakbeat, House, Acid, Electro'
-        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
-        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
-        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
-        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
-        metadata_mock.get_release_by_id.return_value = release_model
-
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
-        self.assertEqual(4, len(commands))
+        command_args = artwork_command_parser_mock.call_args[0][0]
+        self.assertIsInstance(command_args[0], EncodeWavToMp3Command)
+        self.assertIsInstance(command_args[1], EncodeWavToMp3Command)
+        self.assertIsInstance(command_args[2], EncodeWavToMp3Command)
+        self.assertIsInstance(command_args[3], EncodeWavToMp3Command)
 
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
