@@ -16,5 +16,8 @@ if [[ ! -e "tests/integration/data/song.mp3" ]]; then
     mkdir tests/integration/data
     cd tests/integration/data
     curl -O http://jacderida-misc.s3.amazonaws.com/song.mp3
+    curl -O http://jacderida-misc.s3.amazonaws.com/song_with_both_id3v2_and_id3v1_tags.mp3
+    curl -O http://jacderida-misc.s3.amazonaws.com/song_with_only_id3v1_tags.mp3
+    curl -O http://jacderida-misc.s3.amazonaws.com/song_with_only_id3v2_tags.mp3
     cd $present_path
 fi
