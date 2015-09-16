@@ -435,19 +435,21 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.genre, 'Electronic, Stage & Screen')
 
-    def test__from_discogs_release__release_has_multiple_labels__the_full_list_of_labels_are_used(self):
+    def test__from_discogs_release__release_has_multiple_labels__the_first_label_is_taken(self):
+        # Note: This will be refactored later to use a list of labels rather than taking the first.
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(2318107)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.label, 'Apollo, [PIAS] Recordings')
+        self.assertEqual(release.label, 'Apollo')
 
     def test__from_discogs_release__release_has_multiple_labels__the_full_list_of_catnos_are_used(self):
+        # Note: This will be refactored later to use a list of labels rather than taking the first.
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(2318107)
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.catno, 'AMB3922CD, 516.9522.020')
+        self.assertEqual(release.catno, 'AMB3922CD')
 
     def test__from_discogs_release__release_has_artists_separated_by_commas__the_correct_joined_artist_is_used(self):
         client = discogs_client.Client('amu/0.1')

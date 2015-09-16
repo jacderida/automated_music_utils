@@ -215,27 +215,12 @@ Tracklist:
 
     @staticmethod
     def _get_labels_from_discogs_model(labels):
-        if len(labels) == 1:
-            return remove_number_from_duplicate_entry(labels[0].name)
-        label_string = ''
-        for i, label in enumerate(labels):
-            label_string += label.name
-            label_string = remove_number_from_duplicate_entry(label_string)
-            if i < len(labels) - 1:
-                label_string += ', '
-        return label_string
+        return remove_number_from_duplicate_entry(labels[0].name)
 
     @staticmethod
     def _get_cat_numbers_from_discogs_model(release):
         labels = release.data['labels']
-        if len(labels) == 1:
-            return labels[0]['catno']
-        catno_string = ''
-        for i, label in enumerate(labels):
-            catno_string += label['catno']
-            if i < len(labels) - 1:
-                catno_string += ', '
-        return catno_string
+        return labels[0]['catno']
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
