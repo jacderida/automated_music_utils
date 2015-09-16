@@ -78,3 +78,16 @@ def get_track_name(track_number, extension):
     if track_number < 10:
         return "0{0} - Track {0}.{1}".format(track_number, extension)
     return "{0} - Track {0}.{1}".format(track_number, extension)
+
+def remove_number_from_duplicate_entry(entry):
+    """
+    Discogs deals with duplicate artists or labels by appending a number.
+    For example, if there are 2 artists named 'Aphex Twin', there will be an
+    entry for Aphex Twin and Aphex Twin (2).
+
+    This code detects that and then strips it off.
+    """
+    match = re.search('.*(\(\d+\))', entry)
+    if match:
+        entry = entry[0:match.start(1)].strip()
+    return entry

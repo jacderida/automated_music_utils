@@ -1,4 +1,5 @@
 import re
+from amu.utils import remove_number_from_duplicate_entry
 
 class TrackModel(object):
     def __init__(self):
@@ -215,10 +216,11 @@ Tracklist:
     @staticmethod
     def _get_labels_from_discogs_model(labels):
         if len(labels) == 1:
-            return labels[0].name
+            return remove_number_from_duplicate_entry(labels[0].name)
         label_string = ''
         for i, label in enumerate(labels):
             label_string += label.name
+            label_string = remove_number_from_duplicate_entry(label_string)
             if i < len(labels) - 1:
                 label_string += ', '
         return label_string
@@ -447,7 +449,7 @@ class ArtistHelper(object):
                 artists_string += artist['anv']
             else:
                 artists_string += ArtistHelper._apply_the_suffix(artist['name'])
-            artists_string = ArtistHelper._remove_number_from_duplicate_artist(artists_string)
+            artists_string = remove_number_from_duplicate_entry(artists_string)
             join = artist['join']
             if join:
                 if join == ',':
@@ -469,18 +471,4 @@ class ArtistHelper(object):
     def _apply_the_suffix(artist):
         if artist[0:3] == u'The':
             return u'{0}, The'.format(artist[4:])
-        return artist
-
-    @staticmethod
-    def _remove_number_from_duplicate_artist(artist):
-        """
-        Discogs deals with duplicate artists by appending a number to the artist.
-        For example, if there are 2 artists named 'Aphex Twin', there will be an
-        entry for Aphex Twin and Aphex Twin (2).
-
-        This code detects that and then strips it off.
-        """
-        match = re.search('.*(\(\d+\))', artist)
-        if match:
-            artist = artist[0:match.start(1)].strip()
         return artist

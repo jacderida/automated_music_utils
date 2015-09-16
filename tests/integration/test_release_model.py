@@ -546,12 +546,19 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         release_model = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual('Dr. Rhythm', release_model.artist)
 
+    def test__from_discogs_release__release_has_a_duplicate_label__the_number_should_be_stripped_from_the_label(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(4347)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual('Submerge', release_model.label)
+
     def test__from_discogs_release__release_has_a_duplicate_artists__the_number_should_be_stripped_from_the_artists(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(5459202)
         discogs_release.refresh()
         release_model = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(u'Noize Choir, Wax Magentic, Steve Legget, Shemale, Mike McHugh', release_model.artist)
+        self.assertEqual(u'Noize Choir, Wax Magnetic, Steve Legget, Shemale, Mike McHugh', release_model.artist)
 
     def test__from_discogs_release__release_has_duplicate_artists_on_tracks__the_number_should_be_stripped_from_the_artist(self):
         client = discogs_client.Client('amu/0.1')
