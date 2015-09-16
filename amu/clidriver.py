@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 import argparse
 import sys
+from amu.audio import LameEncoder, RubyRipperCdRipper
 from amu.config import ConfigurationProvider
-from amu.encode import LameEncoder
 from amu.metadata import DiscogsMetadataService
 from amu.metadata import MaskReplacer
 from amu.parsing import CommandParser
-from amu.rip import RubyRipperCdRipper
 
 
 def main():
@@ -60,6 +59,15 @@ class CliDriver(object):
         tag_parser.add_argument('--disc-number', help='The disc number to use for the tag.')
         tag_parser.add_argument('--disc-total', help='The disc total to use for the tag.')
         tag_parser.add_argument('--comment', help='The comment for the tag.')
+        artwork_parser = subparsers.add_parser('artwork', help='adds or removes artwork from a file')
+        artwork_parser.add_argument(
+            'action', choices=['add', 'remove'], help='The artwork action to be performed. The artwork can be added or removed.')
+        artwork_parser.add_argument(
+            'type', choices=['mp3', 'flac'], help='The type of file to apply the artwork to.')
+        artwork_parser.add_argument(
+            '--source', help='The destination file or directory to apply the artwork to. If there is no source then any artwork in the current directory will be used.')
+        artwork_parser.add_argument(
+            '--destination', help='The destination file or directory to apply the artwork to. If there is no destination then the current directory will be used.')
         return parser
 
     def _get_arguments(self):

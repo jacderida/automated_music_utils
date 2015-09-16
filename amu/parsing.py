@@ -2,6 +2,8 @@ import os
 import tempfile
 import uuid
 from amu import utils
+from amu.audio import Mp3Tagger
+from amu.commands import AddArtworkCommand
 from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
 from amu.commands import FetchReleaseCommand
@@ -30,6 +32,21 @@ class CommandParser(object):
             return self._get_tag_command(args)
         elif args.command == 'fetch':
             return self._get_fetch_command(args)
+        elif args.command == 'artwork':
+            return self._get_artwork_command(args)
+
+    def _get_artwork_command(self, args):
+        if args.action == 'add' and args.type == 'mp3':
+            if args.source:
+                source = args.source
+            else:
+                source = os.getcwd()
+            if args.destination:
+                destination = args.destination
+            else:
+                destination = os.getcwd()
+            parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
+            return parser.parse_add_artwork_command(source, destination)
 
     def _get_fetch_command(self, args):
         command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)
@@ -77,9 +94,8 @@ class CommandParser(object):
     def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
         commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
-        track_count = utils.get_number_of_tracks_on_cd()
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
-        encode_commands = encode_command_parser.parse_cd_rip(source, destination, track_count)
+        encode_commands = encode_command_parser.parse_cd_rip(source, destination)
         commands.extend(encode_commands)
         if release_model:
             # The first command is a rip cd command, which we don't need.
@@ -102,6 +118,7 @@ class CommandParser(object):
             raise CommandParsingError('The source directory has no wavs to encode')
         if release_model:
             commands.extend(self._get_release_tag_commands(args, encode_commands, destination, release_model))
+            commands.extend(self._get_add_artwork_commands(encode_commands))
             move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
             commands.extend(move_file_parser.parse_from_encode_commands(encode_commands, release_model))
         return commands
@@ -118,19 +135,22 @@ class CommandParser(object):
         return tag_command_parser.parse_from_release_model_with_sources(
             release_model, [x.destination for x in commands])
 
+    def _get_add_artwork_commands(self, encode_commands):
+        artwork_command_parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
+        return artwork_command_parser.parse_from_encode_commands(encode_commands)
+
 class EncodeCommandParser(object):
     def __init__(self, configuration_provider, cd_ripper, encoder):
         self._configuration_provider = configuration_provider
         self._cd_ripper = cd_ripper
         self._encoder = encoder
 
-    def parse_cd_rip(self, rip_destination, destination, track_count):
+    def parse_cd_rip(self, rip_destination, destination):
         if not rip_destination:
             raise CommandParsingError('The rip destination cannot be empty')
         if not destination:
             raise CommandParsingError('The destination cannot be empty')
-        if track_count < 1:
-            raise CommandParsingError('The track count must be greather than or equal to 1')
+        track_count = utils.get_number_of_tracks_on_cd()
         commands = []
         rip_cd_command = RipCdCommand(self._configuration_provider, self._cd_ripper)
         rip_cd_command.destination = rip_destination
@@ -214,7 +234,8 @@ class TagCommandParser(object):
         commands = []
         track_number = 1
         for track in release_model.get_tracks():
-            full_source_path = os.path.join(source_path, utils.get_track_name(track_number, "mp3"))
+            track_name = utils.get_track_name(track_number, "mp3")
+            full_source_path = os.path.join(source_path, track_name)
             commands.append(self._get_add_tag_command_from_release_model(full_source_path, release_model, track))
             track_number += 1
         return commands
@@ -298,7 +319,7 @@ class TagCommandParser(object):
         command_args.title = track.title
         command_args.year = release_model.original_year
         command_args.genre = release_model.genre
-        command_args.comment = '{0} ({1})'.format(release_model.label, release_model.catno)
+        command_args.comment = u'{0} ({1})'.format(release_model.label, release_model.catno)
         command_args.track_number = track.track_number
         command_args.track_total = track.track_total
         command_args.disc_number = track.disc_number
@@ -376,6 +397,73 @@ class MoveAudioFileCommandParser(object):
             else:
                 replaced_title += char
         return replaced_title
+
+class ArtworkCommandParser(object):
+    def __init__(self, configuration_provider, tagger):
+        self._configuration_provider = configuration_provider
+        self._tagger = tagger
+
+    def parse_add_artwork_command(self, source, destination):
+        cover = self._get_cover_path(source)
+        if os.path.isdir(destination):
+            commands = []
+            for root, directories, files in os.walk(destination):
+                directory_len = len(directories)
+                if directory_len > 0:
+                    commands.extend(self._get_multi_cd_commands(root, directories, cover))
+                else:
+                    commands.extend(self._get_single_cd_commands(files, cover, destination))
+                break
+            return commands
+        return [self._get_add_artwork_command(source, destination)]
+
+    def parse_from_encode_commands(self, encode_commands):
+        commands = []
+        source = os.path.dirname(encode_commands[0].source)
+        images = [
+            f for f in [
+                image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')
+            ] if f.startswith('cover')
+        ]
+        if len(images) == 0:
+            return commands
+        cover = os.path.join(source, images[0])
+        for encode_command in encode_commands:
+            command = AddArtworkCommand(self._configuration_provider, self._tagger)
+            command.source = cover
+            command.destination = encode_command.destination
+            commands.append(command)
+        return commands
+
+    def _get_multi_cd_commands(self, root, directories, cover):
+        commands = []
+        for directory in directories:
+            full_destination_directory = os.path.join(root, directory)
+            audio_files = [f for f in os.listdir(full_destination_directory) if f.endswith('.mp3')]
+            for audio_file in audio_files:
+                commands.append(self._get_add_artwork_command(cover, os.path.join(full_destination_directory, audio_file)))
+        return commands
+
+    def _get_single_cd_commands(self, files, cover, destination):
+        commands = []
+        audio_files = [f for f in files if f.endswith('.mp3')]
+        for audio_file in audio_files:
+            commands.append(self._get_add_artwork_command(cover, os.path.join(destination, audio_file)))
+        return commands
+
+    def _get_cover_path(self, source):
+        if os.path.isdir(source):
+            images = [f for f in [image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')] if f.startswith('cover')]
+            if len(images) == 0:
+                raise CommandParsingError('The source directory contains no cover jpg or png.')
+            return os.path.join(source, images[0])
+        return source
+
+    def _get_add_artwork_command(self, source, destination):
+        command = AddArtworkCommand(self._configuration_provider, self._tagger)
+        command.source = source
+        command.destination = destination
+        return command
 
 class AddTagCommandArgs(object):
     def __init__(self):

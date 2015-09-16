@@ -68,6 +68,10 @@ def get_id3_tag_data(path):
         tag_data['genre'] = tag.getall('TCON')[0]
     if tag.has_key('COMM:comm:eng'):
         tag_data['comment'] = tag.getall('COMM')[0]
+    if tag.has_key('APIC'):
+        tag_data['artwork'] = True
+    else:
+        tag_data['artwork'] = False
     return tag_data
 
 def get_track_name(track_number, extension):

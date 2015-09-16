@@ -151,7 +151,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_temp_config_file_for_ripper('/any/path')
         sub_mock.assert_called_with('REPLACE_BASE_DIR', '/any/path', 'basedir=REPLACE_BASE_DIR')
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.config.open', create=True)
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
@@ -164,7 +164,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_temp_config_file_for_ripper('/any/path')
         open_mock.assert_called_with(utils.AnyStringWith('/tmp'), 'w')
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.config.open', create=True)
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
@@ -176,7 +176,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_temp_config_file_for_ripper('/any/path')
         gettempdir_mock.assert_called_once_with()
 
-    @mock.patch('amu.rip.tempfile.gettempdir')
+    @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.config.open', create=True)
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')

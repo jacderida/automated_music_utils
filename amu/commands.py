@@ -1,8 +1,7 @@
 import os
 from mutagen import File
 from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPOS, TRCK
-from amu.encode import LameEncoder
-from amu.rip import RubyRipperCdRipper
+from amu.audio import LameEncoder, RubyRipperCdRipper
 
 class CommandValidationError(Exception):
     def __init__(self, message):
@@ -366,3 +365,39 @@ class FetchReleaseCommand(Command):
     def execute(self):
         release_model = self._metadata_service.get_release_by_id(self.discogs_id)
         print release_model
+
+class AddArtworkCommand(Command):
+    def __init__(self, config_provider, tagger):
+        super(AddArtworkCommand, self).__init__(config_provider)
+        self._tagger = tagger
+        self._source = ''
+        self._destination = ''
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
+
+    def validate(self):
+        if not self.source:
+            raise CommandValidationError('A source must be supplied for the add artwork command.')
+        if not os.path.exists(self.source):
+            raise CommandValidationError('A valid source must be supplied for the add artwork command.')
+        if not self.destination:
+            raise CommandValidationError('A destination must be supplied for the add artwork command.')
+        if not os.path.exists(self.destination):
+            raise CommandValidationError('A valid destination must be supplied for the add artwork command.')
+
+    def execute(self):
+        self._tagger.apply_artwork(self.source, self.destination)
