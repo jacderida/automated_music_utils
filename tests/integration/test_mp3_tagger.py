@@ -11,10 +11,12 @@ class Mp3TaggerTest(unittest.TestCase):
     def setUp(self):
         shutil.copyfile('tests/integration/data/song.mp3', 'tests/integration/data/test_data.mp3')
         shutil.copyfile('tests/integration/data/song_with_only_id3v1_tags.mp3', 'tests/integration/data/copy_of_song_with_only_id3v1_tags.mp3')
+        shutil.copyfile('tests/integration/data/song_with_only_id3v2_tags.mp3', 'tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3')
 
     def tearDown(self):
         os.remove('tests/integration/data/test_data.mp3')
         os.remove('tests/integration/data/copy_of_song_with_only_id3v1_tags.mp3')
+        os.remove('tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3')
 
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
@@ -69,6 +71,12 @@ class Mp3TaggerTest(unittest.TestCase):
 
     def test__remove_tags__mp3_has_only_id3v1_tag__id3v1_tag_is_removed(self):
         source = 'tests/integration/data/copy_of_song_with_only_id3v1_tags.mp3'
+        tagger = Mp3Tagger()
+        tagger.remove_tags(source)
+        self.assertFalse(mp3_has_tags(source))
+
+    def test__remove_tags__mp3_has_only_id3v2_tag__id3v2_tag_is_removed(self):
+        source = 'tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3'
         tagger = Mp3Tagger()
         tagger.remove_tags(source)
         self.assertFalse(mp3_has_tags(source))

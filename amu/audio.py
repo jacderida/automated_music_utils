@@ -93,7 +93,7 @@ class Mp3Tagger(object):
 
     def remove_tags(self, source):
         tag = ID3(source)
-        tag.delete(delete_v1=True, delete_v2=False)
+        tag.delete(delete_v1=True, delete_v2=True)
 
     def _get_tag(self, source):
         """
