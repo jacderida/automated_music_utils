@@ -2,6 +2,7 @@ import re
 import subprocess
 import sys
 from contextlib import contextmanager
+from mutagen.id3 import APIC, ID3, ID3NoHeaderError
 from StringIO import StringIO
 
 
@@ -23,3 +24,10 @@ def get_mp3_artwork_data(mp3_source):
     splits = match.groups(0)[0].split(',')
     size_string = splits[1].strip()
     return (splits[0].strip(), int(size_string[0:size_string.index(' ')]))
+
+def mp3_has_tags(mp3_source):
+    try:
+        ID3(mp3_source)
+        return True
+    except ID3NoHeaderError:
+        return False

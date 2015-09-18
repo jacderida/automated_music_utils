@@ -91,6 +91,10 @@ class Mp3Tagger(object):
         tag.add(APIC(encoding=3, mime=mime_type, type=3, desc=u'cover', data=open(source).read()))
         tag.save()
 
+    def remove_tags(self, source):
+        tag = ID3(source)
+        tag.delete(delete_v1=True, delete_v2=False)
+
     def _get_tag(self, source):
         """
         This exists to handle mp3s that have no tags. It's horrendous, but
