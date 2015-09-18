@@ -314,6 +314,8 @@ class RemoveTagCommand(Command):
     def validate(self):
         if not self._source:
             raise CommandValidationError('A source must be specified for the remove tag command.')
+        if not os.path.exists(self._source):
+            raise CommandValidationError('The specified source does not exist.')
 
     def execute(self):
         pass
