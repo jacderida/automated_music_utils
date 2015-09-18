@@ -5,7 +5,7 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import AddArtworkCommand, AddMp3TagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RipCdCommand
+from amu.commands import AddArtworkCommand, AddMp3TagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser, CommandParsingError
 from mock import Mock
@@ -1181,6 +1181,23 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
         self.assertEqual('/some/current/working/directory', command_args.source)
+
+    @mock.patch('amu.parsing.TagCommandParser.parse_remove_mp3_tag_command')
+    def test__from_args__when_remove_mp3_tag_is_specified__the_tag_command_parser_should_be_used(self, tag_command_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'remove',
+            'mp3',
+            '--source=/some/path/to/song.mp3',
+        ])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        tag_command_parser_mock.return_value = [RemoveTagCommand(config_mock, tagger_mock)]
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = parser.from_args(args)
+        tag_command_parser_mock.assert_called_once()
+        self.assertEqual(1, len(commands))
 
     def test__from_args__when_a_fetch_release_command_is_specified__it_should_return_a_fetch_release_command(self):
         driver = CliDriver()
