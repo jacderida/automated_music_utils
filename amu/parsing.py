@@ -85,13 +85,13 @@ class CommandParser(object):
 
     def _get_tag_command(self, args):
         if args.action == 'remove':
-            tag_command_parser = TagCommandParser(self._configuration_provider)
+            tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
             commands = tag_command_parser.parse_remove_mp3_tag_command(args)
             return commands
         command_args = AddTagCommandArgs.from_args(args)
         if not command_args.source:
             command_args.source = os.getcwd()
-        tag_command_parser = TagCommandParser(self._configuration_provider)
+        tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
         commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
         return commands
 
@@ -133,7 +133,7 @@ class CommandParser(object):
         if track_count != release_track_count:
             raise CommandParsingError(
                 'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
-        tag_command_parser = TagCommandParser(self._configuration_provider)
+        tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
         if args.encoding_from == 'cd':
             return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
         return tag_command_parser.parse_from_release_model_with_sources(
@@ -207,8 +207,9 @@ class EncodeCommandParser(object):
         return command
 
 class TagCommandParser(object):
-    def __init__(self, configuration_provider):
+    def __init__(self, configuration_provider, tagger):
         self._configuration_provider = configuration_provider
+        self._tagger = tagger
 
     def parse_from_release_model_with_sources(self, release_model, sources):
         commands = []
