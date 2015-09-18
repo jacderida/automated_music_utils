@@ -84,16 +84,13 @@ class CommandParser(object):
         return commands
 
     def _get_tag_command(self, args):
-        if args.action == 'remove':
-            tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
-            commands = tag_command_parser.parse_remove_mp3_tag_command(args.source if args.source else os.getcwd())
-            return commands
-        command_args = AddTagCommandArgs.from_args(args)
-        if not command_args.source:
-            command_args.source = os.getcwd()
+        source = args.source if args.source else os.getcwd()
         tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
-        commands = tag_command_parser.parse_add_mp3_tag_command(command_args)
-        return commands
+        if args.action == 'remove':
+            return tag_command_parser.parse_remove_mp3_tag_command(source)
+        command_args = AddTagCommandArgs.from_args(args)
+        command_args.source = source
+        return tag_command_parser.parse_add_mp3_tag_command(command_args)
 
     def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
         commands = []
