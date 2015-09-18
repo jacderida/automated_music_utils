@@ -87,3 +87,9 @@ class Mp3TaggerTest(unittest.TestCase):
         tagger = Mp3Tagger()
         tagger.remove_tags(source)
         self.assertFalse(mp3_has_tags(source))
+
+    def test__remove_tags__mp3_has_no_tags__no_error_should_be_raised_and_no_tags_should_be_applied(self):
+        source = 'tests/integration/data/test_data.mp3'
+        tagger = Mp3Tagger()
+        tagger.remove_tags(source)
+        self.assertFalse(mp3_has_tags(source))

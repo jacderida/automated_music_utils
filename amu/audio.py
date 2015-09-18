@@ -92,8 +92,11 @@ class Mp3Tagger(object):
         tag.save()
 
     def remove_tags(self, source):
-        tag = ID3(source)
-        tag.delete()
+        try:
+            tag = ID3(source)
+            tag.delete()
+        except ID3NoHeaderError:
+            pass
 
     def _get_tag(self, source):
         """
