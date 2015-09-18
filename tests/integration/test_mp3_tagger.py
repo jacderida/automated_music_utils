@@ -12,6 +12,7 @@ class Mp3TaggerTest(unittest.TestCase):
         shutil.copyfile('tests/integration/data/song.mp3', 'tests/integration/data/test_data.mp3')
         shutil.copyfile('tests/integration/data/song_with_only_id3v1_tags.mp3', 'tests/integration/data/copy_of_song_with_only_id3v1_tags.mp3')
         shutil.copyfile('tests/integration/data/song_with_only_id3v2_tags.mp3', 'tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3')
+        shutil.copyfile('tests/integration/data/song_with_both_id3v2_and_id3v1_tags.mp3', 'tests/integration/data/copy_of_song_with_both_id3v2_and_id3v1_tags.mp3')
 
     def tearDown(self):
         os.remove('tests/integration/data/test_data.mp3')
@@ -77,6 +78,12 @@ class Mp3TaggerTest(unittest.TestCase):
 
     def test__remove_tags__mp3_has_only_id3v2_tag__id3v2_tag_is_removed(self):
         source = 'tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3'
+        tagger = Mp3Tagger()
+        tagger.remove_tags(source)
+        self.assertFalse(mp3_has_tags(source))
+
+    def test__remove_tags__mp3_has_both_id3v2_and_id3v1_tags__both_tags_are_removed(self):
+        source = 'tests/integration/data/copy_of_song_with_both_id3v2_and_id3v1_tags.mp3'
         tagger = Mp3Tagger()
         tagger.remove_tags(source)
         self.assertFalse(mp3_has_tags(source))
