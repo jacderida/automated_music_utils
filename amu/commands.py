@@ -313,12 +313,12 @@ class RemoveTagCommand(Command):
 
     def validate(self):
         if not self._source:
-            raise CommandValidationError('A source must be specified for the remove tag command.')
+            raise ValueError('A source must be specified for the remove tag command.')
         if not os.path.exists(self._source):
             raise CommandValidationError('The specified source does not exist.')
 
     def execute(self):
-        pass
+        self._tagger.remove_tags(self.source)
 
 class MoveAudioFileCommand(Command):
     def __init__(self, config_provider):
