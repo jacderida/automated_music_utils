@@ -2,6 +2,7 @@ import mock
 import unittest
 from amu.commands import CommandValidationError
 from amu.commands import RemoveTagCommand
+from tests.helpers import captured_output
 from mock import Mock
 
 
@@ -27,3 +28,12 @@ class RemoveTagCommandTest(unittest.TestCase):
         command.source = '/some/path/to/source.mp3'
         command.execute()
         tagger_mock.remove_tags.assert_called_once_with('/some/path/to/source.mp3')
+
+    def test__execute__valid_source__it_should_print_the_source_that_has_tags_being_removed(self):
+        with captured_output() as (out, _):
+            config_mock, tagger_mock = (Mock(),)*2
+            command = RemoveTagCommand(config_mock, tagger_mock)
+            command.source = '/some/path/to/source.mp3'
+            command.execute()
+            output = out.getvalue().strip()
+            self.assertEqual(output, '[tag] Removing tags from /some/path/to/source.mp3')

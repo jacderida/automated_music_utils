@@ -318,6 +318,7 @@ class RemoveTagCommand(Command):
             raise CommandValidationError('The specified source does not exist.')
 
     def execute(self):
+        print "[tag] Removing tags from {0}".format(self.source)
         self._tagger.remove_tags(self.source)
 
 class MoveAudioFileCommand(Command):
