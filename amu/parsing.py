@@ -273,9 +273,19 @@ class TagCommandParser(object):
         return self._get_directory_command(command_args)
 
     def parse_remove_mp3_tag_command(self, source):
-        command = RemoveTagCommand(self._configuration_provider, self._tagger)
-        command.source = source
-        return [command]
+        if os.path.isfile(source):
+            command = RemoveTagCommand(self._configuration_provider, self._tagger)
+            command.source = source
+            return [command]
+        commands = []
+        for root, _, files in os.walk(source):
+            audio_files = [f for f in files if f.endswith('.mp3')]
+            for audio_file in audio_files:
+                command = RemoveTagCommand(self._configuration_provider, self._tagger)
+                command.source = os.path.join(root, audio_file)
+                commands.append(command)
+        return commands
+
 
     def _get_single_file_command(self, command_args):
         command = self._get_add_mp3_command(command_args.source, command_args)
