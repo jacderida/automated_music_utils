@@ -8,6 +8,7 @@ from amu.commands import AddMp3TagCommand
 from amu.commands import EncodeWavToMp3Command
 from amu.commands import FetchReleaseCommand
 from amu.commands import MoveAudioFileCommand
+from amu.commands import RemoveTagCommand
 from amu.commands import RipCdCommand
 from amu.metadata import MaskReplacer
 
@@ -272,7 +273,9 @@ class TagCommandParser(object):
         return self._get_directory_command(command_args)
 
     def parse_remove_mp3_tag_command(self, source):
-        pass
+        command = RemoveTagCommand(self._configuration_provider, self._tagger)
+        command.source = source
+        return [command]
 
     def _get_single_file_command(self, command_args):
         command = self._get_add_mp3_command(command_args.source, command_args)

@@ -2495,3 +2495,10 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('2004', commands[3].year)
         self.assertEqual('2004', commands[4].year)
         self.assertEqual('2004', commands[5].year)
+
+    def test__parse_remove_mp3_tag_command__source_is_single_file__a_single_command_should_be_returned(self):
+        source = '/some/source/track.mp3'
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_remove_mp3_tag_command('/some/source/track.mp3')
+        self.assertEqual(1, len(commands))
