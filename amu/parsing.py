@@ -86,7 +86,7 @@ class CommandParser(object):
     def _get_tag_command(self, args):
         if args.action == 'remove':
             tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
-            commands = tag_command_parser.parse_remove_mp3_tag_command(args)
+            commands = tag_command_parser.parse_remove_mp3_tag_command(args.source if args.source else os.getcwd())
             return commands
         command_args = AddTagCommandArgs.from_args(args)
         if not command_args.source:
@@ -274,7 +274,7 @@ class TagCommandParser(object):
             raise CommandParsingError('With a directory source, a track number and total override cannot be specified.')
         return self._get_directory_command(command_args)
 
-    def parse_remove_mp3_tag_command(self, args):
+    def parse_remove_mp3_tag_command(self, source):
         pass
 
     def _get_single_file_command(self, command_args):
