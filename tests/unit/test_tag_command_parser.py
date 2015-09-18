@@ -2507,7 +2507,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.walk')
-    def test__parse_remove_mp3_tag_command__source_is_directory_with_4_files__a_single_command_should_be_returned(self, walk_mock, isfile_mock):
+    def test__parse_remove_mp3_tag_command__source_is_directory_with_4_files__4_remove_tag_commands_should_be_returned(self, walk_mock, isfile_mock):
         isfile_mock.return_value = False
         walk_mock.return_value = [
             ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
@@ -2517,3 +2517,18 @@ class TagCommandParserTest(unittest.TestCase):
         parser = TagCommandParser(config_mock, tagger_mock)
         commands = parser.parse_remove_mp3_tag_command('/some/path/to/mp3s')
         self.assertEqual(4, len(commands))
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('os.walk')
+    def test__parse_remove_mp3_tag_command__source_is_multi_cd_directory__8_remove_tag_commands_should_be_returned(self, walk_mock, isfile_mock):
+        isfile_mock.return_value = False
+        walk_mock.return_value = [
+            ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
+            ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
+            ('/some/path/to/mp3s/cd2', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        source = '/some/path/to/mp3s'
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_remove_mp3_tag_command('/some/path/to/mp3s')
+        self.assertEqual(9, len(commands))

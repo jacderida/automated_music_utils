@@ -286,7 +286,6 @@ class TagCommandParser(object):
                 commands.append(command)
         return commands
 
-
     def _get_single_file_command(self, command_args):
         command = self._get_add_mp3_command(command_args.source, command_args)
         return [command]
