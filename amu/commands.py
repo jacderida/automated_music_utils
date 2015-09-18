@@ -297,6 +297,27 @@ class AddMp3TagCommand(Command):
         if self._comment:
             tag.add(COMM(encoding=3, lang='eng', desc='comm', text=self._comment))
 
+class RemoveTagCommand(Command):
+    def __init__(self, config_provider, tagger):
+        super(RemoveTagCommand, self).__init__(config_provider)
+        self._tagger = tagger
+        self._source = ''
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    def validate(self):
+        if not self._source:
+            raise CommandValidationError('A source must be specified for the remove tag command.')
+
+    def execute(self):
+        pass
+
 class MoveAudioFileCommand(Command):
     def __init__(self, config_provider):
         super(MoveAudioFileCommand, self).__init__(config_provider)
