@@ -398,11 +398,15 @@ class MoveAudioFileCommandParser(object):
     def parse_from_release_model(self, source, destination, release_model):
         commands = []
         for root, directories, files in os.walk(source):
+            i = 0
+            tracks = release_model.get_tracks()
             audio_files = [f for f in files if f.endswith('.mp3')]
-            for audio_file in audio_files:
+            while i < len(audio_files):
                 command = MoveAudioFileCommand(self._configuration_provider)
-                command.source = os.path.join(root, audio_file)
+                command.source = os.path.join(root, audio_files[i])
+                command.destination = self._get_full_destination_from_track(destination, tracks[i])
                 commands.append(command)
+                i += 1
             break
         return commands
 
@@ -416,6 +420,14 @@ class MoveAudioFileCommandParser(object):
             track_number = track.track_number
         return u'{0}/{1} - {2}.{3}'.format(
             directory_path, track_number, self._get_track_title_without_forbidden_characters(track.title), extension)
+
+    def _get_full_destination_from_track(self, destination, track):
+        track_number = ''
+        if track.track_number < 10:
+            track_number = '0' + str(track.track_number)
+        else:
+            track_number = track.track_number
+        return os.path.join(destination, '{0} - {1}.mp3'.format(track_number, track.title))
 
     def _get_track_title_without_forbidden_characters(self, track_title):
         replaced_title = ''
