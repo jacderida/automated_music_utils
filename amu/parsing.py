@@ -441,7 +441,7 @@ class MoveAudioFileCommandParser(object):
             track_number = '0' + str(track.track_number)
         else:
             track_number = track.track_number
-        return os.path.join(destination, '{0} - {1}.mp3'.format(track_number, track.title))
+        return os.path.join(destination, '{0} - {1}.mp3'.format(track_number, self._get_track_title_without_forbidden_characters(track.title)))
 
     def _get_track_title_without_forbidden_characters(self, track_title):
         replaced_title = ''
