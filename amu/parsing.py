@@ -395,6 +395,12 @@ class MoveAudioFileCommandParser(object):
             i += 1
         return commands
 
+    def parse_from_release_model(self, source, destination, release_model):
+        commands = []
+        for track in release_model.get_tracks():
+            commands.append(MoveAudioFileCommand(self._configuration_provider))
+        return commands
+
     def _get_destination(self, destination, track):
         directory_path = os.path.dirname(destination)
         extension = os.path.splitext(destination)[1][1:] # ignore the . that splitext returns
