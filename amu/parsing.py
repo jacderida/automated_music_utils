@@ -414,7 +414,7 @@ class MoveAudioFileCommandParser(object):
             else:
                 i = 0
                 tracks = release_model.get_tracks()
-                audio_files = [f for f in files if f.endswith('.mp3')]
+                audio_files = [f for f in sorted(files) if f.endswith('.mp3')]
                 while i < len(audio_files):
                     command = MoveAudioFileCommand(self._configuration_provider)
                     command.source = os.path.join(root, audio_files[i])
