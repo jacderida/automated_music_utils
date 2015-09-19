@@ -404,12 +404,11 @@ class MoveAudioFileCommandParser(object):
                 tracks = release_model.get_tracks()
                 for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
-                    mp3_files = [f for f in os.listdir(full_source_directory) if f.endswith('.mp3')]
+                    mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
                     for source_file in mp3_files:
                         command = MoveAudioFileCommand(self._configuration_provider)
                         command.source = os.path.join(root, directory, source_file)
-                        command.destination = self._get_full_destination_from_track(
-                            os.path.join(destination, directory), tracks[i])
+                        command.destination = self._get_full_destination_from_track(os.path.join(destination, directory), tracks[i])
                         commands.append(command)
                         i += 1
             else:
