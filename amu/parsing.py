@@ -251,13 +251,13 @@ class TagCommandParser(object):
             if len(directories) > 0:
                 for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
-                    for source_file in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith(".mp3")]:
+                    for source_file in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]:
                         full_source_path = os.path.join(full_source_directory, source_file)
                         command = self._get_add_tag_command_from_release_model(full_source_path, release_model, tracks[i])
                         commands.append(command)
                         i += 1
             else:
-                for source_file in [f for f in sorted(files) if f.endswith(".mp3")]:
+                for source_file in [f for f in sorted(files) if f.endswith('.mp3')]:
                     full_source = os.path.join(root, source_file)
                     command = self._get_add_tag_command_from_release_model(full_source, release_model, tracks[i])
                     commands.append(command)
