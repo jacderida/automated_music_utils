@@ -398,15 +398,30 @@ class MoveAudioFileCommandParser(object):
     def parse_from_release_model(self, source, destination, release_model):
         commands = []
         for root, directories, files in os.walk(source):
-            i = 0
-            tracks = release_model.get_tracks()
-            audio_files = [f for f in files if f.endswith('.mp3')]
-            while i < len(audio_files):
-                command = MoveAudioFileCommand(self._configuration_provider)
-                command.source = os.path.join(root, audio_files[i])
-                command.destination = self._get_full_destination_from_track(destination, tracks[i])
-                commands.append(command)
-                i += 1
+            directory_len = len(directories)
+            if directory_len > 0:
+                i = 0
+                tracks = release_model.get_tracks()
+                for directory in directories:
+                    full_source_directory = os.path.join(root, directory)
+                    mp3_files = [f for f in os.listdir(full_source_directory) if f.endswith('.mp3')]
+                    for source_file in mp3_files:
+                        command = MoveAudioFileCommand(self._configuration_provider)
+                        command.source = os.path.join(root, source_file)
+                        command.destination = self._get_full_destination_from_track(
+                            os.path.join(destination, directory), tracks[i])
+                        commands.append(command)
+                        i += 1
+            else:
+                i = 0
+                tracks = release_model.get_tracks()
+                audio_files = [f for f in files if f.endswith('.mp3')]
+                while i < len(audio_files):
+                    command = MoveAudioFileCommand(self._configuration_provider)
+                    command.source = os.path.join(root, audio_files[i])
+                    command.destination = self._get_full_destination_from_track(destination, tracks[i])
+                    commands.append(command)
+                    i += 1
             break
         return commands
 
