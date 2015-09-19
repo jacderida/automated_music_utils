@@ -397,8 +397,13 @@ class MoveAudioFileCommandParser(object):
 
     def parse_from_release_model(self, source, destination, release_model):
         commands = []
-        for track in release_model.get_tracks():
-            commands.append(MoveAudioFileCommand(self._configuration_provider))
+        for root, directories, files in os.walk(source):
+            audio_files = [f for f in files if f.endswith('.mp3')]
+            for audio_file in audio_files:
+                command = MoveAudioFileCommand(self._configuration_provider)
+                command.source = os.path.join(root, audio_file)
+                commands.append(command)
+            break
         return commands
 
     def _get_destination(self, destination, track):

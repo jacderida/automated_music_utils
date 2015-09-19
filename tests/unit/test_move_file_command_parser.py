@@ -635,7 +635,12 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    def test__parse_from_release_model__release_has_4_tracks__4_move_file_commands_are_generated(self):
+    @mock.patch('os.walk')
+    def test__parse_from_release_model__release_has_4_tracks__4_move_file_commands_are_generated(self, walk_mock):
+        walk_mock.return_value = [
+            ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -656,3 +661,32 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         parser = MoveAudioFileCommandParser(config_mock)
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual(4, len(commands))
+
+    @mock.patch('os.walk')
+    def test__parse_from_release_model__release_has_4_tracks__source_is_set_correctly(self, walk_mock):
+        walk_mock.return_value = [
+            ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+
+        config_mock = Mock()
+        parser = MoveAudioFileCommandParser(config_mock)
+        commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
+        self.assertEqual('/some/source/01 - Track 1.mp3', commands[0].source)
+        self.assertEqual('/some/source/02 - Track 2.mp3', commands[1].source)
+        self.assertEqual('/some/source/03 - Track 3.mp3', commands[2].source)
+        self.assertEqual('/some/source/04 - Track 4.mp3', commands[3].source)
