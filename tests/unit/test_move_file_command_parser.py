@@ -655,7 +655,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
-        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
         parser = MoveAudioFileCommandParser(config_mock)
@@ -681,7 +681,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
-        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
         parser = MoveAudioFileCommandParser(config_mock)
