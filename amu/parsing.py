@@ -87,6 +87,9 @@ class CommandParser(object):
     def _get_tag_command(self, args):
         source = args.source if args.source else os.getcwd()
         tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
+        if args.discogs_id:
+            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
+            return tag_command_parser.parse_from_release_model(source, release_model)
         if args.action == 'remove':
             return tag_command_parser.parse_remove_mp3_tag_command(source)
         command_args = AddTagCommandArgs.from_args(args)
