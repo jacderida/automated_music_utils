@@ -88,8 +88,13 @@ class CommandParser(object):
         source = args.source if args.source else os.getcwd()
         tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
         if args.discogs_id:
+            commands = []
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
-            return tag_command_parser.parse_from_release_model(source, release_model)
+            commands.extend(tag_command_parser.parse_from_release_model(source, release_model))
+            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
+            commands.extend(move_file_parser.parse_from_release_model(
+                source, self._configuration_provider.get_destination_with_mask_replaced(release_model), release_model))
+            return commands
         if args.action == 'remove':
             return tag_command_parser.parse_remove_mp3_tag_command(source)
         command_args = AddTagCommandArgs.from_args(args)

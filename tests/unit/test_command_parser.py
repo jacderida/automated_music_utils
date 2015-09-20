@@ -1182,8 +1182,9 @@ class CommandParserTest(unittest.TestCase):
         command_args = tag_command_parser_mock.call_args[0][0]
         self.assertEqual('/some/current/working/directory', command_args.source)
 
+    @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_release_model')
     @mock.patch('amu.parsing.TagCommandParser.parse_from_release_model')
-    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id__it_should_return_4_add_tag_commands(self, tag_command_parser_mock):
+    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id__it_should_return_4_add_tag_commands(self, tag_command_parser_mock, move_file_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -1221,8 +1222,9 @@ class CommandParserTest(unittest.TestCase):
         commands = parser.from_args(args)
         self.assertEqual(4, len(commands))
 
+    @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_release_model')
     @mock.patch('amu.parsing.TagCommandParser.parse_from_release_model')
-    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id__it_should_call_the_tag_command_parser_with_the_correct_arguments(self, tag_command_parser_mock):
+    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id__it_should_call_the_tag_command_parser_with_the_correct_arguments(self, tag_command_parser_mock, move_file_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -1259,6 +1261,47 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         tag_command_parser_mock.assert_called_once_with('/some/source', release_model)
+
+    @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_release_model')
+    @mock.patch('amu.parsing.TagCommandParser.parse_from_release_model')
+    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id__it_should_call_the_move_file_command_parser_with_the_correct_arguments(self, tag_command_parser_mock, move_file_command_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/source',
+            '--discogs-id=451034',
+        ])
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        metadata_mock.get_release_by_id.return_value = release_model
+        config_mock.get_destination_with_mask_replaced.return_value = '/replaced/mask/destination'
+        tag_command_parser_mock.return_value = [
+            AddMp3TagCommand(config_mock),
+            AddMp3TagCommand(config_mock),
+            AddMp3TagCommand(config_mock),
+            AddMp3TagCommand(config_mock)
+        ]
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser.from_args(args)
+        move_file_command_parser_mock.assert_called_once_with('/some/source', '/replaced/mask/destination', release_model)
 
     @mock.patch('amu.parsing.TagCommandParser.parse_remove_mp3_tag_command')
     def test__from_args__when_remove_mp3_tag_is_specified__the_tag_command_parser_should_be_used(self, tag_command_parser_mock):
