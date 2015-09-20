@@ -1182,6 +1182,9 @@ class CommandParserTest(unittest.TestCase):
         command_args = tag_command_parser_mock.call_args[0][0]
         self.assertEqual('/some/current/working/directory', command_args.source)
 
+    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id__it_should_call_parse_from_release_model_on_the_tag_parser(self):
+        pass
+
     @mock.patch('amu.parsing.TagCommandParser.parse_remove_mp3_tag_command')
     def test__from_args__when_remove_mp3_tag_is_specified__the_tag_command_parser_should_be_used(self, tag_command_parser_mock):
         driver = CliDriver()
