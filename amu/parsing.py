@@ -400,28 +400,38 @@ class MoveAudioFileCommandParser(object):
         for root, directories, files in os.walk(source):
             directory_len = len(directories)
             if directory_len > 0:
-                i = 0
-                tracks = release_model.get_tracks()
-                for directory in sorted(directories):
-                    full_source_directory = os.path.join(root, directory)
-                    mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
-                    for source_file in mp3_files:
-                        command = MoveAudioFileCommand(self._configuration_provider)
-                        command.source = os.path.join(root, directory, source_file)
-                        command.destination = self._get_full_destination_from_track(os.path.join(destination, directory), tracks[i])
-                        commands.append(command)
-                        i += 1
+                commands.extend(self._get_multi_cd_parse_from_release_model_commands(release_model, root, directories, destination))
             else:
-                i = 0
-                tracks = release_model.get_tracks()
-                audio_files = [f for f in sorted(files) if f.endswith('.mp3')]
-                while i < len(audio_files):
-                    command = MoveAudioFileCommand(self._configuration_provider)
-                    command.source = os.path.join(root, audio_files[i])
-                    command.destination = self._get_full_destination_from_track(destination, tracks[i])
-                    commands.append(command)
-                    i += 1
+                commands.extend(self._get_single_directory_parse_from_release_model_commands(release_model, root, files, destination))
             break
+        return commands
+
+    def _get_multi_cd_parse_from_release_model_commands(self, release_model, source_path, directories, destination):
+        i = 0
+        tracks = release_model.get_tracks()
+        commands = []
+        for directory in sorted(directories):
+            full_source_directory = os.path.join(source_path, directory)
+            mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
+            for source_file in mp3_files:
+                command = MoveAudioFileCommand(self._configuration_provider)
+                command.source = os.path.join(source_path, directory, source_file)
+                command.destination = self._get_full_destination_from_track(os.path.join(destination, directory), tracks[i])
+                commands.append(command)
+                i += 1
+        return commands
+
+    def _get_single_directory_parse_from_release_model_commands(self, release_model, source_path, source_files, destination):
+        i = 0
+        tracks = release_model.get_tracks()
+        audio_files = [f for f in sorted(source_files) if f.endswith('.mp3')]
+        commands = []
+        while i < len(audio_files):
+            command = MoveAudioFileCommand(self._configuration_provider)
+            command.source = os.path.join(source_path, audio_files[i])
+            command.destination = self._get_full_destination_from_track(destination, tracks[i])
+            commands.append(command)
+            i += 1
         return commands
 
     def _get_destination(self, destination, track):
