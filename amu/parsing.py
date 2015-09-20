@@ -398,6 +398,8 @@ class MoveAudioFileCommandParser(object):
     def parse_from_release_model(self, source, destination, release_model):
         if not os.path.isdir(source):
             raise CommandParsingError('The source must be a directory.')
+        if not os.path.isdir(destination):
+            raise CommandParsingError('The destination must be a directory.')
         commands = []
         for root, directories, files in os.walk(source):
             directory_len = len(directories)

@@ -641,7 +641,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -670,7 +670,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -701,7 +701,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('02 - Track 2.mp3', '01 - Track 1.mp3', '04 - Track 4.mp3', '03 - Track 3.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -732,7 +732,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -763,7 +763,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -794,7 +794,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -825,7 +825,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -856,7 +856,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -887,7 +887,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -918,7 +918,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -949,7 +949,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -980,7 +980,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -1011,7 +1011,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -1059,6 +1059,30 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
             config_mock = Mock()
             parser = MoveAudioFileCommandParser(config_mock)
             parser.parse_from_release_model('/some/source/file.mp3', '/some/destination', release_model)
+
+    @mock.patch('os.path.isdir')
+    def test__parse_from_release_model__source_is_not_a_directory__command_parsing_error_is_raised(self, isdir_mock):
+        isdir_mock.side_effect = [True, False]
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+
+        with self.assertRaisesRegexp(CommandParsingError, 'The destination must be a directory.'):
+            config_mock = Mock()
+            parser = MoveAudioFileCommandParser(config_mock)
+            parser.parse_from_release_model('/some/source', '/some/destination/file.mp3', release_model)
 
     @mock.patch('os.path.isdir')
     @mock.patch('os.listdir')
@@ -1111,7 +1135,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
             ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3', '13 - Track 13.mp3'],
             ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3', '13 - Track 13.mp3']
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
         parser = MoveAudioFileCommandParser(config_mock)
@@ -1194,7 +1218,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
             ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3', '13 - Track 13.mp3'],
             ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3', '07 - Track 7.mp3', '08 - Track 8.mp3', '09 - Track 9.mp3', '10 - Track 10.mp3', '11 - Track 11.mp3', '12 - Track 12.mp3', '13 - Track 13.mp3']
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
         parser = MoveAudioFileCommandParser(config_mock)
@@ -1277,7 +1301,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
             ['02 - Track 2.mp3', '01 - Track 1.mp3', '03 - Track 3.mp3', '05 - Track 5.mp3', '04 - Track 4.mp3', '07 - Track 7.mp3', '06 - Track 6.mp3', '08 - Track 8.mp3', '10 - Track 10.mp3', '09 - Track 9.mp3', '11 - Track 11.mp3', '13 - Track 13.mp3', '12 - Track 12.mp3'],
             ['02 - Track 2.mp3', '01 - Track 1.mp3', '03 - Track 3.mp3', '05 - Track 5.mp3', '04 - Track 4.mp3', '07 - Track 7.mp3', '06 - Track 6.mp3', '08 - Track 8.mp3', '10 - Track 10.mp3', '09 - Track 9.mp3', '11 - Track 11.mp3', '13 - Track 13.mp3', '12 - Track 12.mp3'],
         ]
-        isdir_mock.return_value = True
+        isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
         parser = MoveAudioFileCommandParser(config_mock)
