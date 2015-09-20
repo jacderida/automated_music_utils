@@ -1060,8 +1060,9 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
             parser = MoveAudioFileCommandParser(config_mock)
             parser.parse_from_release_model('/some/source/file.mp3', '/some/destination', release_model)
 
+    @mock.patch('os.makedirs')
     @mock.patch('os.path.isdir')
-    def test__parse_from_release_model__source_is_not_a_directory__command_parsing_error_is_raised(self, isdir_mock):
+    def test__parse_from_release_model__destination_is_not_a_directory__the_directory_should_be_created(self, isdir_mock, makedirs_mock):
         isdir_mock.side_effect = [True, False]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -1079,10 +1080,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
 
-        with self.assertRaisesRegexp(CommandParsingError, 'The destination must be a directory.'):
-            config_mock = Mock()
-            parser = MoveAudioFileCommandParser(config_mock)
-            parser.parse_from_release_model('/some/source', '/some/destination/file.mp3', release_model)
+        config_mock = Mock()
+        parser = MoveAudioFileCommandParser(config_mock)
+        parser.parse_from_release_model('/some/source', '/some/destination', release_model)
+        makedirs_mock.assert_called_once_with('/some/destination')
 
     @mock.patch('os.path.isdir')
     @mock.patch('os.listdir')
