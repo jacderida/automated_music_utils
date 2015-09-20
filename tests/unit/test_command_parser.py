@@ -1218,9 +1218,15 @@ class CommandParserTest(unittest.TestCase):
             AddMp3TagCommand(config_mock),
             AddMp3TagCommand(config_mock)
         ]
+        move_file_command_parser_mock.return_value = [
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock)
+        ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
-        self.assertEqual(4, len(commands))
+        self.assertEqual(8, len(commands))
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_release_model')
     @mock.patch('amu.parsing.TagCommandParser.parse_from_release_model')
@@ -1257,6 +1263,12 @@ class CommandParserTest(unittest.TestCase):
             AddMp3TagCommand(config_mock),
             AddMp3TagCommand(config_mock),
             AddMp3TagCommand(config_mock)
+        ]
+        move_file_command_parser_mock.return_value = [
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
@@ -1298,6 +1310,12 @@ class CommandParserTest(unittest.TestCase):
             AddMp3TagCommand(config_mock),
             AddMp3TagCommand(config_mock),
             AddMp3TagCommand(config_mock)
+        ]
+        move_file_command_parser_mock.return_value = [
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
