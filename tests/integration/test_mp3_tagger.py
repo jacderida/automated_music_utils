@@ -124,6 +124,12 @@ class Mp3TaggerTest(unittest.TestCase):
 
     def test__add_tags__comment_is_not_set__tag_should_not_have_a_comment_frame(self):
         tagger = Mp3Tagger()
+        tagger.add_tags('tests/integration/data/test_data.mp3', track_number=10, track_total=15)
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['trackno'], u'10/15')
+
+    def test__add_tags__track_number_is_set__tag_should_have_a_track_number_frame(self):
+        tagger = Mp3Tagger()
         tagger.add_tags('tests/integration/data/test_data.mp3')
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertFalse(tag_data.has_key('comment'))
