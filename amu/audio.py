@@ -109,7 +109,8 @@ class Mp3Tagger(object):
             tag.add(TDRC(encoding=3, text=year))
 
     def _add_genre_frame(self, tag, genre):
-        tag.add(TCON(encoding=3, text=genre))
+        if genre:
+            tag.add(TCON(encoding=3, text=genre))
 
     def apply_artwork(self, source, destination):
         if not source:
