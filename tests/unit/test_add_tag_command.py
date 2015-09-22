@@ -57,3 +57,22 @@ class AddTagCommandTest(unittest.TestCase):
         command.track_total = 2
         with self.assertRaisesRegexp(CommandValidationError, 'The track number cannot be greater than the track total.'):
             command.validate()
+
+    def test__execute__valid_command_specified__tagger_is_called(self):
+        config_mock, tagger_mock = (Mock(),)*2
+        command = AddTagCommand(config_mock, tagger_mock)
+        command.source = '/Music/album/song.mp3'
+        command.artist = 'Aphex Twin'
+        command.album_artist = 'Various'
+        command.title = 'Flap Head'
+        command.album = 'Druqks'
+        command.genre = 'Electronic'
+        command.year = '2015'
+        command.comment = 'WarpCD92'
+        command.track_number = 3
+        command.track_total = 4
+        command.disc_number = 2
+        command.disc_total = 3
+        command.execute()
+        tagger_mock.add_tags.assert_called_once_with(
+            '/Music/album/song.mp3', 'Aphex Twin', 'Various', 'Druqks', 'Flap Head', '2015', 'Electronic', 'WarpCD92', 3, 4, 2, 3)

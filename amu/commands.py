@@ -221,85 +221,10 @@ class AddTagCommand(Command):
             raise CommandValidationError('The track number cannot be greater than the track total.')
 
     def execute(self):
-        print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(
-            self.source, self.artist, self.album, self.title, self.year, self.genre)
-        tag = self._get_tag()
-        self._add_artist_frame(tag)
-        self._add_title_frame(tag)
-        self._add_album_frame(tag)
-        self._add_year_frame(tag)
-        self._add_track_number_frame(tag)
-        self._add_disc_number_frame(tag)
-        self._add_genre_frame(tag)
-        self._add_comment_frame(tag)
-        tag.save()
-
-    def _get_tag(self):
-        """
-        This exists to handle mp3s that have no tags. It's horrendous, but
-        I couldn't see a way to do a conversion between the EasyID3 type and
-        a normal ID3 type.
-
-        The steps are:
-            * Attempt to load ID3 tag
-            * Get an EasyID3 tag (easy=True)
-            * Add a blank tag
-            * Add a placeholder artist
-            * Save the file
-            * Reload as an ID3 object
-
-        If you try and save without the placeholder, it doesn't write any tags (which makes sense),
-        hence the need for the placeholder.
-        """
-        try:
-            tag = ID3(self._source)
-            return tag
-        except ID3NoHeaderError:
-            tag = File(self._source, easy=True)
-            tag.add_tags()
-            tag['artist'] = 'placeholder'
-            tag.save()
-            tag = ID3(self._source)
-            return tag
-
-    def _add_artist_frame(self, tag):
-        tag.add(TPE1(encoding=3, text=self._artist))
-
-    def _add_title_frame(self, tag):
-        tag.add(TIT2(encoding=3, text=self._title))
-
-    def _add_album_frame(self, tag):
-        tag.add(TALB(encoding=3, text=self._album))
-
-    def _add_year_frame(self, tag):
-        if self._year:
-            tag.add(TDRC(encoding=3, text=self._year))
-
-    def _add_track_number_frame(self, tag):
-        track_number_string = str(self._track_number)
-        track_total_string = str(self._track_total)
-        if self._track_number < 10:
-            track_number_string = "0{0}".format(self._track_number)
-        if self._track_total < 10:
-            track_total_string = "0{0}".format(self._track_total)
-        tag.add(TRCK(encoding=3, text='{0}/{1}'.format(track_number_string, track_total_string)))
-
-    def _add_disc_number_frame(self, tag):
-        disc_number_string = str(self._disc_number)
-        disc_total_string = str(self._disc_total)
-        if self._disc_number < 10:
-            disc_number_string = "0{0}".format(self._disc_number)
-        if self._disc_total < 10:
-            disc_total_string = "0{0}".format(self._disc_total)
-        tag.add(TPOS(encoding=3, text='{0}/{1}'.format(disc_number_string, disc_total_string)))
-
-    def _add_genre_frame(self, tag):
-        if self._genre:
-            tag.add(TCON(encoding=3, text=self._genre))
-
-    def _add_comment_frame(self, tag):
-        if self._comment:
-            tag.add(COMM(encoding=3, lang='eng', desc='comm', text=self._comment))
+        self._tagger.add_tags(
+            self.source, self.artist, self.album_artist, self.album,
+            self.title, self.year, self.genre, self.comment,
+            self.track_number, self.track_total, self.disc_number, self.disc_total)
 
 class RemoveTagCommand(Command):
     def __init__(self, config_provider, tagger):
