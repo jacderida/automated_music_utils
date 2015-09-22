@@ -24,6 +24,22 @@ class Mp3TaggerTest(unittest.TestCase):
             tagger = Mp3Tagger()
             tagger.add_tags('')
 
+    @mock.patch('os.path.exists')
+    def test__add_tags__source_does_not_exist__raises_tagger_error(self, exists_mock):
+        exists_mock.return_value = False
+        with self.assertRaisesRegexp(TaggerError, 'The source /some/non/existent/mp3 does not exist.'):
+            tagger = Mp3Tagger()
+            tagger.add_tags('/some/non/existent/mp3')
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.path.exists')
+    def test__add_tags__source_is_directory__raises_tagger_error(self, exists_mock, isdir_mock):
+        exists_mock.return_value = True
+        isdir_mock.return_value = True
+        with self.assertRaisesRegexp(TaggerError, 'The source must not be a directory.'):
+            tagger = Mp3Tagger()
+            tagger.add_tags('/some/non/existent/mp3')
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')
