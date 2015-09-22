@@ -19,6 +19,11 @@ class Mp3TaggerTest(unittest.TestCase):
         os.remove('tests/integration/data/copy_of_song_with_only_id3v1_tags.mp3')
         os.remove('tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3')
 
+    def test__add_tags__source_is_empty__raises_value_error(self):
+        with self.assertRaisesRegexp(ValueError, 'A source must be set for tagging an mp3.'):
+            tagger = Mp3Tagger()
+            tagger.add_tags('')
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')

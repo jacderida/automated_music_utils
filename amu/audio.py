@@ -69,6 +69,12 @@ class RubyRipperCdRipper(object):
         os.remove(temp_config_path)
 
 class Mp3Tagger(object):
+    def add_tags(self, source, artist='', album_artist='', album='',
+                 title='', year='', genre='', comment='',
+                 track_number=0, track_total=0, disc_number=0, disc_total=0):
+        if not source:
+            raise ValueError('A source must be set for tagging an mp3.')
+
     def apply_artwork(self, source, destination):
         if not source:
             raise ValueError('A cover art source must be supplied.')
@@ -96,7 +102,7 @@ class Mp3Tagger(object):
             tag = ID3(source)
             tag.delete()
         except ID3NoHeaderError:
-            pass
+            pass # There already is no tag, in which case, do nothing.
 
     def _get_tag(self, source):
         """
@@ -106,6 +112,7 @@ class Mp3Tagger(object):
 
         The steps are:
             * Attempt to load ID3 tag
+            * Exception is thrown
             * Get an EasyID3 tag (easy=True)
             * Add a blank tag
             * Add a placeholder artist
