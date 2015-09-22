@@ -98,7 +98,7 @@ class RipCdCommand(Command):
         self._cd_ripper.rip_cd(self.destination)
 
 class AddTagCommand(Command):
-    def __init__(self, config_provider):
+    def __init__(self, config_provider, tagger):
         super(AddTagCommand, self).__init__(config_provider)
         self._source = ''
         self._artist = ''
@@ -111,6 +111,7 @@ class AddTagCommand(Command):
         self._track_total = 0
         self._disc_number = 0
         self._disc_total = 0
+        self._tagger = tagger
 
     @property
     def source(self):

@@ -1120,8 +1120,8 @@ class CommandParserTest(unittest.TestCase):
             '--track-number=2',
             '--track-total=15'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        tag_command_parser_mock.return_value = [AddTagCommand(config_mock)]
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        tag_command_parser_mock.return_value = [AddTagCommand(config_mock, tagger_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         tag_command_parser_mock.assert_called_once()
@@ -1144,8 +1144,8 @@ class CommandParserTest(unittest.TestCase):
             '--track-number=2',
             '--track-total=15'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        tag_command_parser_mock.return_value = [AddTagCommand(config_mock)]
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        tag_command_parser_mock.return_value = [AddTagCommand(config_mock, tagger_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
@@ -1175,8 +1175,8 @@ class CommandParserTest(unittest.TestCase):
             '--track-number=2',
             '--track-total=15'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        tag_command_parser_mock.return_value = [AddTagCommand(config_mock)]
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        tag_command_parser_mock.return_value = [AddTagCommand(config_mock, tagger_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
@@ -1210,13 +1210,13 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         metadata_mock.get_release_by_id.return_value = release_model
         tag_command_parser_mock.return_value = [
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock)
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -1256,13 +1256,13 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         metadata_mock.get_release_by_id.return_value = release_model
         tag_command_parser_mock.return_value = [
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock)
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -1302,14 +1302,14 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         metadata_mock.get_release_by_id.return_value = release_model
         config_mock.get_destination_with_mask_replaced.return_value = '/replaced/mask/destination'
         tag_command_parser_mock.return_value = [
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock),
-            AddTagCommand(config_mock)
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),

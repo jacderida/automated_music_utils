@@ -352,7 +352,7 @@ class TagCommandParser(object):
         return self._get_add_mp3_command(source, command_args)
 
     def _get_add_mp3_command(self, source, command_args):
-        command = AddTagCommand(self._configuration_provider)
+        command = AddTagCommand(self._configuration_provider, self._tagger)
         command.source = source
         command.artist = command_args.artist
         command.album = command_args.album
