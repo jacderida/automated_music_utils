@@ -1,6 +1,6 @@
 import mock
 import unittest
-from amu.commands import AddMp3TagCommand
+from amu.commands import AddTagCommand
 from amu.models import ReleaseModel
 from amu.parsing import AddTagCommandArgs
 from amu.parsing import CommandParsingError
@@ -20,7 +20,7 @@ class TagCommandParserTest(unittest.TestCase):
         parser = TagCommandParser(config_mock, tagger_mock)
         commands = parser.parse_add_mp3_tag_command(command_args)
         self.assertEqual(1, len(commands))
-        self.assertIsInstance(commands[0], AddMp3TagCommand)
+        self.assertIsInstance(commands[0], AddTagCommand)
         self.assertEqual('/some/path/to/song.mp3', commands[0].source)
 
     @mock.patch('os.path.isfile')

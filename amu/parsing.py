@@ -4,7 +4,7 @@ import uuid
 from amu import utils
 from amu.audio import Mp3Tagger
 from amu.commands import AddArtworkCommand
-from amu.commands import AddMp3TagCommand
+from amu.commands import AddTagCommand
 from amu.commands import EncodeWavToMp3Command
 from amu.commands import FetchReleaseCommand
 from amu.commands import MoveAudioFileCommand
@@ -352,7 +352,7 @@ class TagCommandParser(object):
         return self._get_add_mp3_command(source, command_args)
 
     def _get_add_mp3_command(self, source, command_args):
-        command = AddMp3TagCommand(self._configuration_provider)
+        command = AddTagCommand(self._configuration_provider)
         command.source = source
         command.artist = command_args.artist
         command.album = command_args.album

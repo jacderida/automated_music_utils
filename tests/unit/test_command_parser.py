@@ -5,7 +5,7 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import AddArtworkCommand, AddMp3TagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
+from amu.commands import AddArtworkCommand, AddTagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser, CommandParsingError
 from mock import Mock
@@ -193,7 +193,7 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
+        commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual(4, len(commands))
 
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
@@ -252,7 +252,7 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
+        commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual('/some/path/to/mp3s/01 - Track 01.mp3', commands[0].source)
         self.assertEqual('/some/path/to/mp3s/02 - Track 02.mp3', commands[1].source)
         self.assertEqual('/some/path/to/mp3s/03 - Track 03.mp3', commands[2].source)
@@ -490,7 +490,7 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if isinstance(x, AddMp3TagCommand)]
+        commands = [x for x in parser.from_args(args) if isinstance(x, AddTagCommand)]
         self.assertEqual(4, len(commands))
 
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
@@ -745,7 +745,7 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
+        commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual(12, len(commands))
 
     @mock.patch('tempfile.gettempdir')
@@ -803,7 +803,7 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if type(x) == AddMp3TagCommand]
+        commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual('/some/replaced/mask/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/replaced/mask/02 - Track 2.mp3', commands[1].source)
         self.assertEqual('/some/replaced/mask/03 - Track 3.mp3', commands[2].source)
@@ -1040,7 +1040,7 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
-        commands = [x for x in parser.from_args(args) if isinstance(x, AddMp3TagCommand)]
+        commands = [x for x in parser.from_args(args) if isinstance(x, AddTagCommand)]
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/custom/destination')
         self.assertEqual(12, len(commands))
 
@@ -1121,7 +1121,7 @@ class CommandParserTest(unittest.TestCase):
             '--track-total=15'
         ])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        tag_command_parser_mock.return_value = [AddMp3TagCommand(config_mock)]
+        tag_command_parser_mock.return_value = [AddTagCommand(config_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         tag_command_parser_mock.assert_called_once()
@@ -1145,7 +1145,7 @@ class CommandParserTest(unittest.TestCase):
             '--track-total=15'
         ])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        tag_command_parser_mock.return_value = [AddMp3TagCommand(config_mock)]
+        tag_command_parser_mock.return_value = [AddTagCommand(config_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
@@ -1176,7 +1176,7 @@ class CommandParserTest(unittest.TestCase):
             '--track-total=15'
         ])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        tag_command_parser_mock.return_value = [AddMp3TagCommand(config_mock)]
+        tag_command_parser_mock.return_value = [AddTagCommand(config_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
@@ -1213,10 +1213,10 @@ class CommandParserTest(unittest.TestCase):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         metadata_mock.get_release_by_id.return_value = release_model
         tag_command_parser_mock.return_value = [
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock)
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -1259,10 +1259,10 @@ class CommandParserTest(unittest.TestCase):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         metadata_mock.get_release_by_id.return_value = release_model
         tag_command_parser_mock.return_value = [
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock)
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -1306,10 +1306,10 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
         config_mock.get_destination_with_mask_replaced.return_value = '/replaced/mask/destination'
         tag_command_parser_mock.return_value = [
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock),
-            AddMp3TagCommand(config_mock)
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock),
+            AddTagCommand(config_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),

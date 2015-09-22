@@ -97,9 +97,9 @@ class RipCdCommand(Command):
     def execute(self):
         self._cd_ripper.rip_cd(self.destination)
 
-class AddMp3TagCommand(Command):
+class AddTagCommand(Command):
     def __init__(self, config_provider):
-        super(AddMp3TagCommand, self).__init__(config_provider)
+        super(AddTagCommand, self).__init__(config_provider)
         self._source = ''
         self._artist = ''
         self._title = ''
@@ -205,12 +205,6 @@ class AddMp3TagCommand(Command):
             raise CommandValidationError('The specified mp3 source does not exist.')
         if os.path.isdir(self._source):
             raise CommandValidationError('The source must be an mp3, not a directory.')
-        if not self._artist:
-            raise CommandValidationError('An artist must be supplied for the tag.')
-        if not self._album:
-            raise CommandValidationError('An album must be supplied for the tag.')
-        if not self._title:
-            raise CommandValidationError('A title must be supplied for the tag.')
         if self._track_number < 1:
             raise CommandValidationError('The track number must be at least 1.')
         if self._track_number > self._track_total:
