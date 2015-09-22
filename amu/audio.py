@@ -125,18 +125,18 @@ class Mp3Tagger(object):
         track_number_string = str(track_number)
         track_total_string = str(track_total)
         if track_number < 10:
-            track_number_string = "0{0}".format(track_number)
+            track_number_string = '0{0}'.format(track_number)
         if track_total < 10:
-            track_total_string = "0{0}".format(track_total)
+            track_total_string = '0{0}'.format(track_total)
         tag.add(TRCK(encoding=3, text='{0}/{1}'.format(track_number_string, track_total_string)))
 
     def _add_disc_number_frame(self, tag, disc_number, disc_total):
         disc_number_string = str(disc_number)
         disc_total_string = str(disc_total)
         if disc_number < 10:
-            disc_number_string = "0{0}".format(disc_number)
+            disc_number_string = '0{0}'.format(disc_number)
         if disc_total < 10:
-            disc_total_string = "0{0}".format(disc_total)
+            disc_total_string = '0{0}'.format(disc_total)
         tag.add(TPOS(encoding=3, text='{0}/{1}'.format(disc_number_string, disc_total_string)))
 
     def apply_artwork(self, source, destination):

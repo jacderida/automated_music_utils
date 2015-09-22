@@ -3,13 +3,14 @@ import mock
 import unittest
 from amu.commands import CommandValidationError
 from amu.commands import AddMp3TagCommand
+from mock import Mock
 
 
 class AddMp3TagCommandTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('os.path.isdir')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__source_is_directory__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
+    def test__validate__source_is_directory__throws_command_validation_exception(self, isdir_mock, path_exists_mock):
+        config_mock = Mock()
         path_exists_mock.return_value = True
         isdir_mock.return_value = True
         command = AddMp3TagCommand(config_mock)
@@ -18,8 +19,8 @@ class AddMp3TagCommandTest(unittest.TestCase):
             command.validate()
 
     @mock.patch('amu.config.os.path.exists')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__source_does_not_exist__throws_command_validation_exception(self, config_mock, path_exists_mock):
+    def test__validate__source_does_not_exist__throws_command_validation_exception(self, path_exists_mock):
+        config_mock = Mock()
         path_exists_mock.return_value = False
         command = AddMp3TagCommand(config_mock)
         command.source = '/Music/album/non_existent.mp3'
@@ -28,46 +29,8 @@ class AddMp3TagCommandTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('os.path.isdir')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__artist_is_not_supplied__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
-        path_exists_mock.return_value = True
-        isdir_mock.return_value = False
-        command = AddMp3TagCommand(config_mock)
-        command.source = '/Music/album/song.mp3'
-        command.artist = ''
-        with self.assertRaisesRegexp(CommandValidationError, 'An artist must be supplied for the tag.'):
-            command.validate()
-
-    @mock.patch('amu.config.os.path.exists')
-    @mock.patch('os.path.isdir')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__album_is_not_supplied__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
-        path_exists_mock.return_value = True
-        isdir_mock.return_value = False
-        command = AddMp3TagCommand(config_mock)
-        command.source = '/Music/album/song.mp3'
-        command.artist = 'Aphex Twin'
-        with self.assertRaisesRegexp(CommandValidationError, 'An album must be supplied for the tag.'):
-            command.validate()
-
-    @mock.patch('amu.config.os.path.exists')
-    @mock.patch('os.path.isdir')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__title_is_not_supplied__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
-        path_exists_mock.return_value = True
-        isdir_mock.return_value = False
-        command = AddMp3TagCommand(config_mock)
-        command.source = '/Music/album/song.mp3'
-        command.artist = 'Aphex Twin'
-        command.album = 'Druqks'
-        command.title = ''
-        with self.assertRaisesRegexp(CommandValidationError, 'A title must be supplied for the tag.'):
-            command.validate()
-
-    @mock.patch('amu.config.os.path.exists')
-    @mock.patch('os.path.isdir')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__track_no_is_less_than_1__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
+    def test__validate__track_no_is_less_than_1__throws_command_validation_exception(self, isdir_mock, path_exists_mock):
+        config_mock = Mock()
         path_exists_mock.return_value = True
         isdir_mock.return_value = False
         command = AddMp3TagCommand(config_mock)
@@ -81,8 +44,8 @@ class AddMp3TagCommandTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('os.path.isdir')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__validate__track_no_is_greater_than_total__throws_command_validation_exception(self, config_mock, isdir_mock, path_exists_mock):
+    def test__validate__track_no_is_greater_than_total__throws_command_validation_exception(self, isdir_mock, path_exists_mock):
+        config_mock = Mock()
         path_exists_mock.return_value = True
         isdir_mock.return_value = False
         command = AddMp3TagCommand(config_mock)
