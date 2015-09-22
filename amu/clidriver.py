@@ -51,6 +51,7 @@ class CliDriver(object):
             help='The source audio files to tag. This can be a file or a directory. If the source is omitted, the files in the current working directory will be used.')
         tag_parser.add_argument('--discogs-id', help='The discogs ID for the release. When this is used metadata from the discogs release will be applied to the tagged files.')
         tag_parser.add_argument('--artist', help='The artist to use for the tag.')
+        tag_parser.add_argument('--album-artist', help='The album artist to use for the tag.')
         tag_parser.add_argument('--album', help='The album to use for the tag.')
         tag_parser.add_argument('--title', help='The title to use for the tag.')
         tag_parser.add_argument('--year', help='The year to use for the tag.')
