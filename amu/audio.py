@@ -114,7 +114,8 @@ class Mp3Tagger(object):
             tag.add(TCON(encoding=3, text=genre))
 
     def _add_comment_frame(self, tag, comment):
-        tag.add(COMM(encoding=3, lang='eng', desc='comm', text=comment))
+        if comment:
+            tag.add(COMM(encoding=3, lang='eng', desc='comm', text=comment))
 
     def apply_artwork(self, source, destination):
         if not source:
