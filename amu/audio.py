@@ -94,7 +94,8 @@ class Mp3Tagger(object):
             tag.add(TPE2(encoding=3, text=album_artist))
 
     def _add_title_frame(self, tag, title):
-        tag.add(TIT2(encoding=3, text=title))
+        if title:
+            tag.add(TIT2(encoding=3, text=title))
 
     def apply_artwork(self, source, destination):
         if not source:
