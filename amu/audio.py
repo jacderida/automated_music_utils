@@ -7,7 +7,7 @@ from amu import utils
 from amu.config import ConfigurationError, ConfigurationProvider
 from amu.metadata import MaskReplacer
 from mutagen import File
-from mutagen.id3 import APIC, ID3, ID3NoHeaderError
+from mutagen.id3 import APIC, COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPOS, TRCK
 
 class TaggerError(Exception):
     def __init__(self, message):
@@ -79,6 +79,12 @@ class Mp3Tagger(object):
                 raise TaggerError('The source must not be a directory.')
         if not source:
             raise ValueError('A source must be set for tagging an mp3.')
+        tag = self._get_tag(source)
+        self._add_artist_frame(tag, artist)
+        tag.save()
+
+    def _add_artist_frame(self, tag, artist):
+        tag.add(TPE1(encoding=3, text=artist))
 
     def apply_artwork(self, source, destination):
         if not source:

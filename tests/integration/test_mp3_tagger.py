@@ -3,6 +3,7 @@ import os
 import shutil
 import unittest
 from amu.audio import Mp3Tagger, TaggerError
+from amu.utils import get_id3_tag_data
 from tests.helpers import get_mp3_artwork_data
 from tests.helpers import mp3_has_tags
 
@@ -18,6 +19,7 @@ class Mp3TaggerTest(unittest.TestCase):
         os.remove('tests/integration/data/test_data.mp3')
         os.remove('tests/integration/data/copy_of_song_with_only_id3v1_tags.mp3')
         os.remove('tests/integration/data/copy_of_song_with_only_id3v2_tags.mp3')
+        os.remove('tests/integration/data/copy_of_song_with_both_id3v2_and_id3v1_tags.mp3')
 
     def test__add_tags__source_is_empty__raises_value_error(self):
         with self.assertRaisesRegexp(ValueError, 'A source must be set for tagging an mp3.'):
@@ -39,6 +41,12 @@ class Mp3TaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(TaggerError, 'The source must not be a directory.'):
             tagger = Mp3Tagger()
             tagger.add_tags('/some/non/existent/mp3')
+
+    def test__add_tags__artist_is_set__tag_should_have_an_artist_frame(self):
+        tagger = Mp3Tagger()
+        tagger.add_tags('tests/integration/data/test_data.mp3', artist='Aphex Twin')
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['artist'], u'Aphex Twin')
 
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
