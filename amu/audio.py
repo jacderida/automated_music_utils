@@ -130,6 +130,8 @@ class Mp3Tagger(object):
 
     def _add_disc_number_frame(self, tag, disc_number, disc_total):
         disc_number_string = str(disc_number)
+        if disc_number < 10:
+            disc_number_string = "0{0}".format(disc_number)
         disc_total_string = str(disc_total)
         tag.add(TPOS(encoding=3, text='{0}/{1}'.format(disc_number_string, disc_total_string)))
 
