@@ -48,6 +48,14 @@ class Mp3TaggerTest(unittest.TestCase):
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['artist'], u'Aphex Twin')
 
+    def test__add_tags__artist_is_not_set__artist_should_be_set_to_placeholder(self):
+        # It's horrible to have to check for this placeholder value, but due to the way
+        # the tagging library works, sadly it's necessary.
+        tagger = Mp3Tagger()
+        tagger.add_tags('tests/integration/data/test_data.mp3')
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['artist'], u'placeholder')
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')
