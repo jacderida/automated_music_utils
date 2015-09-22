@@ -123,6 +123,8 @@ class Mp3Tagger(object):
         track_total_string = str(track_total)
         if track_number < 10:
             track_number_string = "0{0}".format(track_number)
+        if track_total < 10:
+            track_total_string = "0{0}".format(track_total)
         tag.add(TRCK(encoding=3, text='{0}/{1}'.format(track_number_string, track_total_string)))
 
     def apply_artwork(self, source, destination):

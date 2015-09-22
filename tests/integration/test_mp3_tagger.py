@@ -140,6 +140,12 @@ class Mp3TaggerTest(unittest.TestCase):
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['trackno'], u'05/15')
 
+    def test__add_tags__track_total_is_less_than_10__tag_should_have_a_padded_track_total_frame(self):
+        tagger = Mp3Tagger()
+        tagger.add_tags('tests/integration/data/test_data.mp3', track_number=5, track_total=6)
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['trackno'], u'05/06')
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')
