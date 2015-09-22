@@ -102,6 +102,7 @@ class AddTagCommand(Command):
         super(AddTagCommand, self).__init__(config_provider)
         self._source = ''
         self._artist = ''
+        self._album_artist = ''
         self._title = ''
         self._album = ''
         self._year = ''
@@ -128,6 +129,14 @@ class AddTagCommand(Command):
     @artist.setter
     def artist(self, value):
         self._artist = value
+
+    @property
+    def album_artist(self):
+        return self._album_artist
+
+    @album_artist.setter
+    def album_artist(self, value):
+        self._album_artist = value
 
     @property
     def title(self):
