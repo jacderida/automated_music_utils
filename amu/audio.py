@@ -88,6 +88,7 @@ class Mp3Tagger(object):
         self._add_genre_frame(tag, genre)
         self._add_comment_frame(tag, comment)
         self._add_track_number_frame(tag, track_number, track_total)
+        self._add_disc_number_frame(tag, disc_number, disc_total)
         tag.save()
 
     def _add_artist_frame(self, tag, artist):
@@ -126,6 +127,11 @@ class Mp3Tagger(object):
         if track_total < 10:
             track_total_string = "0{0}".format(track_total)
         tag.add(TRCK(encoding=3, text='{0}/{1}'.format(track_number_string, track_total_string)))
+
+    def _add_disc_number_frame(self, tag, disc_number, disc_total):
+        disc_number_string = str(disc_number)
+        disc_total_string = str(disc_total)
+        tag.add(TPOS(encoding=3, text='{0}/{1}'.format(disc_number_string, disc_total_string)))
 
     def apply_artwork(self, source, destination):
         if not source:
