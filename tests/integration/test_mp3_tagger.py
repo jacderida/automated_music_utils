@@ -164,6 +164,22 @@ class Mp3TaggerTest(unittest.TestCase):
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['discno'], u'03/04')
 
+    def test__add_tags__all_fields_specified__tag_should_have_all_frames_set(self):
+        tagger = Mp3Tagger()
+        tagger.add_tags(
+            'tests/integration/data/test_data.mp3', 'Aphex Twin', 'Aphex Twin', 'Drukqs',
+            'Flap Head', '2015', 'Electronic', 'Nightwind Records (NW001)', 5, 6, 1, 1)
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['artist'], u'Aphex Twin')
+        self.assertEqual(tag_data['album_artist'], u'Aphex Twin')
+        self.assertEqual(tag_data['title'], u'Flap Head')
+        self.assertEqual(tag_data['album'], u'Drukqs')
+        self.assertEqual(tag_data['year'], u'2015')
+        self.assertEqual(tag_data['trackno'], u'05/06')
+        self.assertEqual(tag_data['discno'], u'01/01')
+        self.assertEqual(tag_data['genre'], u'Electronic')
+        self.assertEqual(tag_data['comment'], u'Nightwind Records (NW001)')
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')
