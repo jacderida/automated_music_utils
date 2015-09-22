@@ -99,7 +99,8 @@ class Mp3Tagger(object):
             tag.add(TIT2(encoding=3, text=title))
 
     def _add_album_frame(self, tag, album):
-        tag.add(TALB(encoding=3, text=album))
+        if album:
+            tag.add(TALB(encoding=3, text=album))
 
     def apply_artwork(self, source, destination):
         if not source:

@@ -86,6 +86,12 @@ class Mp3TaggerTest(unittest.TestCase):
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertEqual(tag_data['album'], u'Dark Side of the Moon')
 
+    def test__add_tags__album_is_not_set__tag_should_not_have_an_album_frame(self):
+        tagger = Mp3Tagger()
+        tagger.add_tags('tests/integration/data/test_data.mp3')
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertFalse(tag_data.has_key('album'))
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')
