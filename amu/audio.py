@@ -104,7 +104,8 @@ class Mp3Tagger(object):
             tag.add(TALB(encoding=3, text=album))
 
     def _add_year_frame(self, tag, year):
-        tag.add(TDRC(encoding=3, text=year))
+        if year:
+            tag.add(TDRC(encoding=3, text=year))
 
     def apply_artwork(self, source, destination):
         if not source:
