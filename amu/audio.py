@@ -86,6 +86,7 @@ class Mp3Tagger(object):
         self._add_album_frame(tag, album)
         self._add_year_frame(tag, year)
         self._add_genre_frame(tag, genre)
+        self._add_comment_frame(tag, comment)
         tag.save()
 
     def _add_artist_frame(self, tag, artist):
@@ -111,6 +112,9 @@ class Mp3Tagger(object):
     def _add_genre_frame(self, tag, genre):
         if genre:
             tag.add(TCON(encoding=3, text=genre))
+
+    def _add_comment_frame(self, tag, comment):
+        tag.add(COMM(encoding=3, lang='eng', desc='comm', text=comment))
 
     def apply_artwork(self, source, destination):
         if not source:
