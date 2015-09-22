@@ -54,6 +54,8 @@ def get_id3_tag_data(path):
         return tag_data
     if tag.has_key('TPE1'):
         tag_data['artist'] = tag.getall('TPE1')[0]
+    if tag.has_key('TPE2'):
+        tag_data['album_artist'] = tag.getall('TPE2')[0]
     if tag.has_key('TIT2'):
         tag_data['title'] = tag.getall('TIT2')[0]
     if tag.has_key('TALB'):
