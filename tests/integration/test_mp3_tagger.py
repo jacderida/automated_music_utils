@@ -68,6 +68,12 @@ class Mp3TaggerTest(unittest.TestCase):
         tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
         self.assertFalse(tag_data.has_key('album_artist'))
 
+    def test__add_tags__title_is_set__tag_should_have_an_title_frame(self):
+        tagger = Mp3Tagger()
+        tagger.add_tags('tests/integration/data/test_data.mp3', title='Flap Head')
+        tag_data = get_id3_tag_data('tests/integration/data/test_data.mp3')
+        self.assertEqual(tag_data['title'], u'Flap Head')
+
     def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
         tagger = Mp3Tagger()
         tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.mp3')
