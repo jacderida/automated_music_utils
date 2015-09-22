@@ -84,6 +84,7 @@ class Mp3Tagger(object):
         self._add_album_artist_frame(tag, album_artist)
         self._add_title_frame(tag, title)
         self._add_album_frame(tag, album)
+        self._add_year_frame(tag, year)
         tag.save()
 
     def _add_artist_frame(self, tag, artist):
@@ -101,6 +102,9 @@ class Mp3Tagger(object):
     def _add_album_frame(self, tag, album):
         if album:
             tag.add(TALB(encoding=3, text=album))
+
+    def _add_year_frame(self, tag, year):
+        tag.add(TDRC(encoding=3, text=year))
 
     def apply_artwork(self, source, destination):
         if not source:
