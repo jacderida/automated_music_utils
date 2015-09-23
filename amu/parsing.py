@@ -546,6 +546,7 @@ class AddTagCommandArgs(object):
     def __init__(self):
         self._source = ''
         self._artist = ''
+        self._album_artist = ''
         self._title = ''
         self._album = ''
         self._year = ''
@@ -571,6 +572,14 @@ class AddTagCommandArgs(object):
     @artist.setter
     def artist(self, value):
         self._artist = value
+
+    @property
+    def album_artist(self):
+        return self._album_artist
+
+    @album_artist.setter
+    def album_artist(self, value):
+        self._album_artist = value
 
     @property
     def title(self):
@@ -649,6 +658,7 @@ class AddTagCommandArgs(object):
         command_args = AddTagCommandArgs()
         command_args.source = AddTagCommandArgs._get_value_from_args(args.source)
         command_args.artist = AddTagCommandArgs._get_value_from_args(args.artist)
+        command_args.album_artist = AddTagCommandArgs._get_value_from_args(args.album_artist)
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
         command_args.genre = AddTagCommandArgs._get_value_from_args(args.genre)
