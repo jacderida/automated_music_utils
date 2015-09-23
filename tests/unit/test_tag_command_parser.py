@@ -36,6 +36,19 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('Aphex Twin', commands[0].artist)
 
     @mock.patch('os.path.isfile')
+    def test__parse_add_mp3_tag_command__album_artist_is_specified__add_mp3_tag_command_has_album_artist_correctly_specified(self, isfile_mock):
+        isfile_mock.return_value = True
+        command_args = AddTagCommandArgs()
+        command_args.source = '/some/path/to/song.mp3'
+        command_args.artist = 'Aphex Twin'
+        command_args.album = 'Druqks'
+        command_args.album_artist = 'Aphex Twin'
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_mp3_tag_command(command_args)
+        self.assertEqual('Aphex Twin', commands[0].album_artist)
+
+    @mock.patch('os.path.isfile')
     def test__parse_add_mp3_tag_command__album_is_specified__add_mp3_tag_command_has_album_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()

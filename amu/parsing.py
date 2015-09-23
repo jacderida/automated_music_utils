@@ -355,6 +355,7 @@ class TagCommandParser(object):
         command = AddTagCommand(self._configuration_provider, self._tagger)
         command.source = source
         command.artist = command_args.artist
+        command.album_artist = command_args.album_artist
         command.album = command_args.album
         command.title = command_args.title
         command.year = command_args.year
