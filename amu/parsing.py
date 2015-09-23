@@ -340,6 +340,7 @@ class TagCommandParser(object):
             command_args.artist = track.artist
         else:
             command_args.artist = release_model.artist
+        command_args.album_artist = release_model.artist
         command_args.album = release_model.title
         command_args.title = track.title
         command_args.year = release_model.original_year

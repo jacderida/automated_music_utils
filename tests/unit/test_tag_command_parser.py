@@ -620,6 +620,39 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('Legowelt', commands[5].artist)
 
     @mock.patch('os.walk')
+    def test__parse_from_release_model__release_has_single_artist_and_6_tracks__release_album_artist_is_set_on_tracks(self, walk_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'Legowelt'
+        release_model.title = 'Pimpshifter'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+        source_path = '/some/path/to/mp3s'
+        walk_mock.return_value = [
+            (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
+        ]
+
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_from_release_model(source_path, release_model)
+        self.assertEqual('Legowelt', commands[0].album_artist)
+        self.assertEqual('Legowelt', commands[1].album_artist)
+        self.assertEqual('Legowelt', commands[2].album_artist)
+        self.assertEqual('Legowelt', commands[3].album_artist)
+        self.assertEqual('Legowelt', commands[4].album_artist)
+        self.assertEqual('Legowelt', commands[5].album_artist)
+
+    @mock.patch('os.walk')
     def test__parse_from_release_model__release_has_single_artist_and_6_tracks__release_album_is_set_on_tracks(self, walk_mock):
         release_model = ReleaseModel()
         release_model.artist = 'Legowelt'
