@@ -1920,6 +1920,31 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('AFX', commands[2].artist)
         self.assertEqual('AFX', commands[3].artist)
 
+    def test__parse_from_release_model_with_empty_source__release_has_4_tracks__album_artists_are_specified_correctly(self):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
+        self.assertEqual('AFX', commands[0].album_artist)
+        self.assertEqual('AFX', commands[1].album_artist)
+        self.assertEqual('AFX', commands[2].album_artist)
+        self.assertEqual('AFX', commands[3].album_artist)
+
     def test__parse_from_release_model_with_empty_source__release_has_4_tracks__titles_are_specified_correctly(self):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -2173,6 +2198,34 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('Luke Eargoggle', commands[3].artist)
         self.assertEqual('Porn.Darsteller', commands[4].artist)
         self.assertEqual('Sendex', commands[5].artist)
+
+    def test__parse_from_release_model_with_empty_source__release_has_artists_on_tracks__album_artists_are_specified_correctly(self):
+        release_model = ReleaseModel()
+        release_model.artist = 'Various'
+        release_model.title = 'Bronson Quest'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3047'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly('Legowelt', 'Crystal Cat', 1, 6, 1, 1)
+        release_model.add_track_directly('It & My Computer', 'Bronx On / Bronx Off', 2, 6, 1, 1)
+        release_model.add_track_directly('Orgue Electronique', 'Beirut Meeting', 3, 6, 1, 1)
+        release_model.add_track_directly('Luke Eargoggle', 'The Mechanic Priest', 4, 6, 1, 1)
+        release_model.add_track_directly('Porn.Darsteller', "L'ombre Des Heros", 5, 6, 1, 1)
+        release_model.add_track_directly('Sendex', 'Raid On Entebbe', 6, 6, 1, 1)
+
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_from_release_model_with_empty_source('/some/source/mp3s', release_model)
+        self.assertEqual('Various', commands[0].album_artist)
+        self.assertEqual('Various', commands[1].album_artist)
+        self.assertEqual('Various', commands[2].album_artist)
+        self.assertEqual('Various', commands[3].album_artist)
+        self.assertEqual('Various', commands[4].album_artist)
+        self.assertEqual('Various', commands[5].album_artist)
 
     def test__parse_from_release_model_with_sources__release_has_6_tracks__6_tag_mp3_commands_are_returned(self):
         release_model = ReleaseModel()
