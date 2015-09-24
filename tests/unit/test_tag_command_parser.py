@@ -2420,6 +2420,42 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual('Porn.Darsteller', commands[4].artist)
         self.assertEqual('Sendex', commands[5].artist)
 
+    def test__parse_from_release_model_with_sources__release_has_6_tracks__album_artists_are_set_correctly(self):
+        release_model = ReleaseModel()
+        release_model.artist = 'Various'
+        release_model.title = 'Bronson Quest'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3047'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly('Legowelt', 'Crystal Cat', 1, 6, 1, 1)
+        release_model.add_track_directly('It & My Computer', 'Bronx On / Bronx Off', 2, 6, 1, 1)
+        release_model.add_track_directly('Orgue Electronique', 'Beirut Meeting', 3, 6, 1, 1)
+        release_model.add_track_directly('Luke Eargoggle', 'The Mechanic Priest', 4, 6, 1, 1)
+        release_model.add_track_directly('Porn.Darsteller', "L'ombre Des Heros", 5, 6, 1, 1)
+        release_model.add_track_directly('Sendex', 'Raid On Entebbe', 6, 6, 1, 1)
+        sources = [
+            '/some/path/to/mp3s/01 - Track 01.mp3',
+            '/some/path/to/mp3s/02 - Track 02.mp3',
+            '/some/path/to/mp3s/03 - Track 03.mp3',
+            '/some/path/to/mp3s/04 - Track 04.mp3',
+            '/some/path/to/mp3s/05 - Track 05.mp3',
+            '/some/path/to/mp3s/06 - Track 06.mp3'
+        ]
+
+        config_mock, tagger_mock = (Mock(),)*2
+        parser = TagCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_from_release_model_with_sources(release_model, sources)
+        self.assertEqual('Various', commands[0].album_artist)
+        self.assertEqual('Various', commands[1].album_artist)
+        self.assertEqual('Various', commands[2].album_artist)
+        self.assertEqual('Various', commands[3].album_artist)
+        self.assertEqual('Various', commands[4].album_artist)
+        self.assertEqual('Various', commands[5].album_artist)
+
     def test__parse_from_release_model_with_sources__release_has_6_tracks__titles_are_set_correctly(self):
         release_model = ReleaseModel()
         release_model.artist = 'Various'
