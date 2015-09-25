@@ -1519,3 +1519,36 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_release_model('/some/source', '/some/destination', release_model)[4]
         self.assertEqual('/some/source/cover.jpg', command.source)
         self.assertEqual('/some/destination/cover.jpg', command.destination)
+
+    @mock.patch('os.listdir')
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.walk')
+    def test__parse_from_release_model__source_has_cover_png__a_move_file_command_should_be_generated_for_the_cover(self, walk_mock, isdir_mock, listdir_mock):
+        walk_mock.return_value = [
+            ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.png'))
+        ]
+        isdir_mock.side_effect = [True, True]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.png'
+        ]
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+
+        config_mock = Mock()
+        parser = MoveAudioFileCommandParser(config_mock)
+        command = parser.parse_from_release_model('/some/source', '/some/destination', release_model)[4]
+        self.assertEqual('/some/source/cover.png', command.source)
+        self.assertEqual('/some/destination/cover.png', command.destination)
