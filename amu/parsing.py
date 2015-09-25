@@ -440,6 +440,7 @@ class MoveAudioFileCommandParser(object):
         i = 0
         tracks = release_model.get_tracks()
         commands = []
+        commands.extend(self._get_move_cover_command(source_path, destination))
         for directory in sorted(directories):
             full_source_directory = os.path.join(source_path, directory)
             mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
