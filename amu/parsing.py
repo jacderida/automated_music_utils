@@ -404,16 +404,8 @@ class MoveAudioFileCommandParser(object):
             commands.append(command)
             i += 1
         source = os.path.dirname(encode_commands[0].source)
-        images = [
-            f for f in [
-                image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')
-            ] if f.startswith('cover')
-        ]
-        if len(images) > 0:
-            command = MoveAudioFileCommand(self._configuration_provider)
-            command.source = os.path.join(source, images[0])
-            command.destination = os.path.join(os.path.dirname(encode_commands[0].destination), images[0])
-            commands.append(command)
+        commands.extend(
+            self._get_move_cover_command(source, os.path.dirname(encode_commands[0].destination)))
         return commands
 
     def parse_from_release_model(self, source, destination, release_model):
@@ -430,6 +422,19 @@ class MoveAudioFileCommandParser(object):
                 commands.extend(self._get_single_directory_parse_from_release_model_commands(release_model, root, files, destination))
             break
         return commands
+
+    def _get_move_cover_command(self, source, destination):
+        images = [
+            f for f in [
+                image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')
+            ] if f.startswith('cover')
+        ]
+        if len(images) > 0:
+            command = MoveAudioFileCommand(self._configuration_provider)
+            command.source = os.path.join(source, images[0])
+            command.destination = os.path.join(destination, images[0])
+            return [command]
+        return []
 
     def _get_multi_cd_parse_from_release_model_commands(self, release_model, source_path, directories, destination):
         i = 0
