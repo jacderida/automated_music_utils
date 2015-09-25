@@ -8,9 +8,10 @@ from mock import Mock
 
 
 class TestMoveAudioFileCommandParser(unittest.TestCase):
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__4_encode_commands__returns_4_move_file_commands(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__4_encode_commands__returns_4_move_file_commands(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -49,9 +50,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         commands = parser.parse_from_encode_commands(commands, release_model)
         self.assertEqual(4, len(commands))
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__4_encode_commands__source_is_correctly_specified(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__4_encode_commands__source_is_correctly_specified(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -93,9 +95,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3', commands[2].source)
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3', commands[3].source)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__4_encode_commands__destination_is_correctly_specified(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__4_encode_commands__destination_is_correctly_specified(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -137,9 +140,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor.Spyboter.A.mp3', commands[3].destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__12_encode_commands__destination_is_correctly_specified(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__12_encode_commands__destination_is_correctly_specified(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/01 - Track 01.wav'
@@ -229,9 +233,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/11 - Cow Cud Is A Twin.mp3', commands[10].destination)
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/12 - Next Heap With.mp3', commands[11].destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__3_encode_commands_and_release_has_4_tracks__throws_command_parsing_error(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__3_encode_commands_and_release_has_4_tracks__throws_command_parsing_error(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -266,9 +271,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
             parser = MoveAudioFileCommandParser(config_mock)
             commands = parser.parse_from_encode_commands(commands, release_model)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_forward_slash_in_title__the_forward_slash_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_forward_slash_in_title__the_forward_slash_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -303,13 +309,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor/Spyboter.A', 4, 4, 1, 1)
 
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         parser = MoveAudioFileCommandParser(config_mock)
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_backslash_in_title__the_backslash_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_backslash_in_title__the_backslash_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -348,9 +356,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_question_mark_in_title__the_question_mark_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_question_mark_in_title__the_question_mark_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -389,9 +398,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_left_arrow_in_title__the_left_arrow_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_left_arrow_in_title__the_left_arrow_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -430,9 +440,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_right_arrow_in_title__the_right_arrow_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_right_arrow_in_title__the_right_arrow_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -471,9 +482,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_colon_in_title__the_colon_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_colon_in_title__the_colon_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -512,9 +524,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_asterisk_in_title__the_asterisk_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_asterisk_in_title__the_asterisk_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -553,9 +566,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_pipe_in_title__the_pipe_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_pipe_in_title__the_pipe_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -594,9 +608,10 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
 
-    @mock.patch('amu.encode.LameEncoder')
-    @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_from_encode_commands__track_has_double_quote_in_title__the_double_quote_is_replaced_with_a_space(self, config_mock, encoder_mock):
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__track_has_double_quote_in_title__the_double_quote_is_replaced_with_a_space(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
+        config_mock, encoder_mock = (Mock(),)*2
         commands = []
         command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
@@ -634,6 +649,49 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         parser = MoveAudioFileCommandParser(config_mock)
         command = parser.parse_from_encode_commands(commands, release_model)[3]
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Backdoor Spyboter.A.mp3', command.destination)
+
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__source_directory_has_cover_jpg__a_command_should_be_generated_to_move_the_artwork(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.jpg']
+        config_mock, encoder_mock = (Mock(),)*2
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
+        command1.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
+        command2.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
+        command3.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
+        command4.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
+        commands.append(command4)
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        parser = MoveAudioFileCommandParser(config_mock)
+        command = parser.parse_from_encode_commands(commands, release_model)[4]
+        self.assertEqual('/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.jpg', command.source)
+        self.assertEqual('/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.jpg', command.destination)
 
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')

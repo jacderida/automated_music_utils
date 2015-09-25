@@ -403,10 +403,20 @@ class MoveAudioFileCommandParser(object):
             command.destination = self._get_destination(encode_commands[i].destination, tracks[i])
             commands.append(command)
             i += 1
+        source = os.path.dirname(encode_commands[0].source)
+        images = [
+            f for f in [
+                image for image in os.listdir(source) if image.endswith('.jpg')
+            ] if f.startswith('cover')
+        ]
+        if len(images) > 0:
+            command = MoveAudioFileCommand(self._configuration_provider)
+            command.source = os.path.join(source, images[0])
+            command.destination = os.path.join(os.path.dirname(encode_commands[0].destination), images[0])
+            commands.append(command)
         return commands
 
     def parse_from_release_model(self, source, destination, release_model):
-        print destination
         if not os.path.isdir(source):
             raise CommandParsingError('The source must be a directory.')
         if not os.path.isdir(destination):
