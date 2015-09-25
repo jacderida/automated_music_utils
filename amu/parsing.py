@@ -406,7 +406,7 @@ class MoveAudioFileCommandParser(object):
         source = os.path.dirname(encode_commands[0].source)
         images = [
             f for f in [
-                image for image in os.listdir(source) if image.endswith('.jpg')
+                image for image in os.listdir(source) if image.endswith('.jpg') or image.endswith('.png')
             ] if f.startswith('cover')
         ]
         if len(images) > 0:

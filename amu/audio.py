@@ -157,7 +157,7 @@ class Mp3Tagger(object):
         elif artwork_type == 'png':
             mime_type = 'image/png'
         tag = self._get_tag(destination)
-        print "[artwork] Adding {0} to {1}".format(source, destination)
+        print u'[artwork] Adding {0} to {1}'.format(source, destination)
         tag.add(APIC(encoding=3, mime=mime_type, type=3, desc=u'cover', data=open(source).read()))
         tag.save()
 

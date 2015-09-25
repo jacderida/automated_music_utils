@@ -693,6 +693,49 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.jpg', command.source)
         self.assertEqual('/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.jpg', command.destination)
 
+    @mock.patch('os.listdir')
+    def test__parse_from_encode_commands__source_directory_has_cover_png__a_command_should_be_generated_to_move_the_artwork(self, listdir_mock):
+        listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.png']
+        config_mock, encoder_mock = (Mock(),)*2
+        commands = []
+        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
+        command1.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
+        command2.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
+        command3.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
+        command4.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
+        commands.append(command4)
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        parser = MoveAudioFileCommandParser(config_mock)
+        command = parser.parse_from_encode_commands(commands, release_model)[4]
+        self.assertEqual('/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.png', command.source)
+        self.assertEqual('/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.png', command.destination)
+
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
     def test__parse_from_release_model__release_has_4_tracks__4_move_file_commands_are_generated(self, walk_mock, isdir_mock):
