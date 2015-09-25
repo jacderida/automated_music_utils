@@ -736,11 +736,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.png', command.source)
         self.assertEqual('/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.png', command.destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_4_tracks__4_move_file_commands_are_generated(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_4_tracks__4_move_file_commands_are_generated(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
 
@@ -765,11 +769,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual(4, len(commands))
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_4_tracks__source_is_set_correctly(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_4_tracks__source_is_set_correctly(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -796,12 +804,16 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/source/03 - Track 3.mp3', commands[2].source)
         self.assertEqual('/some/source/04 - Track 4.mp3', commands[3].source)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_4_tracks_and_walk_returns_tracks_in_arbitrary_order__source_is_set_correctly(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_4_tracks_and_walk_returns_tracks_in_arbitrary_order__source_is_set_correctly(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('02 - Track 2.mp3', '01 - Track 1.mp3', '04 - Track 4.mp3', '03 - Track 3.mp3'))
         ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
+        ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -827,11 +839,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/source/03 - Track 3.mp3', commands[2].source)
         self.assertEqual('/some/source/04 - Track 4.mp3', commands[3].source)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_4_tracks__destination_is_set_correctly(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_4_tracks__destination_is_set_correctly(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -858,11 +874,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor.Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_forward_slash__forward_slash_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_forward_slash__forward_slash_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -889,11 +909,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_back_slash__back_slash_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_back_slash__back_slash_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -920,11 +944,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_question_mark__question_mark_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_question_mark__question_mark_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -951,11 +979,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_left_arrow__left_arrow_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_left_arrow__left_arrow_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -982,11 +1014,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_right_arrow__right_arrow_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_right_arrow__right_arrow_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -1013,11 +1049,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_colon__colon_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_colon__colon_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -1044,11 +1084,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_asterisk__asterisk_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_asterisk__asterisk_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -1075,11 +1119,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_pipe__pipe_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_pipe__pipe_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -1106,11 +1154,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
         self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
 
+    @mock.patch('os.listdir')
     @mock.patch('os.path.isdir')
     @mock.patch('os.walk')
-    def test__parse_from_release_model__release_has_track_title_with_double_quotes__double_quotes_is_replaced_with_a_space(self, walk_mock, isdir_mock):
+    def test__parse_from_release_model__release_has_track_title_with_double_quotes__double_quotes_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
         ]
         isdir_mock.side_effect = [True, True]
         release_model = ReleaseModel()
@@ -1434,3 +1486,36 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         self.assertEqual("/some/source/cd2/11 - Track 11.mp3", commands[23].source)
         self.assertEqual('/some/source/cd2/12 - Track 12.mp3', commands[24].source)
         self.assertEqual('/some/source/cd2/13 - Track 13.mp3', commands[25].source)
+
+    @mock.patch('os.listdir')
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.walk')
+    def test__parse_from_release_model__source_has_cover_jpg__a_move_file_command_should_be_generated_for_the_cover(self, walk_mock, isdir_mock, listdir_mock):
+        walk_mock.return_value = [
+            ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.jpg'))
+        ]
+        isdir_mock.side_effect = [True, True]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.jpg'
+        ]
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
+
+        config_mock = Mock()
+        parser = MoveAudioFileCommandParser(config_mock)
+        command = parser.parse_from_release_model('/some/source', '/some/destination', release_model)[4]
+        self.assertEqual('/some/source/cover.jpg', command.source)
+        self.assertEqual('/some/destination/cover.jpg', command.destination)

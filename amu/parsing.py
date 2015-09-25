@@ -462,6 +462,7 @@ class MoveAudioFileCommandParser(object):
             command.destination = self._get_full_destination_from_track(destination, tracks[i])
             commands.append(command)
             i += 1
+        commands.extend(self._get_move_cover_command(source_path, destination))
         return commands
 
     def _get_destination(self, destination, track):
