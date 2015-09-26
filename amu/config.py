@@ -28,7 +28,11 @@ class ConfigurationProvider(object):
         if not subprocess.call(['which', 'flac']):
             return 'flac'
         path_from_env_variable = os.environ.get('FLAC_PATH')
-        return self._get_verified_path_from_environment_variable(path_from_env_variable, 'FLAC_PATH', 'flac')
+        if path_from_env_variable:
+            return self._get_verified_path_from_environment_variable(path_from_env_variable, 'FLAC_PATH', 'flac')
+        config = self._get_config_parser()
+        path_from_config = config.get('encoder', 'flac_path')
+        return path_from_config
 
     def get_encoding_setting(self):
         config = self._get_config_parser()
