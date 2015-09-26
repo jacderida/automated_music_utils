@@ -31,6 +31,12 @@ class FlacEncoderTest(unittest.TestCase):
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
+    def test__encode_wav__source_is_empty__raises_value_error(self):
+        config_mock = Mock(autospec=True)
+        with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the source'):
+            encoder = FlacEncoder(config_mock)
+            encoder.encode_wav('', '/some/path/destination')
+
     @mock.patch('os.path.exists')
     def test__encode_wav__source_is_non_existent__raises_configuration_error(self, exists_mock):
         exists_mock.return_value = False
