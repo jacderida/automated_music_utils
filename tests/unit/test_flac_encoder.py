@@ -42,3 +42,17 @@ class FlacEncoderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'The source to encode does not exist'):
             encoder = FlacEncoder(config_mock)
             encoder.encode_wav('/some/path/source', '/some/path/destination')
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isdir')
+    def test__encode_wav__source_is_directory__throws_configuration_exception(self, isdir_mock, exists_mock):
+        exists_mock.return_value = True
+        isdir_mock.return_value = True
+        config_mock = Mock(autospec=True)
+        config_mock.get_lame_path.return_value = '/opt/flac/flac'
+        config_mock.get_lame_encoding_setting.return_value = '-V0'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        with self.assertRaisesRegexp(ConfigurationError, 'The source should not be a directory'):
+            encoder = FlacEncoder(config_mock)
+            encoder.encode_wav('/some/path/source', '/some/path/destination')

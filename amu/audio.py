@@ -47,6 +47,8 @@ class FlacEncoder(object):
     def encode_wav(self, source, destination):
         if not os.path.exists(source):
             raise ConfigurationError('The source to encode does not exist')
+        if os.path.isdir(source):
+            raise ConfigurationError('The source should not be a directory')
         subprocess_args = [
             self._config_provider.get_lame_path(),
             self._config_provider.get_lame_encoding_setting(),
