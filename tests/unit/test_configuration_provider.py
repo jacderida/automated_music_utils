@@ -623,3 +623,15 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the flac encoding setting.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_flac_encoding_setting()
+
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.read')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    @mock.patch('os.path.expanduser')
+    def test__get_flac_encoding_setting__encoding_setting_is_in_config_file__correct_config_file_is_used(self, expanduser_mock, config_get_mock, config_read_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        expanduser_mock.return_value = '/home/user/'
+        config_get_mock.return_value = '-5'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        config_provider.get_flac_encoding_setting()
+        config_read_mock.assert_called_with('/home/user/.amu_config')
