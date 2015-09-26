@@ -24,6 +24,10 @@ class ConfigurationProvider(object):
                 path_from_env_variable, 'LAME_PATH', 'lame')
         return self._get_verified_path_from_config_file('encoder', 'lame')
 
+    def get_flac_path(self):
+        if not subprocess.call(['which', 'flac']):
+            return 'flac'
+
     def get_encoding_setting(self):
         config = self._get_config_parser()
         return config.get('encoder', 'encoding_setting')

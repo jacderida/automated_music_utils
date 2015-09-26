@@ -505,3 +505,11 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_destination_with_mask_replaced(release_model)
+
+    @mock.patch('subprocess.call')
+    def test__get_flac_path__flac_is_on_path__flac_returned(self, subprocess_mock):
+        subprocess_mock.return_value = 0
+        config_provider = ConfigurationProvider(MaskReplacer())
+        result = config_provider.get_flac_path()
+        self.assertEqual('flac', result)
+        subprocess_mock.assert_called_with(['which', 'flac'])
