@@ -614,3 +614,12 @@ class ConfigurationProviderTest(unittest.TestCase):
         result = config_provider.get_flac_encoding_setting()
         self.assertEqual('-5', result)
         config_get_mock.assert_called_with('encoding', 'flac_encoding_setting')
+
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    def test__get_flac_encoding_setting__encoding_setting_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = ''
+        with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the flac encoding setting.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_flac_encoding_setting()
