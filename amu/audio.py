@@ -31,12 +31,32 @@ class LameEncoder(object):
             source,
             destination
         ]
-        print "[encode] Running lame with {0}".format(subprocess_args)
+        print '[encode] Running lame with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        lines_iterator = iter(popen.stdout.readline, "")
+        lines_iterator = iter(popen.stdout.readline, '')
         for line in lines_iterator:
             if line:
-                print "[encode] {0}".format(line.strip())
+                print '[encode] {0}'.format(line.strip())
+
+class FlacEncoder(object):
+    def __init__(self, config_provider):
+        if config_provider is None:
+            config_provider = ConfigurationProvider(MaskReplacer())
+        self._config_provider = config_provider
+
+    def encode_wav(self, source, destination):
+        subprocess_args = [
+            self._config_provider.get_lame_path(),
+            self._config_provider.get_lame_encoding_setting(),
+            source,
+            destination
+        ]
+        print '[encode] Running flac with {0}'.format(subprocess_args)
+        popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        lines_iterator = iter(popen.stdout.readline, '')
+        for line in lines_iterator:
+            if line:
+                print '[encode] {0}'.format(line.strip())
 
 class RubyRipperCdRipper(object):
     def __init__(self, config_provider):
