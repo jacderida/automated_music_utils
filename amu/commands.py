@@ -21,9 +21,9 @@ class Command(object):
         """ Executes the command. """
         pass
 
-class EncodeWavToMp3Command(Command):
+class EncodeWavCommand(Command):
     def __init__(self, config_provider, encoder):
-        super(EncodeWavToMp3Command, self).__init__(config_provider)
+        super(EncodeWavCommand, self).__init__(config_provider)
         if encoder is None:
             encoder = LameEncoder(config_provider)
         self._encoder = encoder

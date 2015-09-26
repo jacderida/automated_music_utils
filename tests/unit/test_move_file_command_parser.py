@@ -1,6 +1,6 @@
 import mock
 import unittest
-from amu.commands import EncodeWavToMp3Command
+from amu.commands import EncodeWavCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParsingError
 from amu.parsing import MoveAudioFileCommandParser
@@ -13,19 +13,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -55,19 +55,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -100,19 +100,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -145,51 +145,51 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/01 - Track 01.wav'
         command1.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/02 - Track 02.wav'
         command2.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/03 - Track 03.wav'
         command3.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/04 - Track 04.wav'
         command4.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/04 - Track 04.mp3'
         commands.append(command4)
-        command5 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command5 = EncodeWavCommand(config_mock, encoder_mock)
         command5.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/05 - Track 05.wav'
         command5.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/05 - Track 05.mp3'
         commands.append(command5)
-        command6 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command6 = EncodeWavCommand(config_mock, encoder_mock)
         command6.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/06 - Track 06.wav'
         command6.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/06 - Track 06.mp3'
         commands.append(command6)
-        command7 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command7 = EncodeWavCommand(config_mock, encoder_mock)
         command7.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/07 - Track 07.wav'
         command7.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/07 - Track 07.mp3'
         commands.append(command7)
-        command8 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command8 = EncodeWavCommand(config_mock, encoder_mock)
         command8.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/08 - Track 08.wav'
         command8.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/08 - Track 08.mp3'
         commands.append(command8)
-        command9 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command9 = EncodeWavCommand(config_mock, encoder_mock)
         command9.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/09 - Track 09.wav'
         command9.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/09 - Track 09.mp3'
         commands.append(command9)
-        command10 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command10 = EncodeWavCommand(config_mock, encoder_mock)
         command10.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/10 - Track 10.wav'
         command10.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/10 - Track 10.mp3'
         commands.append(command10)
-        command11 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command11 = EncodeWavCommand(config_mock, encoder_mock)
         command11.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/11 - Track 11.wav'
         command11.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/11 - Track 11.mp3'
         commands.append(command11)
-        command12 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command12 = EncodeWavCommand(config_mock, encoder_mock)
         command12.source = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/12 - Track 12.wav'
         command12.destination = '/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/12 - Track 12.mp3'
         commands.append(command12)
@@ -238,15 +238,15 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
@@ -276,19 +276,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -319,19 +319,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -361,19 +361,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -403,19 +403,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -445,19 +445,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -487,19 +487,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -529,19 +529,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -571,19 +571,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -613,19 +613,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -655,19 +655,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.jpg']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -698,19 +698,19 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         listdir_mock.return_value = ['01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', 'cover.png']
         config_mock, encoder_mock = (Mock(),)*2
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)

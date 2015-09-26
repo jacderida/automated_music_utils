@@ -5,7 +5,7 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import AddArtworkCommand, AddTagCommand, EncodeWavToMp3Command, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
+from amu.commands import AddArtworkCommand, AddTagCommand, EncodeWavCommand, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser, CommandParsingError
 from mock import Mock
@@ -52,7 +52,7 @@ class CommandParserTest(unittest.TestCase):
             '--destination=some/song.mp3'
         ])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
+        encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/song.wav', 'some/song.mp3')
@@ -64,7 +64,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
+        encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         current_working_directory = os.getcwd()
@@ -76,7 +76,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--source=/some/source'])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
+        encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/source', os.getcwd())
@@ -87,7 +87,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
+        encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         current_working_directory = os.getcwd()
@@ -99,7 +99,7 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--destination=/some/destination'])
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        encode_command_parser_mock.return_value = [EncodeWavToMp3Command(config_mock, encoder_mock)]
+        encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(os.getcwd(), '/some/destination')
@@ -111,8 +111,8 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--keep-source'])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
@@ -128,8 +128,8 @@ class CommandParserTest(unittest.TestCase):
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
@@ -164,10 +164,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         artwork_command_parser_mock.return_value = [
             AddArtworkCommand(config_mock, tagger_mock),
@@ -218,19 +218,19 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/some/path/to/wavs/01 - Track 01.wav'
         command1.destination = '/some/path/to/mp3s/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/some/path/to/wavs/02 - Track 02.wav'
         command2.destination = '/some/path/to/mp3s/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/some/path/to/wavs/03 - Track 03.wav'
         command3.destination = '/some/path/to/mp3s/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/some/path/to/wavs/04 - Track 04.wav'
         command4.destination = '/some/path/to/mp3s/04 - Track 04.mp3'
         commands.append(command4)
@@ -285,11 +285,11 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
@@ -329,10 +329,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         artwork_command_parser_mock.return_value = [
             AddArtworkCommand(config_mock, tagger_mock),
@@ -384,10 +384,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         artwork_command_parser_mock.return_value = [
             AddArtworkCommand(config_mock, tagger_mock),
@@ -439,10 +439,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         artwork_command_parser_mock.return_value = [
             AddArtworkCommand(config_mock, tagger_mock),
@@ -495,10 +495,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         artwork_command_parser_mock.return_value = [
             AddArtworkCommand(config_mock, tagger_mock),
@@ -551,10 +551,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         artwork_command_parser_mock.return_value = [
             AddArtworkCommand(config_mock, tagger_mock),
@@ -607,10 +607,10 @@ class CommandParserTest(unittest.TestCase):
             '--discogs-id=451034'
         ])
         encode_command_parser_mock.return_value = [
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -640,10 +640,10 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         command_args = artwork_command_parser_mock.call_args[0][0]
-        self.assertIsInstance(command_args[0], EncodeWavToMp3Command)
-        self.assertIsInstance(command_args[1], EncodeWavToMp3Command)
-        self.assertIsInstance(command_args[2], EncodeWavToMp3Command)
-        self.assertIsInstance(command_args[3], EncodeWavToMp3Command)
+        self.assertIsInstance(command_args[0], EncodeWavCommand)
+        self.assertIsInstance(command_args[1], EncodeWavCommand)
+        self.assertIsInstance(command_args[2], EncodeWavCommand)
+        self.assertIsInstance(command_args[3], EncodeWavCommand)
 
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
@@ -660,16 +660,16 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/destination')
         self.assertEqual(3, len(commands))
         self.assertIsInstance(commands[0], RipCdCommand)
-        self.assertIsInstance(commands[1], EncodeWavToMp3Command)
-        self.assertIsInstance(commands[2], EncodeWavToMp3Command)
+        self.assertIsInstance(commands[1], EncodeWavCommand)
+        self.assertIsInstance(commands[2], EncodeWavCommand)
 
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
@@ -687,8 +687,8 @@ class CommandParserTest(unittest.TestCase):
         stored_args_mock = utils.get_mock_with_stored_call_args(encode_command_parser_mock)
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
@@ -706,8 +706,8 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
@@ -726,8 +726,8 @@ class CommandParserTest(unittest.TestCase):
         ])
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
@@ -742,8 +742,8 @@ class CommandParserTest(unittest.TestCase):
         args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
@@ -761,18 +761,18 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -834,18 +834,18 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -918,18 +918,18 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -984,17 +984,17 @@ class CommandParserTest(unittest.TestCase):
         args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=3535'])
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
         ]
         config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
@@ -1042,18 +1042,18 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -1116,18 +1116,18 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),
@@ -1191,18 +1191,18 @@ class CommandParserTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         encode_command_parser_mock.return_value = [
             RipCdCommand(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock),
-            EncodeWavToMp3Command(config_mock, encoder_mock)
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock)
         ]
         move_file_command_parser_mock.return_value = [
             MoveAudioFileCommand(config_mock),

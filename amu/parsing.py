@@ -5,7 +5,7 @@ from amu import utils
 from amu.audio import Mp3Tagger
 from amu.commands import AddArtworkCommand
 from amu.commands import AddTagCommand
-from amu.commands import EncodeWavToMp3Command
+from amu.commands import EncodeWavCommand
 from amu.commands import FetchReleaseCommand
 from amu.commands import MoveAudioFileCommand
 from amu.commands import RemoveTagCommand
@@ -166,7 +166,7 @@ class EncodeCommandParser(object):
         rip_cd_command.destination = rip_destination
         commands.append(rip_cd_command)
         for i in range(1, track_count + 1):
-            command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+            command = EncodeWavCommand(self._configuration_provider, self._encoder)
             command.source = os.path.join(rip_destination, utils.get_track_name(i, "wav"))
             command.destination = os.path.join(destination, utils.get_track_name(i, "mp3"))
             commands.append(command)
@@ -184,7 +184,7 @@ class EncodeCommandParser(object):
     def _get_single_file_command(self, source, destination):
         if not destination.endswith('.mp3'):
             raise CommandParsingError('If the source is a file, the destination must also be a file.')
-        command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+        command = EncodeWavCommand(self._configuration_provider, self._encoder)
         command.source = source
         command.destination = destination
         return [command]
@@ -207,7 +207,7 @@ class EncodeCommandParser(object):
         return commands
 
     def _get_encode_wav_to_mp3_command(self, source_directory, destination_directory, source_wav):
-        command = EncodeWavToMp3Command(self._configuration_provider, self._encoder)
+        command = EncodeWavCommand(self._configuration_provider, self._encoder)
         command.source = os.path.join(source_directory, source_wav)
         command.destination = os.path.join(destination_directory, os.path.splitext(source_wav)[0] + '.mp3')
         return command

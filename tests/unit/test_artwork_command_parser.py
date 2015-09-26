@@ -2,7 +2,7 @@ import mock
 import unittest
 from mock import Mock
 from amu.commands import AddArtworkCommand
-from amu.commands import EncodeWavToMp3Command
+from amu.commands import EncodeWavCommand
 from amu.parsing import ArtworkCommandParser
 from amu.parsing import CommandParsingError
 
@@ -158,19 +158,19 @@ class ArtworkCommandParserTest(unittest.TestCase):
             '01 - Track 01.wav', '02 - Track 02.wav', '03 - Track 03.wav', '04 - Track 04.wav', 'cover.jpg'
         ]
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -190,19 +190,19 @@ class ArtworkCommandParserTest(unittest.TestCase):
             '01 - Track 01.wav', '02 - Track 02.wav', '03 - Track 03.wav', '04 - Track 04.wav', 'cover.jpg'
         ]
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -221,19 +221,19 @@ class ArtworkCommandParserTest(unittest.TestCase):
             '01 - Track 01.wav', '02 - Track 02.wav', '03 - Track 03.wav', '04 - Track 04.wav', 'cover.png'
         ]
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -252,19 +252,19 @@ class ArtworkCommandParserTest(unittest.TestCase):
             '01 - Track 01.wav', '02 - Track 02.wav', '03 - Track 03.wav', '04 - Track 04.wav', 'cover.jpg'
         ]
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
@@ -283,19 +283,19 @@ class ArtworkCommandParserTest(unittest.TestCase):
             '01 - Track 01.wav', '02 - Track 02.wav', '03 - Track 03.wav', '04 - Track 04.wav'
         ]
         commands = []
-        command1 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
         command1.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.wav'
         command1.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3'
         commands.append(command1)
-        command2 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
         command2.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.wav'
         command2.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3'
         commands.append(command2)
-        command3 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
         command3.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.wav'
         command3.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/03 - Track 03.mp3'
         commands.append(command3)
-        command4 = EncodeWavToMp3Command(config_mock, encoder_mock)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
         command4.source = '/wav/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.wav'
         command4.destination = '/mp3/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/04 - Track 04.mp3'
         commands.append(command4)
