@@ -27,7 +27,8 @@ class ConfigurationProvider(object):
     def get_flac_path(self):
         if not subprocess.call(['which', 'flac']):
             return 'flac'
-        return os.environ.get('FLAC_PATH')
+        path_from_env_variable = os.environ.get('FLAC_PATH')
+        return self._get_verified_path_from_environment_variable(path_from_env_variable, 'FLAC_PATH', 'flac')
 
     def get_encoding_setting(self):
         config = self._get_config_parser()
@@ -72,9 +73,7 @@ class ConfigurationProvider(object):
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):
             raise ConfigurationError(
-                """The path specified by {0}
-                is incorrect. Please provide a valid path for
-                {1}.""".format(env_variable_name, program))
+                'The path specified by {0} is incorrect. Please provide a valid path for {1}.'.format(env_variable_name, program))
         return path_from_env_variable
 
     def _get_verified_path_from_config_file(self, config_section, program):

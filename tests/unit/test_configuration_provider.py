@@ -525,3 +525,14 @@ class ConfigurationProviderTest(unittest.TestCase):
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
         environ_mock.get.assert_called_with('FLAC_PATH')
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.environ')
+    @mock.patch('subprocess.call')
+    def test__get_flac_path__environment_variable_has_incorrect_path__raises_configuration_error(self, subprocess_mock, environ_mock, path_exists_mock):
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = '/some/incorrect/path/to/flac'
+        path_exists_mock.return_value = False
+        with self.assertRaisesRegexp(ConfigurationError, 'The path specified by FLAC_PATH is incorrect. Please provide a valid path for flac.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_flac_path()
