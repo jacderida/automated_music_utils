@@ -33,7 +33,10 @@ class ConfigurationProvider(object):
 
     def get_lame_encoding_setting(self):
         config = self._get_config_parser()
-        return config.get('encoding', 'lame_encoding_setting')
+        encoding_setting = config.get('encoding', 'lame_encoding_setting')
+        if not encoding_setting:
+            raise ConfigurationError('A value must be provided for the lame encoding setting.')
+        return encoding_setting
 
     def get_ruby_ripper_path(self):
         if not subprocess.call(['which', 'rubyripper_cli']):

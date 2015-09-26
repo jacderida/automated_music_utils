@@ -300,6 +300,15 @@ class ConfigurationProviderTest(unittest.TestCase):
         self.assertEqual('-V0', result)
         config_get_mock.assert_called_with('encoding', 'lame_encoding_setting')
 
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    def test__get_lame_encoding_setting__encoding_setting_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = ''
+        with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the lame encoding setting.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_lame_encoding_setting()
+
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
