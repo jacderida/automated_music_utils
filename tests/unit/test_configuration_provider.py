@@ -550,3 +550,19 @@ class ConfigurationProviderTest(unittest.TestCase):
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
         config_get_mock.assert_called_with('encoder', 'flac_path')
+
+    @mock.patch('ConfigParser.ConfigParser.read')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.expanduser')
+    @mock.patch('os.environ')
+    @mock.patch('subprocess.call')
+    def test__get_flac_path__flac_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
+        config_provider = ConfigurationProvider(MaskReplacer())
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = None
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '/some/path/to/flac'
+        config_provider.get_flac_path()
+        config_read_mock.assert_called_with('/home/user/.amu_config')

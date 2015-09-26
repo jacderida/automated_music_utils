@@ -94,7 +94,6 @@ class ConfigurationProvider(object):
         config = ConfigParser.ConfigParser()
         config_path = os.path.join(os.path.expanduser('~'), '.amu_config')
         if not os.path.exists(config_path):
-            raise ConfigurationError(
-                'The .amu_config file does not exist in your home directory.')
+            raise ConfigurationError('The .amu_config file does not exist in your home directory.')
         config.read(config_path)
         return config
