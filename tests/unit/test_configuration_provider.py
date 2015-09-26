@@ -604,3 +604,13 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'The path specified to flac in the .amu_config file is incorrect. Please provide a valid path for flac.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_flac_path()
+
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    def test__get_flac_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '-5'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        result = config_provider.get_flac_encoding_setting()
+        self.assertEqual('-5', result)
+        config_get_mock.assert_called_with('encoding', 'flac_encoding_setting')
