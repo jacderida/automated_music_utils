@@ -27,7 +27,7 @@ class LameEncoder(object):
             raise ConfigurationError('The source should not be a directory')
         subprocess_args = [
             self._config_provider.get_lame_path(),
-            self._config_provider.get_encoding_setting(),
+            self._config_provider.get_lame_encoding_setting(),
             source,
             destination
         ]
