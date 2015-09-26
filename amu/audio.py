@@ -21,6 +21,10 @@ class LameEncoder(object):
         self._config_provider = config_provider
 
     def encode_wav(self, source, destination):
+        if not source:
+            raise ValueError('A value must be supplied for the source')
+        if not destination:
+            raise ValueError('A value must be supplied for the destination')
         if not os.path.exists(source):
             raise ConfigurationError('The source to encode does not exist')
         if os.path.isdir(source):
