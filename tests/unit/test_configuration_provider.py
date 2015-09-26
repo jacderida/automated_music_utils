@@ -243,7 +243,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_lame_path()
         self.assertEqual('/some/path/to/lame', result)
-        config_get_mock.assert_called_with('encoder', 'path')
+        config_get_mock.assert_called_with('encoding', 'lame_path')
 
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -292,34 +292,34 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
+    def test__get_lame_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = '-V0'
         config_provider = ConfigurationProvider(MaskReplacer())
-        result = config_provider.get_encoding_setting()
+        result = config_provider.get_lame_encoding_setting()
         self.assertEqual('-V0', result)
-        config_get_mock.assert_called_with('encoder', 'encoding_setting')
+        config_get_mock.assert_called_with('encoding', 'lame_encoding_setting')
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
     @mock.patch('amu.config.os.path.expanduser')
-    def test__get_encoding_setting__encoding_setting_is_in_config_file__correct_config_file_is_used(self, expanduser_mock, config_get_mock, config_read_mock, path_exists_mock):
+    def test__get_lame_encoding_setting__encoding_setting_is_in_config_file__correct_config_file_is_used(self, expanduser_mock, config_get_mock, config_read_mock, path_exists_mock):
         path_exists_mock.return_value = True
         expanduser_mock.return_value = '/home/user/'
         config_get_mock.return_value = '-V0'
         config_provider = ConfigurationProvider(MaskReplacer())
-        config_provider.get_encoding_setting()
+        config_provider.get_lame_encoding_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
-    def test__get_encoding_setting__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
+    def test__get_lame_encoding_setting__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer())
-            config_provider.get_encoding_setting()
+            config_provider.get_lame_encoding_setting()
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -549,7 +549,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider = ConfigurationProvider(MaskReplacer())
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
-        config_get_mock.assert_called_with('encoder', 'flac_path')
+        config_get_mock.assert_called_with('encoding', 'flac_path')
 
     @mock.patch('ConfigParser.ConfigParser.read')
     @mock.patch('ConfigParser.ConfigParser.get')

@@ -20,9 +20,8 @@ class ConfigurationProvider(object):
             return 'lame'
         path_from_env_variable = os.environ.get('LAME_PATH')
         if path_from_env_variable:
-            return self._get_verified_path_from_environment_variable(
-                path_from_env_variable, 'LAME_PATH', 'lame')
-        return self._get_verified_path_from_config_file('encoder', 'lame')
+            return self._get_verified_path_from_environment_variable(path_from_env_variable, 'LAME_PATH', 'lame')
+        return self._get_verified_path_from_config_file('encoding', 'lame_path', 'lame')
 
     def get_flac_path(self):
         if not subprocess.call(['which', 'flac']):
@@ -30,11 +29,11 @@ class ConfigurationProvider(object):
         path_from_env_variable = os.environ.get('FLAC_PATH')
         if path_from_env_variable:
             return self._get_verified_path_from_environment_variable(path_from_env_variable, 'FLAC_PATH', 'flac')
-        return self._get_verified_path_from_config_file('encoder', 'flac_path', 'flac')
+        return self._get_verified_path_from_config_file('encoding', 'flac_path', 'flac')
 
-    def get_encoding_setting(self):
+    def get_lame_encoding_setting(self):
         config = self._get_config_parser()
-        return config.get('encoder', 'encoding_setting')
+        return config.get('encoding', 'lame_encoding_setting')
 
     def get_ruby_ripper_path(self):
         if not subprocess.call(['which', 'rubyripper_cli']):
@@ -43,15 +42,13 @@ class ConfigurationProvider(object):
         if path_from_env_variable:
             return self._get_verified_path_from_environment_variable(
                 path_from_env_variable, 'RUBYRIPPER_CLI_PATH', 'ruby ripper')
-        return self._get_verified_path_from_config_file('ripper', 'ruby ripper')
+        return self._get_verified_path_from_config_file('ripper', 'path', 'ruby ripper')
 
     def get_ruby_ripper_config_file(self):
         path_from_env_variable = os.environ.get('RUBYRIPPER_CONFIG_PATH')
         if not os.path.exists(path_from_env_variable):
             raise ConfigurationError(
-                """The path specified by RUBYRIPPER_CONFIG_PATH
-                is incorrect. Please provide a valid path for
-                ruby ripper.""")
+                'The path specified by RUBYRIPPER_CONFIG_PATH is incorrect. Please provide a valid path for ruby ripper.')
         return path_from_env_variable
 
     def get_temp_config_file_for_ripper(self, destination_path):
