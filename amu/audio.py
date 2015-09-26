@@ -20,7 +20,7 @@ class LameEncoder(object):
             config_provider = ConfigurationProvider(MaskReplacer())
         self._config_provider = config_provider
 
-    def encode_wav_to_mp3(self, source, destination):
+    def encode_wav(self, source, destination):
         if not os.path.exists(source):
             raise ConfigurationError('The source to encode does not exist')
         if os.path.isdir(source):

@@ -15,7 +15,7 @@ class EncodeWavToMp3CommandTest(unittest.TestCase):
         command.source = '/some/source'
         command.destination = '/some/destination'
         command.execute()
-        encoder_mock.encode_wav_to_mp3.assert_called_once_with('/some/source', '/some/destination')
+        encoder_mock.encode_wav.assert_called_once_with('/some/source', '/some/destination')
 
     @mock.patch('os.remove')
     @mock.patch('os.path.exists')
