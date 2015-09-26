@@ -30,3 +30,15 @@ class FlacEncoderTest(unittest.TestCase):
             '/some/path/destination'
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    @mock.patch('os.path.exists')
+    def test__encode_wav__source_is_non_existent__raises_configuration_error(self, exists_mock):
+        exists_mock.return_value = False
+        config_mock = Mock(autospec=True)
+        config_mock.get_lame_path.return_value = '/opt/flac/flac'
+        config_mock.get_lame_encoding_setting.return_value = '-8'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        with self.assertRaisesRegexp(ConfigurationError, 'The source to encode does not exist'):
+            encoder = FlacEncoder(config_mock)
+            encoder.encode_wav('/some/path/source', '/some/path/destination')
