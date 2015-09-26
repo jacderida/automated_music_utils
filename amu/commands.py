@@ -62,9 +62,9 @@ class EncodeWavCommand(Command):
             if os.path.isdir(self.source):
                 raise CommandValidationError('The source cannot be a directory.')
         else:
-            raise CommandValidationError('A source must be specified for encoding a wav to mp3')
+            raise CommandValidationError('A source must be specified for encoding a wav')
         if not self.destination:
-            raise CommandValidationError('A destination must be specified for encoding a wav to mp3')
+            raise CommandValidationError('A destination must be specified for encoding a wav')
 
     def execute(self):
         directory_path = os.path.dirname(self.destination)
