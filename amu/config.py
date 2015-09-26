@@ -30,9 +30,7 @@ class ConfigurationProvider(object):
         path_from_env_variable = os.environ.get('FLAC_PATH')
         if path_from_env_variable:
             return self._get_verified_path_from_environment_variable(path_from_env_variable, 'FLAC_PATH', 'flac')
-        config = self._get_config_parser()
-        path_from_config = config.get('encoder', 'flac_path')
-        return path_from_config
+        return self._get_verified_path_from_config_file('encoder', 'flac_path', 'flac')
 
     def get_encoding_setting(self):
         config = self._get_config_parser()
@@ -80,14 +78,12 @@ class ConfigurationProvider(object):
                 'The path specified by {0} is incorrect. Please provide a valid path for {1}.'.format(env_variable_name, program))
         return path_from_env_variable
 
-    def _get_verified_path_from_config_file(self, config_section, program):
+    def _get_verified_path_from_config_file(self, config_section, config_value, program):
         config = self._get_config_parser()
-        path_from_config = config.get(config_section, 'path')
+        path_from_config = config.get(config_section, config_value)
         if not os.path.exists(path_from_config):
             raise ConfigurationError(
-                """The path specified to {0} in the .amu_config
-                file is incorrect. Please provide a valid path for
-                {0}.""".format(program))
+                'The path specified to {0} in the .amu_config file is incorrect. Please provide a valid path for {0}.'.format(program))
         return path_from_config
 
     def _get_config_parser(self):

@@ -567,15 +567,31 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_flac_path()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
-    @mock.patch('amu.config.os.path.exists')
-    @mock.patch('amu.config.os.path.expanduser')
-    @mock.patch('amu.config.os.environ')
-    @mock.patch('amu.config.subprocess.call')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.expanduser')
+    @mock.patch('os.environ')
+    @mock.patch('subprocess.call')
     def test__get_flac_path__config_file_does_not_exist__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock):
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_flac_path()
+
+    @mock.patch('ConfigParser.ConfigParser.read')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.expanduser')
+    @mock.patch('os.environ')
+    @mock.patch('subprocess.call')
+    def test__get_flac_path__config_file_specifies_incorrect_path__raises_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = None
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.side_effect = [True, False]
+        config_get_mock.return_value = '/some/path/to/flac'
+        with self.assertRaisesRegexp(ConfigurationError, 'The path specified to flac in the .amu_config file is incorrect. Please provide a valid path for flac.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_flac_path()
