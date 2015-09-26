@@ -27,6 +27,7 @@ class ConfigurationProvider(object):
     def get_flac_path(self):
         if not subprocess.call(['which', 'flac']):
             return 'flac'
+        return os.environ.get('FLAC_PATH')
 
     def get_encoding_setting(self):
         config = self._get_config_parser()

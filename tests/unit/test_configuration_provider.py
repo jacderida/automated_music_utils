@@ -513,3 +513,15 @@ class ConfigurationProviderTest(unittest.TestCase):
         result = config_provider.get_flac_path()
         self.assertEqual('flac', result)
         subprocess_mock.assert_called_with(['which', 'flac'])
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.environ')
+    @mock.patch('subprocess.call')
+    def test__get_flac_path__flac_path_is_set_on_environment_variable__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock):
+        subprocess_mock.return_value = 1
+        environ_mock.get.return_value = '/some/path/to/flac'
+        path_exists_mock.return_value = True
+        config_provider = ConfigurationProvider(MaskReplacer())
+        result = config_provider.get_flac_path()
+        self.assertEqual('/some/path/to/flac', result)
+        environ_mock.get.assert_called_with('FLAC_PATH')
