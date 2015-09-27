@@ -85,12 +85,12 @@ class FlacEncoder(object):
             source,
             destination
         ]
-        print '[encode] Running flac with {0}'.format(subprocess_args)
+        print '[decode] Running flac with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         lines_iterator = iter(popen.stdout.readline, '')
         for line in lines_iterator:
             if line:
-                print '[encode] {0}'.format(line.strip())
+                print '[decode] {0}'.format(line.strip())
 
 class RubyRipperCdRipper(object):
     def __init__(self, config_provider):
