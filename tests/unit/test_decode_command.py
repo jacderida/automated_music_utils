@@ -53,3 +53,15 @@ class DecodeAudioCommandTest(unittest.TestCase):
         command.destination = '/some/destination'
         command.execute()
         encoder_mock.decode.assert_called_once_with('/some/source', '/some/destination')
+
+    @mock.patch('os.remove')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.makedirs')
+    def test__execute__destination_directory_does_not_exist__destination_directory_is_created(self, makedirs_mock, path_exists_mock, remove_mock):
+        path_exists_mock.return_value = False
+        config_mock, encoder_mock = (Mock(),)*2
+        command = DecodeAudioCommand(config_mock, encoder_mock)
+        command.source = '/some/source'
+        command.destination = '/some/destination/with/many/sub/directories/mp3'
+        command.execute()
+        makedirs_mock.assert_called_once_with('/some/destination/with/many/sub/directories')

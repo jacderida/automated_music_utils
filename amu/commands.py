@@ -108,6 +108,9 @@ class DecodeAudioCommand(Command):
             raise CommandValidationError('The source cannot be a directory.')
 
     def execute(self):
+        directory_path = os.path.dirname(self.destination)
+        if not os.path.exists(directory_path):
+            os.makedirs(directory_path)
         self._encoder.decode(self.source, self.destination)
 
 class RipCdCommand(Command):
