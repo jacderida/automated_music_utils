@@ -77,8 +77,6 @@ class EncodeWavCommand(Command):
 class DecodeAudioCommand(Command):
     def __init__(self, config_provider, encoder):
         super(DecodeAudioCommand, self).__init__(config_provider)
-        if encoder is None:
-            encoder = LameEncoder(config_provider)
         self._encoder = encoder
         self._source = ''
         self._destination = ''
@@ -108,6 +106,9 @@ class DecodeAudioCommand(Command):
             raise CommandValidationError('The specified source does not exist.')
         if os.path.isdir(self.source):
             raise CommandValidationError('The source cannot be a directory.')
+
+    def execute(self):
+        self._encoder.decode(self.source, self.destination)
 
 class RipCdCommand(Command):
     def __init__(self, config_provider, cd_ripper):

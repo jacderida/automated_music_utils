@@ -41,3 +41,15 @@ class DecodeAudioCommandTest(unittest.TestCase):
             command.source = '/some/source/'
             command.destination = '/some/destination/'
             command.validate()
+
+    @mock.patch('os.remove')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.makedirs')
+    def test__execute__encoder_called_correctly__is_called_with_correct_arguments(self, makedirs_mock, path_exists_mock, remove_mock):
+        path_exists_mock.return_value = True
+        config_mock, encoder_mock = (Mock(),)*2
+        command = DecodeAudioCommand(config_mock, encoder_mock)
+        command.source = '/some/source'
+        command.destination = '/some/destination'
+        command.execute()
+        encoder_mock.decode.assert_called_once_with('/some/source', '/some/destination')
