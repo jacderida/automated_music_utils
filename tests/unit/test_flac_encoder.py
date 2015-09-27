@@ -110,9 +110,23 @@ class FlacEncoderTest(unittest.TestCase):
         exists_mock.return_value = False
         config_mock = Mock(autospec=True)
         config_mock.get_flac_path.return_value = '/opt/flac/flac'
-        config_mock.get_flac_encoding_setting.return_value = '-8'
+        config_mock.get_flac_encoding_setting.return_value = '-d'
         process_mock = mock.Mock()
         process_mock.stdout.readline = lambda: ""
-        with self.assertRaisesRegexp(ConfigurationError, 'The source to encode does not exist'):
+        with self.assertRaisesRegexp(ConfigurationError, 'The source to decode does not exist'):
+            encoder = FlacEncoder(config_mock)
+            encoder.decode('/some/path/source', '/some/path/destination')
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isdir')
+    def test__decode__source_is_directory__throws_configuration_exception(self, isdir_mock, exists_mock):
+        exists_mock.return_value = True
+        isdir_mock.return_value = True
+        config_mock = Mock(autospec=True)
+        config_mock.get_flac_path.return_value = '/opt/flac/flac'
+        config_mock.get_flac_encoding_setting.return_value = '-d'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        with self.assertRaisesRegexp(ConfigurationError, 'The source should not be a directory'):
             encoder = FlacEncoder(config_mock)
             encoder.decode('/some/path/source', '/some/path/destination')
