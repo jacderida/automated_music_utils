@@ -104,6 +104,8 @@ class DecodeAudioCommand(Command):
             raise ValueError('A source must be specified for decoding an audio file')
         if not self.destination:
             raise ValueError('A destination must be specified for decoding an audio file')
+        if not os.path.exists(self.source):
+            raise CommandValidationError('The specified source does not exist.')
 
 class RipCdCommand(Command):
     def __init__(self, config_provider, cd_ripper):

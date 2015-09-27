@@ -19,3 +19,13 @@ class DecodeAudioCommandTest(unittest.TestCase):
             command = DecodeAudioCommand(config_mock, encoder_mock)
             command.source = '/some/source'
             command.validate()
+
+    @mock.patch('amu.config.os.path.exists')
+    def test__validate__source_is_non_existent__raises_command_validation_error(self, path_exists_mock):
+        path_exists_mock.return_value = False
+        with self.assertRaisesRegexp(CommandValidationError, 'The specified source does not exist.'):
+            config_mock, encoder_mock = (Mock(),)*2
+            command = DecodeAudioCommand(config_mock, encoder_mock)
+            command.source = '/some/source'
+            command.destination = '/some/destination'
+            command.validate()
