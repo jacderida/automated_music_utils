@@ -20,7 +20,7 @@ class LameEncoder(object):
             config_provider = ConfigurationProvider(MaskReplacer())
         self._config_provider = config_provider
 
-    def encode_wav(self, source, destination):
+    def encode(self, source, destination):
         if not source:
             raise ValueError('A value must be supplied for the source')
         if not destination:
@@ -48,7 +48,7 @@ class FlacEncoder(object):
             config_provider = ConfigurationProvider(MaskReplacer())
         self._config_provider = config_provider
 
-    def encode_wav(self, source, destination):
+    def encode(self, source, destination):
         if not source:
             raise ValueError('A value must be supplied for the source')
         if not destination:

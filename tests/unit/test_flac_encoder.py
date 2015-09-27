@@ -11,7 +11,7 @@ class FlacEncoderTest(unittest.TestCase):
     @mock.patch('subprocess.Popen')
     @mock.patch('os.path.isdir')
     @mock.patch('os.path.exists')
-    def test__encode_wav__flac_is_used_as_encoder__flac_is_called_with_the_correct_args(self, exists_mock, isdir_mock, subprocess_mock, open_mock):
+    def test__encode__flac_is_used_as_encoder__flac_is_called_with_the_correct_args(self, exists_mock, isdir_mock, subprocess_mock, open_mock):
         exists_mock.return_value = True
         isdir_mock.return_value = False
         open_mock.return_value = MagicMock(spec=file)
@@ -22,7 +22,7 @@ class FlacEncoderTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
         encoder = FlacEncoder(config_mock)
-        encoder.encode_wav('/some/path/source', '/some/path/destination')
+        encoder.encode('/some/path/source', '/some/path/destination')
         subprocess_args = [
             '/opt/flac/flac',
             '-8',
@@ -31,20 +31,20 @@ class FlacEncoderTest(unittest.TestCase):
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-    def test__encode_wav__source_is_empty__raises_value_error(self):
+    def test__encode__source_is_empty__raises_value_error(self):
         config_mock = Mock(autospec=True)
         with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the source'):
             encoder = FlacEncoder(config_mock)
-            encoder.encode_wav('', '/some/path/destination')
+            encoder.encode('', '/some/path/destination')
 
-    def test__encode_wav__destination_is_empty__raises_value_error(self):
+    def test__encode__destination_is_empty__raises_value_error(self):
         config_mock = Mock(autospec=True)
         with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the destination'):
             encoder = FlacEncoder(config_mock)
-            encoder.encode_wav('/some/path/source', '')
+            encoder.encode('/some/path/source', '')
 
     @mock.patch('os.path.exists')
-    def test__encode_wav__source_is_non_existent__raises_configuration_error(self, exists_mock):
+    def test__encode__source_is_non_existent__raises_configuration_error(self, exists_mock):
         exists_mock.return_value = False
         config_mock = Mock(autospec=True)
         config_mock.get_flac_path.return_value = '/opt/flac/flac'
@@ -53,11 +53,11 @@ class FlacEncoderTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         with self.assertRaisesRegexp(ConfigurationError, 'The source to encode does not exist'):
             encoder = FlacEncoder(config_mock)
-            encoder.encode_wav('/some/path/source', '/some/path/destination')
+            encoder.encode('/some/path/source', '/some/path/destination')
 
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isdir')
-    def test__encode_wav__source_is_directory__throws_configuration_exception(self, isdir_mock, exists_mock):
+    def test__encode__source_is_directory__throws_configuration_exception(self, isdir_mock, exists_mock):
         exists_mock.return_value = True
         isdir_mock.return_value = True
         config_mock = Mock(autospec=True)
@@ -67,7 +67,7 @@ class FlacEncoderTest(unittest.TestCase):
         process_mock.stdout.readline = lambda: ""
         with self.assertRaisesRegexp(ConfigurationError, 'The source should not be a directory'):
             encoder = FlacEncoder(config_mock)
-            encoder.encode_wav('/some/path/source', '/some/path/destination')
+            encoder.encode('/some/path/source', '/some/path/destination')
 
     @mock.patch('amu.audio.open', create=True)
     @mock.patch('subprocess.Popen')

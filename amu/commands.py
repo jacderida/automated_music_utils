@@ -70,7 +70,7 @@ class EncodeWavCommand(Command):
         directory_path = os.path.dirname(self.destination)
         if not os.path.exists(directory_path):
             os.makedirs(directory_path)
-        self._encoder.encode_wav(self.source, self.destination)
+        self._encoder.encode(self.source, self.destination)
         if not self.keep_source:
             os.remove(self.source)
 
