@@ -71,6 +71,10 @@ class FlacEncoder(object):
                 print '[encode] {0}'.format(line.strip())
 
     def decode(self, source, destination):
+        if not source:
+            raise ValueError('A value must be supplied for the source')
+        if not destination:
+            raise ValueError('A value must be supplied for the destination')
         subprocess_args = [
             self._config_provider.get_flac_path(),
             self._config_provider.get_flac_decode_setting(),

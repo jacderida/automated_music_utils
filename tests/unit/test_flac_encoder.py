@@ -92,3 +92,15 @@ class FlacEncoderTest(unittest.TestCase):
             '/some/path/destination'
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    def test__decode__source_is_empty__raises_value_error(self):
+        config_mock = Mock(autospec=True)
+        with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the source'):
+            encoder = FlacEncoder(config_mock)
+            encoder.decode('', '/some/path/destination')
+
+    def test__decode__destination_is_empty__raises_value_error(self):
+        config_mock = Mock(autospec=True)
+        with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the destination'):
+            encoder = FlacEncoder(config_mock)
+            encoder.decode('/some/path/source', '')
