@@ -29,3 +29,15 @@ class DecodeAudioCommandTest(unittest.TestCase):
             command.source = '/some/source'
             command.destination = '/some/destination'
             command.validate()
+
+    @mock.patch('amu.config.os.path.isdir')
+    @mock.patch('amu.config.os.path.exists')
+    def test__validate__source_is_directory__raises_command_validation_error(self, path_exists_mock, isdir_mock):
+        path_exists_mock.return_value = True
+        isdir_mock.return_value = True
+        with self.assertRaisesRegexp(CommandValidationError, 'The source cannot be a directory.'):
+            config_mock, encoder_mock = (Mock(),)*2
+            command = DecodeAudioCommand(config_mock, encoder_mock)
+            command.source = '/some/source/'
+            command.destination = '/some/destination/'
+            command.validate()
