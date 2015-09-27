@@ -74,6 +74,35 @@ class EncodeWavCommand(Command):
         if not self.keep_source:
             os.remove(self.source)
 
+class DecodeAudioCommand(Command):
+    def __init__(self, config_provider, encoder):
+        super(DecodeAudioCommand, self).__init__(config_provider)
+        if encoder is None:
+            encoder = LameEncoder(config_provider)
+        self._encoder = encoder
+        self._source = ''
+        self._destination = ''
+
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def destination(self):
+        return self._destination
+
+    @destination.setter
+    def destination(self, value):
+        self._destination = value
+
+    def validate(self):
+        if not self.source:
+            raise ValueError('A source must be specified for decoding an audio file')
+
 class RipCdCommand(Command):
     def __init__(self, config_provider, cd_ripper):
         super(RipCdCommand, self).__init__(config_provider)
