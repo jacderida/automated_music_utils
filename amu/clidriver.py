@@ -41,6 +41,13 @@ class CliDriver(object):
             '--keep-source', action='store_true', help='If encoding from wav, use this to keep the original wav being removed.')
         encode_parser.add_argument(
             '--discogs-id', help='The discogs ID for the release. When this is used metadata from the discogs release will be applied to the encoded files.')
+        decode_parser = subparsers.add_argument('decode', help='Decodes a set of FLAC or MP3 files to WAV.')
+        decode_parser.add_argument(
+            'decode_from', choices=['flac', 'mp3'], help='The source to decode from.')
+        decode_parser.add_argument(
+            '--source', help='The destination of the source file. This can be a file or directory.')
+        decode_parser.add_argument(
+            '--destination', help='The destination of the resulting wav. This can be a file or directory.')
         tag_parser = subparsers.add_parser('tag', help='Tags an audio file')
         tag_parser.add_argument(
             'action', choices=['add', 'remove'], help='The tagging action to be performed. A tag can be added or removed.')
