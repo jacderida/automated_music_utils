@@ -58,8 +58,8 @@ class FlacEncoder(object):
         if os.path.isdir(source):
             raise ConfigurationError('The source should not be a directory')
         subprocess_args = [
-            self._config_provider.get_lame_path(),
-            self._config_provider.get_lame_encoding_setting(),
+            self._config_provider.get_flac_path(),
+            self._config_provider.get_flac_encoding_setting(),
             source,
             destination
         ]
@@ -72,7 +72,7 @@ class FlacEncoder(object):
 
     def decode(self, source, destination):
         subprocess_args = [
-            self._config_provider.get_lame_path(),
+            self._config_provider.get_flac_path(),
             self._config_provider.get_flac_decode_setting(),
             source,
             destination

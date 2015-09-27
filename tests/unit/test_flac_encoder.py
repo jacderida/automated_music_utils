@@ -16,8 +16,8 @@ class FlacEncoderTest(unittest.TestCase):
         isdir_mock.return_value = False
         open_mock.return_value = MagicMock(spec=file)
         config_mock = Mock(autospec=True)
-        config_mock.get_lame_path.return_value = '/opt/flac/flac'
-        config_mock.get_lame_encoding_setting.return_value = '-8'
+        config_mock.get_flac_path.return_value = '/opt/flac/flac'
+        config_mock.get_flac_encoding_setting.return_value = '-8'
         process_mock = mock.Mock()
         process_mock.stdout.readline = lambda: ""
         subprocess_mock.return_value = process_mock
@@ -47,8 +47,8 @@ class FlacEncoderTest(unittest.TestCase):
     def test__encode_wav__source_is_non_existent__raises_configuration_error(self, exists_mock):
         exists_mock.return_value = False
         config_mock = Mock(autospec=True)
-        config_mock.get_lame_path.return_value = '/opt/flac/flac'
-        config_mock.get_lame_encoding_setting.return_value = '-8'
+        config_mock.get_flac_path.return_value = '/opt/flac/flac'
+        config_mock.get_flac_encoding_setting.return_value = '-8'
         process_mock = mock.Mock()
         process_mock.stdout.readline = lambda: ""
         with self.assertRaisesRegexp(ConfigurationError, 'The source to encode does not exist'):
@@ -61,8 +61,8 @@ class FlacEncoderTest(unittest.TestCase):
         exists_mock.return_value = True
         isdir_mock.return_value = True
         config_mock = Mock(autospec=True)
-        config_mock.get_lame_path.return_value = '/opt/flac/flac'
-        config_mock.get_lame_encoding_setting.return_value = '-V0'
+        config_mock.get_flac_path.return_value = '/opt/flac/flac'
+        config_mock.get_flac_encoding_setting.return_value = '-V0'
         process_mock = mock.Mock()
         process_mock.stdout.readline = lambda: ""
         with self.assertRaisesRegexp(ConfigurationError, 'The source should not be a directory'):
@@ -78,7 +78,7 @@ class FlacEncoderTest(unittest.TestCase):
         isdir_mock.return_value = False
         open_mock.return_value = MagicMock(spec=file)
         config_mock = Mock(autospec=True)
-        config_mock.get_lame_path.return_value = '/opt/flac/flac'
+        config_mock.get_flac_path.return_value = '/opt/flac/flac'
         config_mock.get_flac_decode_setting.return_value = '-d'
         process_mock = mock.Mock()
         process_mock.stdout.readline = lambda: ""
