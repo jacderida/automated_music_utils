@@ -644,3 +644,43 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_flac_encoding_setting()
+
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    def test__get_flac_decode_setting__decode_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '-5'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        result = config_provider.get_flac_decode_setting()
+        self.assertEqual('-5', result)
+        config_get_mock.assert_called_with('encoding', 'flac_decode_setting')
+
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    def test__get_flac_decode_setting__decode_setting_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = ''
+        with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the flac decode setting.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_flac_decode_setting()
+
+    @mock.patch('os.path.exists')
+    @mock.patch('ConfigParser.ConfigParser.read')
+    @mock.patch('ConfigParser.ConfigParser.get')
+    @mock.patch('os.path.expanduser')
+    def test__get_flac_decode_setting__encoding_setting_is_in_config_file__correct_config_file_is_used(self, expanduser_mock, config_get_mock, config_read_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        expanduser_mock.return_value = '/home/user/'
+        config_get_mock.return_value = '-5'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        config_provider.get_flac_decode_setting()
+        config_read_mock.assert_called_with('/home/user/.amu_config')
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.expanduser')
+    def test__get_flac_decode_setting__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = False
+        with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_flac_decode_setting()

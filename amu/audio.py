@@ -70,6 +70,9 @@ class FlacEncoder(object):
             if line:
                 print '[encode] {0}'.format(line.strip())
 
+    def decode(self, source, destination):
+        pass
+
 class RubyRipperCdRipper(object):
     def __init__(self, config_provider):
         if config_provider is None:

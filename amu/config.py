@@ -45,6 +45,13 @@ class ConfigurationProvider(object):
             raise ConfigurationError('A value must be provided for the flac encoding setting.')
         return encoding_setting
 
+    def get_flac_decode_setting(self):
+        config = self._get_config_parser()
+        decode_setting = config.get('encoding', 'flac_decode_setting')
+        if not decode_setting:
+            raise ConfigurationError('A value must be provided for the flac decode setting.')
+        return decode_setting
+
     def get_ruby_ripper_path(self):
         if not subprocess.call(['which', 'rubyripper_cli']):
             return 'rubyripper_cli'
