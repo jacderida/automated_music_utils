@@ -75,6 +75,8 @@ class FlacEncoder(object):
             raise ValueError('A value must be supplied for the source')
         if not destination:
             raise ValueError('A value must be supplied for the destination')
+        if not os.path.exists(source):
+            raise ConfigurationError('The source to encode does not exist')
         subprocess_args = [
             self._config_provider.get_flac_path(),
             self._config_provider.get_flac_decode_setting(),

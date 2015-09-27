@@ -104,3 +104,15 @@ class FlacEncoderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the destination'):
             encoder = FlacEncoder(config_mock)
             encoder.decode('/some/path/source', '')
+
+    @mock.patch('os.path.exists')
+    def test__decode__source_is_non_existent__raises_configuration_error(self, exists_mock):
+        exists_mock.return_value = False
+        config_mock = Mock(autospec=True)
+        config_mock.get_flac_path.return_value = '/opt/flac/flac'
+        config_mock.get_flac_encoding_setting.return_value = '-8'
+        process_mock = mock.Mock()
+        process_mock.stdout.readline = lambda: ""
+        with self.assertRaisesRegexp(ConfigurationError, 'The source to encode does not exist'):
+            encoder = FlacEncoder(config_mock)
+            encoder.decode('/some/path/source', '/some/path/destination')
