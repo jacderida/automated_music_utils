@@ -167,3 +167,18 @@ class DecodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[16].destination, '/some/destination/cd4/03 - Track 3.wav')
         self.assertEqual(commands[17].source, '/some/path/to/flacs/cd4/04 - Track 4.flac')
         self.assertEqual(commands[17].destination, '/some/destination/cd4/04 - Track 4.wav')
+
+    @mock.patch('os.walk')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isfile')
+    def test__parse_decode_command__source_contains_files_that_are_not_wavs__commands_should_not_be_generated_for_non_wav_files(self, isfile_mock, exists_mock, walk_mock):
+        exists_mock.return_value = True
+        isfile_mock.return_value = False
+        walk_mock.return_value = [
+            ('/some/path/to/flacs', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', 'rip.log', 'description.txt'))
+        ]
+        config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
+        config_mock, encoder_mock = (Mock(),)*2
+        parser = DecodeCommandParser(config_mock, encoder_mock)
+        commands = parser.parse_decode_command('/some/path/to/flacs', '/some/destination/')
+        self.assertEqual(4, len(commands))
