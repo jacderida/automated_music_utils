@@ -222,6 +222,7 @@ class DecodeCommandParser(object):
         if os.path.isfile(source):
             command = DecodeAudioCommand(self._configuration_provider, self._encoder)
             command.source = source
+            command.destination = destination
             return [command]
 
 class TagCommandParser(object):
