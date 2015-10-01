@@ -5,6 +5,7 @@ from amu import utils
 from amu.audio import Mp3Tagger
 from amu.commands import AddArtworkCommand
 from amu.commands import AddTagCommand
+from amu.commands import DecodeAudioCommand
 from amu.commands import EncodeWavCommand
 from amu.commands import FetchReleaseCommand
 from amu.commands import MoveAudioFileCommand
@@ -211,6 +212,15 @@ class EncodeCommandParser(object):
         command.source = os.path.join(source_directory, source_wav)
         command.destination = os.path.join(destination_directory, os.path.splitext(source_wav)[0] + '.mp3')
         return command
+
+class DecodeCommandParser(object):
+    def __init__(self, configuration_provider, encoder):
+        self._configuration_provider = configuration_provider
+        self._encoder = encoder
+
+    def parse_decode_flac_command(self, source, destination):
+        if os.path.isfile(source):
+            return DecodeAudioCommand(self._configuration_provider, self._encoder)
 
 class TagCommandParser(object):
     def __init__(self, configuration_provider, tagger):
