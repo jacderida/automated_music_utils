@@ -68,3 +68,42 @@ class DecodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[2].destination, '/some/destination/03 - Track 3.wav')
         self.assertEqual(commands[3].source, '/some/path/to/flacs/04 - Track 4.flac')
         self.assertEqual(commands[3].destination, '/some/destination/04 - Track 4.wav')
+
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isfile')
+    def test__parse_decode_command__source_is_multi_cd_release__returns_9_correctly_specified_decode_audio_file_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
+        exists_mock.return_value = True
+        isfile_mock.return_value = False
+        walk_mock.return_value = [
+            ('/some/path/to/flacs', ('cd1', 'cd2'), ()),
+            ('/some/path/to/flacs/cd1', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', '05 - Track 5.flac')),
+            ('/some/path/to/flacs/cd2', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', '05 - Track 5.flac'],
+            ['01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac']
+        ]
+        config_mock, encoder_mock = (Mock(),)*2
+        parser = DecodeCommandParser(config_mock, encoder_mock)
+        commands = parser.parse_decode_command('/some/path/to/flacs', '/some/destination/')
+        self.assertEqual(9, len(commands))
+        self.assertEqual(commands[0].source, '/some/path/to/flacs/cd1/01 - Track 1.flac')
+        self.assertEqual(commands[0].destination, '/some/destination/cd1/01 - Track 1.wav')
+        self.assertEqual(commands[1].source, '/some/path/to/flacs/cd1/02 - Track 2.flac')
+        self.assertEqual(commands[1].destination, '/some/destination/cd1/02 - Track 2.wav')
+        self.assertEqual(commands[2].source, '/some/path/to/flacs/cd1/03 - Track 3.flac')
+        self.assertEqual(commands[2].destination, '/some/destination/cd1/03 - Track 3.wav')
+        self.assertEqual(commands[3].source, '/some/path/to/flacs/cd1/04 - Track 4.flac')
+        self.assertEqual(commands[3].destination, '/some/destination/cd1/04 - Track 4.wav')
+        self.assertEqual(commands[4].source, '/some/path/to/flacs/cd1/05 - Track 5.flac')
+        self.assertEqual(commands[4].destination, '/some/destination/cd1/05 - Track 5.wav')
+        self.assertEqual(commands[5].source, '/some/path/to/flacs/cd2/01 - Track 1.flac')
+        self.assertEqual(commands[5].destination, '/some/destination/cd2/01 - Track 1.wav')
+        self.assertEqual(commands[6].source, '/some/path/to/flacs/cd2/02 - Track 2.flac')
+        self.assertEqual(commands[6].destination, '/some/destination/cd2/02 - Track 2.wav')
+        self.assertEqual(commands[7].source, '/some/path/to/flacs/cd2/03 - Track 3.flac')
+        self.assertEqual(commands[7].destination, '/some/destination/cd2/03 - Track 3.wav')
+        self.assertEqual(commands[8].source, '/some/path/to/flacs/cd2/04 - Track 4.flac')
+        self.assertEqual(commands[8].destination, '/some/destination/cd2/04 - Track 4.wav')

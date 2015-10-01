@@ -228,11 +228,22 @@ class DecodeCommandParser(object):
             return [command]
         commands = []
         for root, directories, files in os.walk(source):
-            for source_audio in [f for f in sorted(files) if f.endswith('.flac')]:
-                command = DecodeAudioCommand(self._configuration_provider, self._encoder)
-                command.source = os.path.join(root, source_audio)
-                command.destination = os.path.join(destination, os.path.splitext(source_audio)[0] + '.wav')
-                commands.append(command)
+            if len(directories) > 0:
+                for directory in sorted(directories):
+                    full_source_directory = os.path.join(root, directory)
+                    full_destination_directory = os.path.join(destination, directory)
+                    for source_audio in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.flac')]:
+                        command = DecodeAudioCommand(self._configuration_provider, self._encoder)
+                        command.source = os.path.join(full_source_directory, source_audio)
+                        command.destination = os.path.join(full_destination_directory, os.path.splitext(source_audio)[0] + '.wav')
+                        commands.append(command)
+            else:
+                for source_audio in [f for f in sorted(files) if f.endswith('.flac')]:
+                    command = DecodeAudioCommand(self._configuration_provider, self._encoder)
+                    command.source = os.path.join(root, source_audio)
+                    command.destination = os.path.join(destination, os.path.splitext(source_audio)[0] + '.wav')
+                    commands.append(command)
+            break
         return commands
 
 class TagCommandParser(object):
