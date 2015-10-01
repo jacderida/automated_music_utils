@@ -219,6 +219,8 @@ class DecodeCommandParser(object):
         self._encoder = encoder
 
     def parse_decode_flac_command(self, source, destination):
+        if not os.path.exists(source):
+            raise CommandParsingError('The source directory or file must exist')
         if os.path.isfile(source):
             command = DecodeAudioCommand(self._configuration_provider, self._encoder)
             command.source = source
