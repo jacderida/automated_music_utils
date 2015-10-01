@@ -220,7 +220,9 @@ class DecodeCommandParser(object):
 
     def parse_decode_flac_command(self, source, destination):
         if os.path.isfile(source):
-            return DecodeAudioCommand(self._configuration_provider, self._encoder)
+            command = DecodeAudioCommand(self._configuration_provider, self._encoder)
+            command.source = source
+            return [command]
 
 class TagCommandParser(object):
     def __init__(self, configuration_provider, tagger):
