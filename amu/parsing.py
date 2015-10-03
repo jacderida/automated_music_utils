@@ -50,8 +50,9 @@ class CommandParser(object):
             return parser.parse_add_artwork_command(source, destination)
 
     def _get_decode_command(self, args):
+        source = args.source if args.source else os.getcwd()
         parser = DecodeCommandParser(self._configuration_provider, self._encoder)
-        return parser.parse_decode_command(args.source, args.destination)
+        return parser.parse_decode_command(source, args.destination)
 
     def _get_fetch_command(self, args):
         command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)
