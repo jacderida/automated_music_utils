@@ -26,18 +26,15 @@ class CommandParser(object):
         self._mask_replacer = MaskReplacer()
 
     def from_args(self, args):
-        if args.command == 'rip':
-            return self._get_rip_command(args)
-        elif args.command == 'encode':
-            return self._get_encode_command(args)
-        elif args.command == 'decode':
-            return self._get_decode_command(args)
-        elif args.command == 'tag':
-            return self._get_tag_command(args)
-        elif args.command == 'fetch':
-            return self._get_fetch_command(args)
-        elif args.command == 'artwork':
-            return self._get_artwork_command(args)
+        commands = {
+            'rip': self._get_rip_command,
+            'encode': self._get_encode_command,
+            'decode': self._get_decode_command,
+            'tag': self._get_tag_command,
+            'fetch': self._get_fetch_command,
+            'artwork': self._get_artwork_command
+        }
+        return commands[args.command](args)
 
     def _get_artwork_command(self, args):
         if args.action == 'add' and args.type == 'mp3':
