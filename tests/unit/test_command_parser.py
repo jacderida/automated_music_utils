@@ -5,7 +5,7 @@ import unittest
 import uuid
 from amu import utils
 from amu.clidriver import CliDriver
-from amu.commands import AddArtworkCommand, AddTagCommand, EncodeWavCommand, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
+from amu.commands import AddArtworkCommand, AddTagCommand, DecodeAudioCommand, EncodeWavCommand, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
 from amu.models import ReleaseModel
 from amu.parsing import CommandParser, CommandParsingError
 from mock import Mock
@@ -1578,3 +1578,19 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
         artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination')
+
+    @mock.patch('amu.parsing.DecodeCommandParser.parse_decode_command')
+    def test__from_args__when_a_decode_command_is_specified__it_should_return_a_decode_audio_command(self, decode_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'decode',
+            'flac',
+            '--source=/some/source/song.flac',
+            '--destination=/some/destination/song.wav'
+        ])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        decode_parser_mock.return_value = [DecodeAudioCommand(config_mock, encoder_mock)]
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        commands = parser.from_args(args)
+        self.assertIsInstance(commands[0], DecodeAudioCommand)

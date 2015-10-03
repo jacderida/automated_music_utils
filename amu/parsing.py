@@ -30,6 +30,8 @@ class CommandParser(object):
             return self._get_rip_command(args)
         elif args.command == 'encode':
             return self._get_encode_command(args)
+        elif args.command == 'decode':
+            return self._get_decode_command(args)
         elif args.command == 'tag':
             return self._get_tag_command(args)
         elif args.command == 'fetch':
@@ -49,6 +51,10 @@ class CommandParser(object):
                 destination = os.getcwd()
             parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
             return parser.parse_add_artwork_command(source, destination)
+
+    def _get_decode_command(self, args):
+        parser = DecodeCommandParser(self._configuration_provider, self._encoder)
+        return parser.parse_decode_command(args.source, args.destination)
 
     def _get_fetch_command(self, args):
         command = FetchReleaseCommand(self._configuration_provider, self._metadata_service)
