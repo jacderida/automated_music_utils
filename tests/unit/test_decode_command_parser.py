@@ -69,6 +69,28 @@ class DecodeCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[3].source, '/some/path/to/flacs/04 - Track 4.flac')
         self.assertEqual(commands[3].destination, '/some/destination/04 - Track 4.wav')
 
+    @mock.patch('os.walk')
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.isfile')
+    def test__parse_decode_command__flac_files_returned_in_arbitrary_order__returns_4_correctly_specified_decode_audio_file_commands(self, isfile_mock, exists_mock, walk_mock):
+        exists_mock.return_value = True
+        isfile_mock.return_value = False
+        walk_mock.return_value = [
+            ('/some/path/to/flacs', (), ('02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac'))
+        ]
+        config_mock, encoder_mock = (Mock(),)*2
+        parser = DecodeCommandParser(config_mock, encoder_mock)
+        commands = parser.parse_decode_command('/some/path/to/flacs', '/some/destination/')
+        self.assertEqual(4, len(commands))
+        self.assertEqual(commands[0].source, '/some/path/to/flacs/01 - Track 1.flac')
+        self.assertEqual(commands[0].destination, '/some/destination/01 - Track 1.wav')
+        self.assertEqual(commands[1].source, '/some/path/to/flacs/02 - Track 2.flac')
+        self.assertEqual(commands[1].destination, '/some/destination/02 - Track 2.wav')
+        self.assertEqual(commands[2].source, '/some/path/to/flacs/03 - Track 3.flac')
+        self.assertEqual(commands[2].destination, '/some/destination/03 - Track 3.wav')
+        self.assertEqual(commands[3].source, '/some/path/to/flacs/04 - Track 4.flac')
+        self.assertEqual(commands[3].destination, '/some/destination/04 - Track 4.wav')
+
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
@@ -111,21 +133,21 @@ class DecodeCommandParserTest(unittest.TestCase):
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_decode_command__source_is_multi_cd_release_and_walk_returns_directories_and_files_in_arbitrary_order__returns_18_correctly_specified_decode_audio_file_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
+    def test__parse_decode_command__source_is_multi_cd_release_and_directories_and_files_are_returned_in_arbitrary_order__returns_18_correctly_specified_decode_audio_file_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
             ('/some/path/to/flacs', ('cd4', 'cd1', 'cd3', 'cd2'), ()),
-            ('/some/path/to/flacs/cd4', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', '05 - Track 5.flac')),
-            ('/some/path/to/flacs/cd1', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac')),
-            ('/some/path/to/flacs/cd3', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', '05 - Track 5.flac')),
-            ('/some/path/to/flacs/cd2', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac'))
+            ('/some/path/to/flacs/cd4', (), ('02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac', '05 - Track 5.flac')),
+            ('/some/path/to/flacs/cd1', (), ('02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac')),
+            ('/some/path/to/flacs/cd3', (), ('02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac', '05 - Track 5.flac')),
+            ('/some/path/to/flacs/cd2', (), ('02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac'))
         ]
         listdir_mock.side_effect = [
-            ['01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', '05 - Track 5.flac'],
-            ['01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac'],
-            ['01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac', '05 - Track 5.flac'],
-            ['01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac', '04 - Track 4.flac']
+            ['02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac', '05 - Track 5.flac'],
+            ['02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac'],
+            ['02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac', '05 - Track 5.flac'],
+            ['02 - Track 2.flac', '03 - Track 3.flac', '01 - Track 1.flac', '04 - Track 4.flac']
         ]
         config_mock, encoder_mock = (Mock(),)*2
         parser = DecodeCommandParser(config_mock, encoder_mock)
@@ -171,7 +193,7 @@ class DecodeCommandParserTest(unittest.TestCase):
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_decode_command__source_contains_files_that_are_not_wavs__commands_should_not_be_generated_for_non_wav_files(self, isfile_mock, exists_mock, walk_mock):
+    def test__parse_decode_command__source_contains_files_that_are_not_flacs__commands_should_not_be_generated_for_non_flac_files(self, isfile_mock, exists_mock, walk_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
