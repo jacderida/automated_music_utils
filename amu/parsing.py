@@ -3,6 +3,7 @@ import tempfile
 import uuid
 from amu import utils
 from amu.audio import Mp3Tagger
+from amu.audio import FlacEncoder
 from amu.commands import AddArtworkCommand
 from amu.commands import AddTagCommand
 from amu.commands import DecodeAudioCommand
@@ -52,7 +53,7 @@ class CommandParser(object):
     def _get_decode_command(self, args):
         source = args.source if args.source else os.getcwd()
         destination = args.destination if args.destination else os.getcwd()
-        parser = DecodeCommandParser(self._configuration_provider, self._encoder)
+        parser = DecodeCommandParser(self._configuration_provider, FlacEncoder(self._configuration_provider))
         return parser.parse_decode_command(source, destination)
 
     def _get_fetch_command(self, args):
