@@ -22,7 +22,7 @@ However, this doesn't cover installation and configuration of the third party co
 
 CD Ripper
 ---------
-AMU uses [Rubyripper](http://wiki.hydrogenaud.io/index.php?title=Rubyripper) to rip CDs. You may be ask, why not use EAC? First and foremost, EAC has no command line interface, and that's what this tool is focused on. Secondly, EAC only runs on Windows, and is completely closed source, which kinda sucks. Personally, I don't notice any difference between CDs ripped with EAC or Rubyripper. If you still want to use EAC, you can use it to rip CDs to WAV, then use AMU for everything else.
+AMU uses [Rubyripper](http://wiki.hydrogenaud.io/index.php?title=Rubyripper) to rip CDs. You may ask, why not use EAC? First and foremost, EAC has no command line interface, and that's what this tool is focused on. Secondly, EAC only runs on Windows, and is completely closed source, which kinda sucks. Personally, I don't notice any difference between CDs ripped with EAC or Rubyripper. If you still want to use EAC, you can use it to rip CDs to WAV, then use AMU for everything else.
 
 There are various ways to install Rubyripper, but here's one:
 ```shell
