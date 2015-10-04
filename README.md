@@ -68,3 +68,36 @@ FLAC Encoding
 FLAC can generally be installed by using the package manager for your distribution.
 
 By default, AMU uses '-8' as the encoding option, which is the option to provide the most compression. This can be modified by editing the AMU configuration file.
+
+Ripping CDs
+===========
+With respect to ripping CDs, there are 2 options. Either simply rip the tracks on the CD to WAV, or rip and encode the tracks to MP3 or FLAC in a single step.
+
+To rip the CD to WAV, issue the following command:
+```
+amu rip
+```
+
+This will use Rubyripper to rip the CD tracks to WAV in the current directory. If you want to use something other than the current directory, use the destination override:
+```
+amu rip --destination=/some/destination
+```
+
+To rip the CD to MP3 or FLAC, issue the following command (replace mp3 with flac to encode to FLAC):
+```
+amu encode cd mp3
+```
+
+This command will use Rubyripper to rip the CD, then LAME to encode the WAVs to MP3. The MP3s will be encoded to the current directory. To use a different directory, override the destination:
+```
+amu encode cd mp3 --destination=/some/destination
+```
+
+Both of those encode commands will produce MP3s with no metadata. To produce MP3s that have metadata, supply the Discogs ID for the release:
+```
+amu encode cd mp3 --discogs-id=123456
+```
+
+You can find the ID by looking up the release on discogs; eventually AMU will provide features to help with this.
+
+When you specify the discogs ID, AMU will retrieve the metadata for the release and use that to apply metadata and automatically move the encoded MP3s to a destination that is built based on some values in the configuration file.
