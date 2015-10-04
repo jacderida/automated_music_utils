@@ -9,7 +9,7 @@ I guess at least one part of the appeal of Spotify is that it removes a lot of t
 
 Installation and Setup
 ======================
-Eventually the installation process will be with pip, i.e.:
+Eventually, the installation process will be with pip, i.e.:
 ```
 pip install amu
 ```
@@ -18,7 +18,7 @@ CD Ripper
 ---------
 AMU uses [Rubyripper](http://wiki.hydrogenaud.io/index.php?title=Rubyripper) to rip CDs. You may be ask, why not use EAC? First and foremost, EAC has no command line interface, and that's what this tool is focused on. Secondly, EAC only runs on Windows, and is completely closed source, which kinda sucks. Personally, I don't notice any difference between CDs ripped with EAC or Rubyripper. If you still want to use EAC, you can use it to rip CDs to WAV, then use AMU for everything else.
 
-There are various ways to install Rubyripper, but here is one way:
+There are various ways to install Rubyripper, but here's one:
 ```shell
 #!/usr/bin/env bash
 
@@ -33,4 +33,24 @@ cd $src_path
 ./configure --enable-lang-all --enable-gtk2 --enable-cli
 make install
 ln -s $src_path/rubyripper_cli.rb /usr/local/bin/rubyripper_cli
+```
+
+It requires some configuration to run from the command line, but the AMU installation will provide this.
+
+MP3 Encoding
+------------
+The only supported MP3 encoder is [LAME](http://lame.sourceforge.net/). Let's face it, why would you use anything else? Here's one way to install it:
+
+```
+#!/usr/bin/env bash
+
+cd /tmp
+curl -O https://jacderida-software.s3.amazonaws.com/lame-3.99.5.tar.gz
+tar -xvf lame-3.99.5.tar.gz
+cd lame-3.99.5
+./configure
+make
+make install
+rm -rf lame-3.99.5
+rm -rf lame-3.99.5.tar.gz
 ```
