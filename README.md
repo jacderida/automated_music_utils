@@ -9,10 +9,16 @@ I guess at least one part of the appeal of Spotify is that it removes a lot of t
 
 Installation and Setup
 ======================
+For the time being, this setup is only for Linux.
+
 Eventually, the installation process will be with pip, i.e.:
 ```
 pip install amu
 ```
+
+The configuration file for AMU is located at ~/.amu_config. This will provide sensible default values for the third party components, but you can edit to suit.
+
+However, this doesn't cover installation and configuration of the third party components.
 
 CD Ripper
 ---------
@@ -54,3 +60,11 @@ make install
 rm -rf lame-3.99.5
 rm -rf lame-3.99.5.tar.gz
 ```
+
+By default, AMU uses 'V0' to encode to MP3. This can be modified by editing the AMU configuration file.
+
+FLAC Encoding
+-------------
+FLAC can generally be installed by using the package manager for your distribution.
+
+By default, AMU uses '-8' as the encoding option, which is the option to provide the most compression. This can be modified by editing the AMU configuration file.
