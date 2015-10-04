@@ -47,7 +47,7 @@ MP3 Encoding
 ------------
 The only supported MP3 encoder is [LAME](http://lame.sourceforge.net/). Let's face it, why would you use anything else? Here's one way to install it:
 
-```
+```shell
 #!/usr/bin/env bash
 
 cd /tmp
