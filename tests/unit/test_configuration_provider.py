@@ -695,3 +695,15 @@ class ConfigurationProviderTest(unittest.TestCase):
         mask_call = config_get_mock.mock_calls[0]
         self.assertEqual('directories', mask_call[1][0])
         self.assertEqual('mixes_directory', mask_call[1][1])
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_mixes_destination__config_file_has_default_mask__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '/path/to/mixes'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        config_provider.get_mixes_destination()
+        config_read_mock.assert_called_with('/home/user/.amu_config')
