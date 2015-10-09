@@ -77,6 +77,14 @@ class CliDriver(object):
             '--source', help='The destination file or directory to apply the artwork to. If there is no source then any artwork in the current directory will be used.')
         artwork_parser.add_argument(
             '--destination', help='The destination file or directory to apply the artwork to. If there is no destination then the current directory will be used.')
+        mix_parser = subparsers.add_parser('mix', help='adds a mix')
+        mix_parser.add_argument('source', help='the source of the mix')
+        mix_parser.add_argument('--artist', help='The artist to use for the tag.')
+        mix_parser.add_argument('--album-artist', help='The album artist to use for the mix.')
+        mix_parser.add_argument('--album', help='The album to use for the mix.')
+        mix_parser.add_argument('--title', help='The title to use for the mix.')
+        mix_parser.add_argument('--year', help='The year to use for the mix.')
+        tag_parser.add_argument('--comment', help='The comment for the mix.')
         return parser
 
     def _get_arguments(self):
