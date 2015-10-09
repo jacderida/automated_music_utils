@@ -78,7 +78,7 @@ class CommandParser(object):
         if args.discogs_id:
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
             if not args.destination:
-                destination = self._configuration_provider.get_destination_with_mask_replaced(release_model)
+                destination = self._configuration_provider.get_releases_destination_with_mask_replaced(release_model)
         return self._get_encode_commands(args, destination, release_model)
 
     def _get_encode_commands(self, args, destination, release_model):
@@ -100,7 +100,7 @@ class CommandParser(object):
             commands.extend(tag_command_parser.parse_from_release_model(source, release_model))
             move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
             commands.extend(move_file_parser.parse_from_release_model(
-                source, self._configuration_provider.get_destination_with_mask_replaced(release_model), release_model))
+                source, self._configuration_provider.get_releases_destination_with_mask_replaced(release_model), release_model))
             return commands
         if args.action == 'remove':
             return tag_command_parser.parse_remove_mp3_tag_command(source)

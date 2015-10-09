@@ -80,7 +80,7 @@ class ConfigurationProvider(object):
                 config_file.write(re.sub('REPLACE_BASE_DIR', destination_path, line))
         return temp_path
 
-    def get_destination_with_mask_replaced(self, release_model):
+    def get_releases_destination_with_mask_replaced(self, release_model):
         config = self._get_config_parser()
         replaced_mask = self._mask_replacer.replace_directory_mask(config.get('masks', 'default'), release_model)
         releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))

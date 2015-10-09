@@ -291,7 +291,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -346,7 +346,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -401,7 +401,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -456,7 +456,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -477,7 +477,7 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
-        config_mock.get_destination_with_mask_replaced.assert_called_once_with(release_model)
+        config_mock.get_releases_destination_with_mask_replaced.assert_called_once_with(release_model)
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
@@ -512,7 +512,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -568,7 +568,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -618,7 +618,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock),
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
@@ -788,7 +788,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/music/destination/'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/music/destination/'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -861,7 +861,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -945,7 +945,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -996,7 +996,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock),
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -1069,7 +1069,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/music/destination/'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/music/destination/'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -1143,7 +1143,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -1218,7 +1218,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        config_mock.get_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
 
         release_model = ReleaseModel()
         release_model.artist = 'Aphex Twin'
@@ -1450,7 +1450,7 @@ class CommandParserTest(unittest.TestCase):
 
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
         metadata_mock.get_release_by_id.return_value = release_model
-        config_mock.get_destination_with_mask_replaced.return_value = '/replaced/mask/destination'
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/replaced/mask/destination'
         tag_command_parser_mock.return_value = [
             AddTagCommand(config_mock, tagger_mock),
             AddTagCommand(config_mock, tagger_mock),
