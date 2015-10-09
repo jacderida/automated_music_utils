@@ -618,6 +618,7 @@ class MixCommandParser(object):
         command.track_number = 1
         command.track_total = 1
         command.disc_number = 1
+        command.disc_total = 1
         return [command]
 
 class AddTagCommandArgs(object):
