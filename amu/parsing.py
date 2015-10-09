@@ -601,6 +601,15 @@ class ArtworkCommandParser(object):
         command.destination = destination
         return command
 
+class MixCommandParser(object):
+    def __init__(self, configuration_provider, tagger):
+        self._configuration_provider = configuration_provider
+        self._tagger = tagger
+
+    def parse_mix_command(self, add_tag_args):
+        command = AddTagCommand(self._configuration_provider, self._tagger)
+        return [command]
+
 class AddTagCommandArgs(object):
     def __init__(self):
         self._source = ''
