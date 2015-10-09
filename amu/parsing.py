@@ -613,6 +613,7 @@ class MixCommandParser(object):
         command.album = add_tag_args.album
         command.title = add_tag_args.title
         command.year = add_tag_args.year
+        command.comment = add_tag_args.comment
         return [command]
 
 class AddTagCommandArgs(object):
