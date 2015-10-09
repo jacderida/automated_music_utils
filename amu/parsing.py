@@ -616,6 +616,7 @@ class MixCommandParser(object):
         command.comment = add_tag_args.comment
         command.genre = 'Mixes'
         command.track_number = 1
+        command.track_total = 1
         return [command]
 
 class AddTagCommandArgs(object):
