@@ -610,6 +610,8 @@ class MixCommandParser(object):
         command = AddTagCommand(self._configuration_provider, self._tagger)
         command.artist = add_tag_args.artist
         command.album_artist = add_tag_args.artist
+        command.album = add_tag_args.album
+        command.title = add_tag_args.title
         return [command]
 
 class AddTagCommandArgs(object):
