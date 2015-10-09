@@ -114,7 +114,7 @@ class MixCommandParserTest(unittest.TestCase):
         commands = mix_command_parser.parse_mix_command(tag_command_args)
         self.assertEqual(commands[0].track_number, 1)
 
-    def test__parse_mix_command__single_file_mix__it_should_specify_the_track_number_on_the_add_tag_command(self):
+    def test__parse_mix_command__single_file_mix__it_should_specify_the_track_total_on_the_add_tag_command(self):
         tag_command_args = AddTagCommandArgs()
         tag_command_args.artist = 'Aphex Twin'
         tag_command_args.album = "All Tomorrow's Parties"
@@ -125,3 +125,15 @@ class MixCommandParserTest(unittest.TestCase):
         mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
         commands = mix_command_parser.parse_mix_command(tag_command_args)
         self.assertEqual(commands[0].track_total, 1)
+
+    def test__parse_mix_command__single_file_mix__it_should_specify_the_disc_number_on_the_add_tag_command(self):
+        tag_command_args = AddTagCommandArgs()
+        tag_command_args.artist = 'Aphex Twin'
+        tag_command_args.album = "All Tomorrow's Parties"
+        tag_command_args.title = "All Tomorrow's Parties"
+        tag_command_args.year = '2003'
+        tag_command_args.comment = "DJ Set at All Tomorrow's Parties 2003"
+        config_provider_mock, tagger_mock = (Mock(),)*2
+        mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
+        commands = mix_command_parser.parse_mix_command(tag_command_args)
+        self.assertEqual(commands[0].disc_number, 1)
