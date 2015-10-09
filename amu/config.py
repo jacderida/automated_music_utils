@@ -83,8 +83,8 @@ class ConfigurationProvider(object):
     def get_destination_with_mask_replaced(self, release_model):
         config = self._get_config_parser()
         replaced_mask = self._mask_replacer.replace_directory_mask(config.get('masks', 'default'), release_model)
-        base_directory = os.path.expanduser(config.get('directories', 'base_directory'))
-        return os.path.join(base_directory, replaced_mask)
+        releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))
+        return os.path.join(releases_base_directory, replaced_mask)
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):

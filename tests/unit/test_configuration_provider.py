@@ -332,7 +332,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_base_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
+    def test__get_configured_destination__config_file_has_releases_base_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -355,7 +355,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_destination_with_mask_replaced(release_model)
         mask_call = config_get_mock.mock_calls[1]
         self.assertEqual('directories', mask_call[1][0])
-        self.assertEqual('base_directory', mask_call[1][1])
+        self.assertEqual('releases_base_directory', mask_call[1][1])
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -466,7 +466,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__base_directory_has_user_home_reference__the_base_directory_should_be_expanded(self, config_get_mock, expanduser_mock, path_exists_mock):
+    def test__get_configured_destination__releases_base_directory_has_user_home_reference__the_releases_base_directory_should_be_expanded(self, config_get_mock, expanduser_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
