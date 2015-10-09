@@ -332,7 +332,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_releases_base_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__config_file_has_releases_base_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -359,7 +359,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__config_file_has_default_mask__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -386,7 +386,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_mask_replacer_should_be_used(self, config_get_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__config_file_has_default_mask__the_mask_replacer_should_be_used(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -412,7 +412,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_correct_destination_should_be_returned(self, config_get_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__config_file_has_default_mask__the_correct_destination_should_be_returned(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -439,7 +439,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__config_file_has_default_mask__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__config_file_has_default_mask__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -466,7 +466,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_configured_destination__releases_base_directory_has_user_home_reference__the_releases_base_directory_should_be_expanded(self, config_get_mock, expanduser_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__releases_base_directory_has_user_home_reference__the_releases_base_directory_should_be_expanded(self, config_get_mock, expanduser_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
@@ -492,7 +492,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
-    def test__get_configured_destination__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
+    def test__get_destination_with_mask_replaced__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
         release_model.title = 'Analord 08'
