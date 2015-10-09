@@ -86,6 +86,10 @@ class ConfigurationProvider(object):
         releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))
         return os.path.join(releases_base_directory, replaced_mask)
 
+    def get_mixes_destination(self):
+        config = self._get_config_parser()
+        return config.get('directories', 'mixes_directory')
+
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):
             raise ConfigurationError(

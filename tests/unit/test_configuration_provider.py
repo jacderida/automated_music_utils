@@ -684,3 +684,14 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_flac_decode_setting()
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_mixes_destination__config_file_has_mixes_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '/path/to/mixes'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        config_provider.get_mixes_destination()
+        mask_call = config_get_mock.mock_calls[0]
+        self.assertEqual('directories', mask_call[1][0])
+        self.assertEqual('mixes_directory', mask_call[1][1])
