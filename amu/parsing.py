@@ -607,20 +607,21 @@ class MixCommandParser(object):
         self._tagger = tagger
 
     def parse_mix_command(self, add_tag_args):
-        command = AddTagCommand(self._configuration_provider, self._tagger)
-        command.source = add_tag_args.source
-        command.artist = add_tag_args.artist
-        command.album_artist = add_tag_args.artist
-        command.album = add_tag_args.album
-        command.title = add_tag_args.title
-        command.year = add_tag_args.year
-        command.comment = add_tag_args.comment
-        command.genre = 'Mixes'
-        command.track_number = 1
-        command.track_total = 1
-        command.disc_number = 1
-        command.disc_total = 1
-        return [command]
+        add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
+        add_tag_command.source = add_tag_args.source
+        add_tag_command.artist = add_tag_args.artist
+        add_tag_command.album_artist = add_tag_args.artist
+        add_tag_command.album = add_tag_args.album
+        add_tag_command.title = add_tag_args.title
+        add_tag_command.year = add_tag_args.year
+        add_tag_command.comment = add_tag_args.comment
+        add_tag_command.genre = 'Mixes'
+        add_tag_command.track_number = 1
+        add_tag_command.track_total = 1
+        add_tag_command.disc_number = 1
+        add_tag_command.disc_total = 1
+        move_file_command = MoveAudioFileCommand(self._configuration_provider)
+        return [add_tag_command, move_file_command]
 
 class AddTagCommandArgs(object):
     def __init__(self):

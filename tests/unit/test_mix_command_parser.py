@@ -1,6 +1,7 @@
 import mock
 import unittest
 from amu.commands import AddTagCommand
+from amu.commands import MoveAudioFileCommand
 from amu.parsing import AddTagCommandArgs
 from amu.parsing import MixCommandParser
 from mock import Mock
@@ -174,3 +175,16 @@ class MixCommandParserTest(unittest.TestCase):
         mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
         commands = mix_command_parser.parse_mix_command(tag_command_args)
         self.assertEqual(commands[0].source, '/some/source/track.mp3')
+
+    def test__parse_mix_command__single_file_mix__it_should_generate_a_move_file_command(self):
+        tag_command_args = AddTagCommandArgs()
+        tag_command_args.source = '/some/source/track.mp3'
+        tag_command_args.artist = 'Aphex Twin'
+        tag_command_args.album = "All Tomorrow's Parties"
+        tag_command_args.title = "All Tomorrow's Parties"
+        tag_command_args.year = '2003'
+        tag_command_args.comment = "DJ Set at All Tomorrow's Parties 2003"
+        config_provider_mock, tagger_mock = (Mock(),)*2
+        mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
+        commands = mix_command_parser.parse_mix_command(tag_command_args)
+        self.assertIsInstance(commands[1], MoveAudioFileCommand)
