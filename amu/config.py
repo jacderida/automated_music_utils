@@ -87,8 +87,7 @@ class ConfigurationProvider(object):
         return os.path.join(releases_base_directory, replaced_mask)
 
     def get_mixes_destination(self):
-        config = self._get_config_parser()
-        mixes_directory = os.path.expanduser(config.get('directories', 'mixes_directory'))
+        mixes_directory = os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
         if not mixes_directory:
             raise ConfigurationError('A value must be supplied in the .amu_config file for the mixes directory.')
         return mixes_directory
@@ -99,12 +98,12 @@ class ConfigurationProvider(object):
                 'The path specified by {0} is incorrect. Please provide a valid path for {1}.'.format(env_variable_name, program))
         return path_from_env_variable
 
-    def _get_verified_path_from_config_file(self, config_section, config_value, program):
+    def _get_verified_path_from_config_file(self, config_section, config_value, resource):
         config = self._get_config_parser()
         path_from_config = config.get(config_section, config_value)
         if not os.path.exists(path_from_config):
             raise ConfigurationError(
-                'The path specified to {0} in the .amu_config file is incorrect. Please provide a valid path for {0}.'.format(program))
+                'The path specified for {0} in the .amu_config file is incorrect. Please provide a valid path for {0}.'.format(resource))
         return path_from_config
 
     def _get_config_parser(self):

@@ -601,7 +601,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.side_effect = [True, False]
         config_get_mock.return_value = '/some/path/to/flac'
-        with self.assertRaisesRegexp(ConfigurationError, 'The path specified to flac in the .amu_config file is incorrect. Please provide a valid path for flac.'):
+        with self.assertRaisesRegexp(ConfigurationError, 'The path specified for flac in the .amu_config file is incorrect. Please provide a valid path for flac.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_flac_path()
 
@@ -735,5 +735,16 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.return_value = ''
         with self.assertRaisesRegexp(ConfigurationError, 'A value must be supplied in the .amu_config file for the mixes directory.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_mixes_destination()
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_mixes_destination__mixes_directory_does_not_exist__raises_configuration_error(self, config_get_mock, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user'
+        path_exists_mock.side_effect = [True, False]
+        config_get_mock.return_value = '~/Music'
+        with self.assertRaisesRegexp(ConfigurationError, 'The path specified for mixes_directory in the .amu_config file is incorrect. Please provide a valid path for mixes_directory.'):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_mixes_destination()
