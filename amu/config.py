@@ -89,6 +89,8 @@ class ConfigurationProvider(object):
     def get_mixes_destination(self):
         config = self._get_config_parser()
         mixes_directory = os.path.expanduser(config.get('directories', 'mixes_directory'))
+        if not mixes_directory:
+            raise ConfigurationError('A value must be supplied in the .amu_config file for the mixes directory.')
         return mixes_directory
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
