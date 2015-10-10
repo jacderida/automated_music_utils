@@ -637,3 +637,55 @@ class MixCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[1].track_total, 4)
         self.assertEqual(commands[2].track_total, 4)
         self.assertEqual(commands[3].track_total, 4)
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('os.listdir')
+    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_disc_number_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+        isfile_mock.return_value = False
+        listdir_mock.return_value = [
+            'Autechre-2006-12-28-part01_vbr.mp3',
+            'Autechre-2006-12-28-part02_vbr.mp3',
+            'Autechre-2006-12-28-part03_vbr.mp3',
+            'Autechre-2006-12-28-part04_vbr.mp3'
+        ]
+        tag_command_args = AddTagCommandArgs()
+        tag_command_args.source = '/some/source'
+        tag_command_args.artist = 'Autechre'
+        tag_command_args.album = 'Xltronic Marathon'
+        tag_command_args.title = 'Xltronic Marathon'
+        tag_command_args.year = '2006'
+        tag_command_args.comment = 'Broadcast on Xltronic on 28/12/2006.'
+        config_provider_mock, tagger_mock = (Mock(),)*2
+        config_provider_mock.get_mixes_destination.return_value = '/mixes/destination'
+        mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
+        commands = [x for x in mix_command_parser.parse_mix_command(tag_command_args) if isinstance(x, AddTagCommand)]
+        self.assertEqual(commands[0].disc_number, 1)
+        self.assertEqual(commands[1].disc_number, 1)
+        self.assertEqual(commands[2].disc_number, 1)
+        self.assertEqual(commands[3].disc_number, 1)
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('os.listdir')
+    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_disc_total_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+        isfile_mock.return_value = False
+        listdir_mock.return_value = [
+            'Autechre-2006-12-28-part01_vbr.mp3',
+            'Autechre-2006-12-28-part02_vbr.mp3',
+            'Autechre-2006-12-28-part03_vbr.mp3',
+            'Autechre-2006-12-28-part04_vbr.mp3'
+        ]
+        tag_command_args = AddTagCommandArgs()
+        tag_command_args.source = '/some/source'
+        tag_command_args.artist = 'Autechre'
+        tag_command_args.album = 'Xltronic Marathon'
+        tag_command_args.title = 'Xltronic Marathon'
+        tag_command_args.year = '2006'
+        tag_command_args.comment = 'Broadcast on Xltronic on 28/12/2006.'
+        config_provider_mock, tagger_mock = (Mock(),)*2
+        config_provider_mock.get_mixes_destination.return_value = '/mixes/destination'
+        mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
+        commands = [x for x in mix_command_parser.parse_mix_command(tag_command_args) if isinstance(x, AddTagCommand)]
+        self.assertEqual(commands[0].disc_total, 1)
+        self.assertEqual(commands[1].disc_total, 1)
+        self.assertEqual(commands[2].disc_total, 1)
+        self.assertEqual(commands[3].disc_total, 1)

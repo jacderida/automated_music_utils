@@ -644,6 +644,8 @@ class MixCommandParser(object):
             add_tag_command.genre = 'Mixes'
             add_tag_command.track_number = part
             add_tag_command.track_total = len(mix_files)
+            add_tag_command.disc_number = 1
+            add_tag_command.disc_total = 1
             commands.append(add_tag_command)
             move_file_command = MoveAudioFileCommand(self._configuration_provider)
             move_file_command.source = source_path
