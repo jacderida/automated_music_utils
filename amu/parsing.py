@@ -631,7 +631,10 @@ class MixCommandParser(object):
         commands = []
         for audio_file in os.listdir(add_tag_args.source):
             add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
+            add_tag_command.source = os.path.join(add_tag_args.source, audio_file)
             commands.append(add_tag_command)
+            move_file_command = MoveAudioFileCommand(self._configuration_provider)
+            commands.append(move_file_command)
         return commands
 
 class AddTagCommandArgs(object):
