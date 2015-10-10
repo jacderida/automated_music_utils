@@ -707,3 +707,15 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider = ConfigurationProvider(MaskReplacer())
         config_provider.get_mixes_destination()
         config_read_mock.assert_called_with('/home/user/.amu_config')
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_mixes_destination__mixes_directory_has_user_home_reference__the_mixes_directory_should_be_expanded(self, config_get_mock, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user'
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = '~/Music'
+        config_provider = ConfigurationProvider(MaskReplacer())
+        config_provider.get_mixes_destination()
+        expanduser_call = expanduser_mock.mock_calls[1]
+        self.assertEqual('~/Music', expanduser_call[1][0])
