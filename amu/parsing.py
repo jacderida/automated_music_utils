@@ -607,6 +607,8 @@ class MixCommandParser(object):
         self._tagger = tagger
 
     def parse_mix_command(self, add_tag_args):
+        if not add_tag_args.source:
+            raise ValueError('A value must be supplied for the source.')
         add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
         add_tag_command.source = add_tag_args.source
         add_tag_command.artist = add_tag_args.artist
