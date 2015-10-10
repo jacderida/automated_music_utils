@@ -630,8 +630,9 @@ class MixCommandParser(object):
             return [add_tag_command, move_file_command]
         part = 1
         commands = []
-        for audio_file in os.listdir(add_tag_args.source):
-            source_path = os.path.join(add_tag_args.source, audio_file)
+        mix_files = os.listdir(add_tag_args.source)
+        for mix_file in mix_files:
+            source_path = os.path.join(add_tag_args.source, mix_file)
             add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
             add_tag_command.source = source_path
             add_tag_command.artist = add_tag_args.artist
@@ -642,10 +643,11 @@ class MixCommandParser(object):
             add_tag_command.comment = add_tag_args.comment
             add_tag_command.genre = 'Mixes'
             add_tag_command.track_number = part
+            add_tag_command.track_total = len(mix_files)
             commands.append(add_tag_command)
             move_file_command = MoveAudioFileCommand(self._configuration_provider)
             move_file_command.source = source_path
-            move_file_command.destination = os.path.join(self._configuration_provider.get_mixes_destination(), audio_file)
+            move_file_command.destination = os.path.join(self._configuration_provider.get_mixes_destination(), mix_file)
             commands.append(move_file_command)
             part += 1
         return commands
