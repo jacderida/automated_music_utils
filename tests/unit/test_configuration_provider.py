@@ -729,15 +729,6 @@ class ConfigurationProviderTest(unittest.TestCase):
             config_provider = ConfigurationProvider(MaskReplacer())
             config_provider.get_mixes_destination()
 
-    @mock.patch('amu.config.os.path.exists')
-    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_mixes_destination__mixes_directory_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
-        path_exists_mock.return_value = True
-        config_get_mock.return_value = ''
-        with self.assertRaisesRegexp(ConfigurationError, 'A value must be supplied in the .amu_config file for the mixes directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
-            config_provider.get_mixes_destination()
-
     @mock.patch('os.path.exists')
     @mock.patch('os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')

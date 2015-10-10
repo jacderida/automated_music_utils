@@ -87,10 +87,7 @@ class ConfigurationProvider(object):
         return os.path.join(releases_base_directory, replaced_mask)
 
     def get_mixes_destination(self):
-        mixes_directory = os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
-        if not mixes_directory:
-            raise ConfigurationError('A value must be supplied in the .amu_config file for the mixes directory.')
-        return mixes_directory
+        return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):
