@@ -641,6 +641,7 @@ class MixCommandParser(object):
             add_tag_command.year = add_tag_args.year
             add_tag_command.comment = add_tag_args.comment
             add_tag_command.genre = 'Mixes'
+            add_tag_command.track_number = part
             commands.append(add_tag_command)
             move_file_command = MoveAudioFileCommand(self._configuration_provider)
             move_file_command.source = source_path
