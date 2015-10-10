@@ -719,3 +719,12 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_mixes_destination()
         expanduser_call = expanduser_mock.mock_calls[1]
         self.assertEqual('~/Music', expanduser_call[1][0])
+
+    @mock.patch('os.path.exists')
+    @mock.patch('os.path.expanduser')
+    def test__get_mixes_destination__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = False
+        with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
+            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider.get_mixes_destination()
