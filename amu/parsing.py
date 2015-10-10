@@ -639,6 +639,7 @@ class MixCommandParser(object):
             add_tag_command.album = add_tag_args.album
             add_tag_command.title = u'{0} Part {1}'.format(add_tag_args.title.decode('utf-8'), part)
             add_tag_command.year = add_tag_args.year
+            add_tag_command.comment = add_tag_args.comment
             commands.append(add_tag_command)
             move_file_command = MoveAudioFileCommand(self._configuration_provider)
             move_file_command.source = source_path
