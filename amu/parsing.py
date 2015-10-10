@@ -633,6 +633,7 @@ class MixCommandParser(object):
             source_path = os.path.join(add_tag_args.source, audio_file)
             add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
             add_tag_command.source = source_path
+            add_tag_command.artist = add_tag_args.artist
             commands.append(add_tag_command)
             move_file_command = MoveAudioFileCommand(self._configuration_provider)
             move_file_command.source = source_path
