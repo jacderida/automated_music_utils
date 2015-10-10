@@ -622,6 +622,8 @@ class MixCommandParser(object):
         add_tag_command.disc_total = 1
         move_file_command = MoveAudioFileCommand(self._configuration_provider)
         move_file_command.source = add_tag_args.source
+        move_file_command.destination = os.path.join(
+            self._configuration_provider.get_mixes_destination(), os.path.basename(add_tag_args.source))
         return [add_tag_command, move_file_command]
 
 class AddTagCommandArgs(object):
