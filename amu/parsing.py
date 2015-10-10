@@ -636,6 +636,7 @@ class MixCommandParser(object):
             commands.append(add_tag_command)
             move_file_command = MoveAudioFileCommand(self._configuration_provider)
             move_file_command.source = source_path
+            move_file_command.destination = os.path.join(self._configuration_provider.get_mixes_destination(), audio_file)
             commands.append(move_file_command)
         return commands
 
