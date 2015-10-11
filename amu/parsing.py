@@ -610,49 +610,45 @@ class MixCommandParser(object):
         if not add_tag_args.source:
             raise ValueError('A value must be supplied for the source.')
         if os.path.isfile(add_tag_args.source):
-            add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
-            add_tag_command.source = add_tag_args.source
-            add_tag_command.artist = add_tag_args.artist
-            add_tag_command.album_artist = add_tag_args.artist
-            add_tag_command.album = add_tag_args.album
-            add_tag_command.title = add_tag_args.title
-            add_tag_command.year = add_tag_args.year
-            add_tag_command.comment = add_tag_args.comment
-            add_tag_command.genre = 'Mixes'
-            add_tag_command.track_number = 1
-            add_tag_command.track_total = 1
-            add_tag_command.disc_number = 1
-            add_tag_command.disc_total = 1
-            move_file_command = MoveAudioFileCommand(self._configuration_provider)
-            move_file_command.source = add_tag_args.source
-            move_file_command.destination = os.path.join(
-                self._configuration_provider.get_mixes_destination(), os.path.basename(add_tag_args.source))
+            add_tag_command = self._get_add_tag_command(add_tag_args, add_tag_args.source, add_tag_args.title, 1, 1)
+            move_file_command = self._get_move_file_command(add_tag_args.source, os.path.basename(add_tag_args.source))
             return [add_tag_command, move_file_command]
         part = 1
         commands = []
         mix_files = os.listdir(add_tag_args.source)
         for mix_file in mix_files:
             source_path = os.path.join(add_tag_args.source, mix_file)
-            add_tag_command = AddTagCommand(self._configuration_provider, self._tagger)
-            add_tag_command.source = source_path
-            add_tag_command.artist = add_tag_args.artist
-            add_tag_command.album_artist = add_tag_args.artist
-            add_tag_command.album = add_tag_args.album
-            add_tag_command.title = u'{0} Part {1}'.format(add_tag_args.title.decode('utf-8'), part)
-            add_tag_command.year = add_tag_args.year
-            add_tag_command.comment = add_tag_args.comment
-            add_tag_command.genre = 'Mixes'
-            add_tag_command.track_number = part
-            add_tag_command.track_total = len(mix_files)
-            add_tag_command.disc_number = 1
-            add_tag_command.disc_total = 1
-            commands.append(add_tag_command)
-            move_file_command = MoveAudioFileCommand(self._configuration_provider)
-            move_file_command.source = source_path
-            move_file_command.destination = os.path.join(self._configuration_provider.get_mixes_destination(), mix_file)
-            commands.append(move_file_command)
+            commands.append(self._get_add_tag_command(
+                add_tag_args,
+                source_path,
+                u'{0} Part {1}'.format(add_tag_args.title.decode('utf-8'), part),
+                part,
+                len(mix_files)))
+            commands.append(self._get_move_file_command(source_path, mix_file))
             part += 1
         return commands
+
+    def _get_add_tag_command(self, add_tag_args, source, title, track_number, track_total):
+        command = AddTagCommand(self._configuration_provider, self._tagger)
+        command.source = source
+        command.artist = add_tag_args.artist
+        command.album_artist = add_tag_args.artist
+        command.album = add_tag_args.album
+        command.title = title
+        command.year = add_tag_args.year
+        command.comment = add_tag_args.comment
+        command.genre = 'Mixes'
+        command.track_number = track_number
+        command.track_total = track_total
+        command.disc_number = 1
+        command.disc_total = 1
+        return command
+
+    def _get_move_file_command(self, source, destination_file):
+        command = MoveAudioFileCommand(self._configuration_provider)
+        command.source = source
+        command.destination = os.path.join(self._configuration_provider.get_mixes_destination(), destination_file)
+        return command
 
 class AddTagCommandArgs(object):
     def __init__(self):
