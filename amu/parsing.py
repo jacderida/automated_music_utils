@@ -788,6 +788,7 @@ class AddTagCommandArgs(object):
     def from_mix_command(args):
         command_args = AddTagCommandArgs()
         command_args.source = AddTagCommandArgs._get_value_from_args(args.source)
+        command_args.artist = AddTagCommandArgs._get_value_from_args(args.artist)
         return command_args
 
     @staticmethod
