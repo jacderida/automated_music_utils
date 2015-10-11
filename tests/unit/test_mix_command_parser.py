@@ -766,5 +766,4 @@ class MixCommandParserTest(unittest.TestCase):
         config_provider_mock.get_mixes_destination.return_value = '/mixes/destination'
         mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
         commands = mix_command_parser.parse_mix_command(tag_command_args)
-        print commands
         self.assertEqual(len(commands), 8)

@@ -1644,3 +1644,22 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         commands = parser.from_args(args)
         decode_parser_mock.assert_called_once_with('/some/source', '/some/current/directory')
+
+    @mock.patch('amu.parsing.MixCommandParser.parse_mix_command')
+    def test__from_args__when_a_mix_command_is_specified__it_should_use_the_mix_command_parser_with_correct_args(self, mix_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'mix',
+            '/some/source/mix.mp3',
+            '--artist=Autechre',
+            '--album=Xltronic Marathon',
+            '--title=Xltronic Marathon',
+            '--year=2006',
+            '--comment=blah',
+        ])
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser.from_args(args)
+        args_to_mix_parser = mix_parser_mock.mock_calls[0][0][0]
+        self.assertEqual(args_to_mix_parser.source, '/some/source/mix.mp3')
