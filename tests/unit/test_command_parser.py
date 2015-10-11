@@ -1663,3 +1663,8 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         args_to_mix_parser = mix_parser_mock.mock_calls[0][1][0]
         self.assertEqual(args_to_mix_parser.source, '/some/source/mix.mp3')
+        self.assertEqual(args_to_mix_parser.artist, 'Autechre')
+        self.assertEqual(args_to_mix_parser.album, 'Xltronic Marathon')
+        self.assertEqual(args_to_mix_parser.title, 'Xltronic Marathon')
+        self.assertEqual(args_to_mix_parser.year, 2006)
+        self.assertEqual(args_to_mix_parser.comment, 'blah')
