@@ -792,6 +792,7 @@ class AddTagCommandArgs(object):
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
         command_args.year = AddTagCommandArgs._get_numeric_value_from_args(args.year)
+        command_args.comment = AddTagCommandArgs._get_value_from_args(args.comment)
         return command_args
 
     @staticmethod
