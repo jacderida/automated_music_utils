@@ -1661,5 +1661,5 @@ class CommandParserTest(unittest.TestCase):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
         parser.from_args(args)
-        args_to_mix_parser = mix_parser_mock.mock_calls[0][0][0]
+        args_to_mix_parser = mix_parser_mock.mock_calls[0][1][0]
         self.assertEqual(args_to_mix_parser.source, '/some/source/mix.mp3')

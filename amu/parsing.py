@@ -34,14 +34,14 @@ class CommandParser(object):
             'tag': self._get_tag_command,
             'fetch': self._get_fetch_command,
             'artwork': self._get_artwork_command,
-            #'mix': self._get_mix_command
+            'mix': self._get_mix_command
         }
         return commands[args.command](args)
 
-    #def _get_mix_command(self, args):
-        #mix_args = AddTagCommandArgs.from_args(args)
-        #parser = MixCommandParser(self._configuration_provider, Mp3Tagger())
-        #return parser.parse_mix_command(mix_args)
+    def _get_mix_command(self, args):
+        mix_args = AddTagCommandArgs.from_mix_command(args)
+        parser = MixCommandParser(self._configuration_provider, Mp3Tagger())
+        return parser.parse_mix_command(mix_args)
 
     def _get_artwork_command(self, args):
         if args.action == 'add' and args.type == 'mp3':
