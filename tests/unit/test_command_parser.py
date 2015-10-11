@@ -1666,5 +1666,5 @@ class CommandParserTest(unittest.TestCase):
         self.assertEqual(args_to_mix_parser.artist, 'Autechre')
         self.assertEqual(args_to_mix_parser.album, 'Xltronic Marathon')
         self.assertEqual(args_to_mix_parser.title, 'Xltronic Marathon')
-        self.assertEqual(args_to_mix_parser.year, 2006)
+        self.assertEqual(args_to_mix_parser.year, '2006')
         self.assertEqual(args_to_mix_parser.comment, 'blah')

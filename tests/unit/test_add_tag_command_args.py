@@ -664,7 +664,7 @@ class AddTagCommandArgsTest(unittest.TestCase):
             '--comment=blah',
         ])
         command_args = AddTagCommandArgs.from_mix_command(args)
-        self.assertEqual(command_args.year, 2006)
+        self.assertEqual(command_args.year, '2006')
 
     def test__from_mix_command__when_passed_args_for_mix_command__the_comment_should_be_specified_correctly(self):
         driver = CliDriver()

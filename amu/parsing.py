@@ -353,7 +353,7 @@ class TagCommandParser(object):
                 disc_total = directory_len
                 for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
-                    mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith(".mp3")]
+                    mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
                     track_total = len(mp3_files)
                     track_number = 1
                     for source_file in mp3_files:
@@ -367,7 +367,7 @@ class TagCommandParser(object):
                         track_number += 1
                     disc_number += 1
             else:
-                mp3_files = [f for f in sorted(files) if f.endswith(".mp3")]
+                mp3_files = [f for f in sorted(files) if f.endswith('.mp3')]
                 track_total = len(mp3_files)
                 track_number = 1
                 for source_file in mp3_files:
@@ -791,7 +791,7 @@ class AddTagCommandArgs(object):
         command_args.artist = AddTagCommandArgs._get_value_from_args(args.artist)
         command_args.album = AddTagCommandArgs._get_value_from_args(args.album)
         command_args.title = AddTagCommandArgs._get_value_from_args(args.title)
-        command_args.year = AddTagCommandArgs._get_numeric_value_from_args(args.year)
+        command_args.year = AddTagCommandArgs._get_value_from_args(args.year)
         command_args.comment = AddTagCommandArgs._get_value_from_args(args.comment)
         return command_args
 
