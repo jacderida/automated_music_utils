@@ -650,3 +650,18 @@ class AddTagCommandArgsTest(unittest.TestCase):
         ])
         command_args = AddTagCommandArgs.from_mix_command(args)
         self.assertEqual(command_args.title, 'Xltronic Marathon')
+
+    def test__from_mix_command__when_passed_args_for_mix_command__the_year_should_be_specified_correctly(self):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'mix',
+            '/some/source/mix.mp3',
+            '--artist=Autechre',
+            '--album=Xltronic Marathon',
+            '--title=Xltronic Marathon',
+            '--year=2006',
+            '--comment=blah',
+        ])
+        command_args = AddTagCommandArgs.from_mix_command(args)
+        self.assertEqual(command_args.year, 2006)
