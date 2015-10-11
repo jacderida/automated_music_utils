@@ -282,7 +282,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_generate_4_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_generate_4_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -305,7 +305,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_generate_4_move_file_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_generate_4_move_file_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -328,7 +328,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_source_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_source_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -354,7 +354,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_source_correctly_on_the_move_file_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_source_correctly_on_the_move_file_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -380,7 +380,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_destination_correctly_on_the_move_file_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_destination_correctly_on_the_move_file_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -406,7 +406,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_artist_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_artist_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -432,7 +432,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_album_artist_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_album_artist_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -458,7 +458,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_album_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_album_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -484,7 +484,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_title_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_title_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -510,7 +510,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_year_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_year_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -536,7 +536,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_comment_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_comment_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -562,7 +562,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_genre_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_genre_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -588,7 +588,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_track_number_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_track_number_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -614,7 +614,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_track_total_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_track_total_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -640,7 +640,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_disc_number_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_disc_number_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -666,7 +666,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files__it_should_specify_the_disc_total_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts__it_should_specify_the_disc_total_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part01_vbr.mp3',
@@ -692,7 +692,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files_and_files_are_returned_in_arbitrary_order__it_should_specify_the_source_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts_and_files_are_returned_in_arbitrary_order__it_should_specify_the_source_correctly_on_the_add_tag_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part04_vbr.mp3',
@@ -718,7 +718,7 @@ class MixCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.isfile')
     @mock.patch('os.listdir')
-    def test__parse_mix_command__source_is_directory_with_4_files_and_files_are_returned_in_arbitrary_order__it_should_specify_the_source_correctly_on_the_move_file_commands(self, listdir_mock, isfile_mock):
+    def test__parse_mix_command__source_is_mix_with_multiple_parts_and_files_are_returned_in_arbitrary_order__it_should_specify_the_source_correctly_on_the_move_file_commands(self, listdir_mock, isfile_mock):
         isfile_mock.return_value = False
         listdir_mock.return_value = [
             'Autechre-2006-12-28-part04_vbr.mp3',
