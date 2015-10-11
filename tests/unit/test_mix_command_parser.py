@@ -741,3 +741,30 @@ class MixCommandParserTest(unittest.TestCase):
         self.assertEqual(commands[1].source, '/some/source/Autechre-2006-12-28-part02_vbr.mp3')
         self.assertEqual(commands[2].source, '/some/source/Autechre-2006-12-28-part03_vbr.mp3')
         self.assertEqual(commands[3].source, '/some/source/Autechre-2006-12-28-part04_vbr.mp3')
+
+    @mock.patch('os.path.isfile')
+    @mock.patch('os.listdir')
+    def test__parse_mix_command__source_is_mix_with_multiple_parts_and_there_are_non_audio_files_in_directory__it_should_only_generate_commands_for_audio_files(self, listdir_mock, isfile_mock):
+        isfile_mock.return_value = False
+        listdir_mock.return_value = [
+            'Autechre-2006-12-28-part04_vbr.mp3',
+            'Autechre-2006-12-28-part01_vbr.mp3',
+            'Autechre-2006-12-28-part03_vbr.mp3',
+            'Autechre-2006-12-28-part02_vbr.mp3',
+            'ripping.log',
+            'text.txt',
+            'random.jpg'
+        ]
+        tag_command_args = AddTagCommandArgs()
+        tag_command_args.source = '/some/source'
+        tag_command_args.artist = 'Autechre'
+        tag_command_args.album = 'Xltronic Marathon'
+        tag_command_args.title = 'Xltronic Marathon'
+        tag_command_args.year = '2006'
+        tag_command_args.comment = 'Broadcast on Xltronic on 28/12/2006.'
+        config_provider_mock, tagger_mock = (Mock(),)*2
+        config_provider_mock.get_mixes_destination.return_value = '/mixes/destination'
+        mix_command_parser = MixCommandParser(config_provider_mock, tagger_mock)
+        commands = mix_command_parser.parse_mix_command(tag_command_args)
+        print commands
+        self.assertEqual(len(commands), 8)

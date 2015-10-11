@@ -615,7 +615,7 @@ class MixCommandParser(object):
             return [add_tag_command, move_file_command]
         part = 1
         commands = []
-        mix_files = sorted(os.listdir(add_tag_args.source))
+        mix_files = [x for x in sorted(os.listdir(add_tag_args.source)) if x.endswith('.mp3')]
         for mix_file in mix_files:
             source_path = os.path.join(add_tag_args.source, mix_file)
             commands.append(self._get_add_tag_command(
