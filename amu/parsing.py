@@ -785,6 +785,12 @@ class AddTagCommandArgs(object):
         return command_args
 
     @staticmethod
+    def from_mix_command(args):
+        command_args = AddTagCommandArgs()
+        command_args.source = AddTagCommandArgs._get_value_from_args(args.source)
+        return command_args
+
+    @staticmethod
     def _get_numeric_value_from_args(args_value):
         value = AddTagCommandArgs._get_value_from_args(args_value)
         if not value:
