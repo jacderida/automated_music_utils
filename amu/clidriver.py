@@ -92,7 +92,7 @@ class CliDriver(object):
 
     def main(self):
         """ The main entry point for the CLI driver """
-        config_provider = ConfigurationProvider(MaskReplacer())
+        config_provider = ConfigurationProvider(MaskReplacer(), DirectorySelector())
         parser = CommandParser(
             config_provider,
             RubyRipperCdRipper(config_provider),
