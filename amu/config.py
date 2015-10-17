@@ -12,8 +12,9 @@ class ConfigurationError(Exception):
         self.message = message
 
 class ConfigurationProvider(object):
-    def __init__(self, mask_replacer):
+    def __init__(self, mask_replacer, directory_selector):
         self._mask_replacer = mask_replacer
+        self._directory_selector = directory_selector
 
     def get_lame_path(self):
         if not subprocess.call(['which', 'lame']):

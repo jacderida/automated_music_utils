@@ -13,7 +13,8 @@ from amu.models import ReleaseModel
 
 class ConfigurationProviderTest(unittest.TestCase):
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_on_path__returns_ruby_ripper_command(self):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         with patch('amu.config.subprocess.call') as mock:
             mock.return_value = 0
             result = config_provider.get_ruby_ripper_path()
@@ -24,7 +25,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_path_is_set_on_environment_variable__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = \
             '/opt/rubyripper/rubyripper_cli.rb'
@@ -38,7 +40,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__environment_variable_has_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = \
             '/opt/rubyripper/rubyripper_cli.rb'
@@ -51,7 +54,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__returns_correct_path(self, subprocess_mock, environ_mock, path_exists_mock, config_get_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         path_exists_mock.return_value = True
@@ -67,7 +71,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__ruby_ripper_cli_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -81,7 +86,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__invalid_config_file__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -96,7 +102,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_ruby_ripper_path__config_file_specifies_incorrect_path__throws_configuration_error(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -108,7 +115,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__returns_correct_path(self, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         result = config_provider.get_ruby_ripper_config_file()
@@ -117,7 +125,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__ruby_ripper_config_file_is_set_on_environment_variable__correct_variable_used(self, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
         config_provider.get_ruby_ripper_config_file()
@@ -126,7 +135,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.environ')
     def test__get_ruby_ripper_config_file__environment_variable_has_incorrect_path__throws_configuration_error(self, environ_mock, path_exists_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = False
         with self.assertRaises(ConfigurationError):
@@ -147,7 +157,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         file_handle = open_mock.return_value.__enter__.return_value
         file_handle.readlines.return_value = sample_file_contents
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_temp_config_file_for_ripper('/any/path')
         sub_mock.assert_called_with('REPLACE_BASE_DIR', '/any/path', 'basedir=REPLACE_BASE_DIR')
 
@@ -160,7 +171,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         gettempdir_mock.return_value = '/tmp' # Mocking for platform agnosticism.
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_temp_config_file_for_ripper('/any/path')
         open_mock.assert_called_with(utils.AnyStringWith('/tmp'), 'w')
 
@@ -172,7 +184,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         open_mock.return_value = MagicMock(spec=file)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_temp_config_file_for_ripper('/any/path')
         gettempdir_mock.assert_called_once_with()
 
@@ -186,7 +199,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         stored_args_mock = utils.get_mock_with_stored_call_args(open_mock)
         environ_mock.get.return_value = '/home/user/ripper_config_file'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_temp_config_file_for_ripper('/any/path')
         temp_path = stored_args_mock.call_args[0][0]
         parsed_uuid = temp_path.split('/tmp/')[1]
@@ -194,13 +208,15 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     def test__get_temp_config_file_for_ripper__empty_destination_path__throws_configuration_exception(self):
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            directory_selector_mock = Mock()
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_temp_config_file_for_ripper('')
 
     def test__get_lame_path__lame_is_on_path__lame_returned(self):
         with patch('amu.config.subprocess.call') as mock:
             mock.return_value = 0
-            config_provider = ConfigurationProvider(MaskReplacer())
+            directory_selector_mock = Mock()
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             result = config_provider.get_lame_path()
             self.assertEqual('lame', result)
             mock.assert_called_with(['which', 'lame'])
@@ -213,7 +229,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = \
             '/some/path/to/lame'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_lame_path()
         self.assertEqual(
             '/some/path/to/lame', result)
@@ -227,8 +244,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = \
             '/some/incorrect/path/to/lame'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_lame_path()
 
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -240,7 +258,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = None
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/some/path/to/lame'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_lame_path()
         self.assertEqual('/some/path/to/lame', result)
         config_get_mock.assert_called_with('encoding', 'lame_path')
@@ -252,12 +271,13 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.environ')
     @mock.patch('amu.config.subprocess.call')
     def test__get_lame_path__lame_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/some/path/to/lame'
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_lame_path()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
@@ -270,8 +290,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_lame_path()
 
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
@@ -286,8 +307,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.side_effect = [True, False]
         config_get_mock.return_value = '/some/path/to/lame'
+        directory_selector_mock = Mock()
         with self.assertRaises(ConfigurationError):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_lame_path()
 
     @mock.patch('amu.config.os.path.exists')
@@ -295,7 +317,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_lame_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = '-V0'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_lame_encoding_setting()
         self.assertEqual('-V0', result)
         config_get_mock.assert_called_with('encoding', 'lame_encoding_setting')
@@ -305,8 +328,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_lame_encoding_setting__encoding_setting_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = ''
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the lame encoding setting.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_lame_encoding_setting()
 
     @mock.patch('amu.config.os.path.exists')
@@ -317,7 +341,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         expanduser_mock.return_value = '/home/user/'
         config_get_mock.return_value = '-V0'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_lame_encoding_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
@@ -326,8 +351,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_lame_encoding_setting__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_lame_encoding_setting()
 
     @mock.patch('amu.config.os.path.exists')
@@ -351,7 +377,8 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         mask_call = config_get_mock.mock_calls[1]
         self.assertEqual('directories', mask_call[1][0])
@@ -378,7 +405,8 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         mask_call = config_get_mock.mock_calls[0]
         self.assertEqual('masks', mask_call[1][0])
@@ -406,7 +434,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         mask_replacer_mock = Mock()
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
-        config_provider = ConfigurationProvider(mask_replacer_mock)
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(mask_replacer_mock, directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         mask_replacer_mock.replace_directory_mask.assert_called_once_with('directory_mask', release_model)
 
@@ -431,7 +460,8 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
         self.assertEqual('/path/to/music/directory_mask', result)
 
@@ -459,7 +489,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '/path/to/music']
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
@@ -486,7 +517,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.side_effect = ['/home/user/', '/home/user/Music']
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['directory_mask', '~/Music']
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
         self.assertEqual('/home/user/Music/directory_mask', result)
 
@@ -511,14 +543,44 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_releases_destination_with_mask_replaced(release_model)
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_releases_destination_with_mask_replaced__config_file_has_release_directories__it_should_call_the_directory_selector(self, config_get_mock, expanduser_mock, path_exists_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        expanduser_mock.side_effect = ['/home/user/', '/home/user/Music']
+        path_exists_mock.return_value = True
+        config_get_mock.side_effect = ['directory_mask', '~/Music']
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+        result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+        self.assertEqual('/home/user/Music/directory_mask', result)
 
     @mock.patch('subprocess.call')
     def test__get_flac_path__flac_is_on_path__flac_returned(self, subprocess_mock):
         subprocess_mock.return_value = 0
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_path()
         self.assertEqual('flac', result)
         subprocess_mock.assert_called_with(['which', 'flac'])
@@ -530,7 +592,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = '/some/path/to/flac'
         path_exists_mock.return_value = True
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
         environ_mock.get.assert_called_with('FLAC_PATH')
@@ -542,8 +605,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = '/some/incorrect/path/to/flac'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The path specified by FLAC_PATH is incorrect. Please provide a valid path for flac.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_path()
 
     @mock.patch('ConfigParser.ConfigParser.get')
@@ -555,7 +619,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = None
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/some/path/to/flac'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
         config_get_mock.assert_called_with('encoding', 'flac_path')
@@ -567,7 +632,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('os.environ')
     @mock.patch('subprocess.call')
     def test__get_flac_path__flac_is_in_config_file__correct_config_file_is_used(self, subprocess_mock, environ_mock, expanduser_mock, path_exists_mock, config_get_mock, config_read_mock):
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         subprocess_mock.return_value = 1
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
@@ -585,8 +651,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = None
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_path()
 
     @mock.patch('ConfigParser.ConfigParser.read')
@@ -601,8 +668,9 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.side_effect = [True, False]
         config_get_mock.return_value = '/some/path/to/flac'
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The path specified for flac in the .amu_config file is incorrect. Please provide a valid path for flac.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_path()
 
     @mock.patch('os.path.exists')
@@ -610,7 +678,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_encoding_setting__encoding_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = '-5'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_encoding_setting()
         self.assertEqual('-5', result)
         config_get_mock.assert_called_with('encoding', 'flac_encoding_setting')
@@ -620,8 +689,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_encoding_setting__encoding_setting_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = ''
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the flac encoding setting.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_encoding_setting()
 
     @mock.patch('os.path.exists')
@@ -632,7 +702,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         expanduser_mock.return_value = '/home/user/'
         config_get_mock.return_value = '-5'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_flac_encoding_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
@@ -641,8 +712,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_encoding_setting__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_encoding_setting()
 
     @mock.patch('os.path.exists')
@@ -650,7 +722,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_decode_setting__decode_setting_is_in_config_file__returns_correct_value(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = '-5'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_decode_setting()
         self.assertEqual('-5', result)
         config_get_mock.assert_called_with('encoding', 'flac_decode_setting')
@@ -660,8 +733,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_decode_setting__decode_setting_is_empty__raises_configuration_error(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = ''
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'A value must be provided for the flac decode setting.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_decode_setting()
 
     @mock.patch('os.path.exists')
@@ -672,7 +746,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         expanduser_mock.return_value = '/home/user/'
         config_get_mock.return_value = '-5'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_flac_decode_setting()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
@@ -681,8 +756,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_decode_setting__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_decode_setting()
 
     @mock.patch('amu.config.os.path.exists')
@@ -690,7 +766,8 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_mixes_destination__config_file_has_mixes_directory__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/path/to/mixes'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_mixes_destination()
         mask_call = config_get_mock.mock_calls[0]
         self.assertEqual('directories', mask_call[1][0])
@@ -704,7 +781,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/path/to/mixes'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_mixes_destination()
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
@@ -715,7 +793,8 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user'
         path_exists_mock.return_value = True
         config_get_mock.return_value = '~/Music'
-        config_provider = ConfigurationProvider(MaskReplacer())
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_mixes_destination()
         expanduser_call = expanduser_mock.mock_calls[1]
         self.assertEqual('~/Music', expanduser_call[1][0])
@@ -725,8 +804,9 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_mixes_destination__config_file_does_not_exist__throws_configuration_error(self, expanduser_mock, path_exists_mock):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_mixes_destination()
 
     @mock.patch('os.path.exists')
@@ -736,6 +816,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user'
         path_exists_mock.side_effect = [True, False]
         config_get_mock.return_value = '~/Music'
+        directory_selector_mock = Mock()
         with self.assertRaisesRegexp(ConfigurationError, 'The path specified for mixes_directory in the .amu_config file is incorrect. Please provide a valid path for mixes_directory.'):
-            config_provider = ConfigurationProvider(MaskReplacer())
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_mixes_destination()
