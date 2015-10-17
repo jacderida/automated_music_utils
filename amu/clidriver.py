@@ -104,5 +104,13 @@ class CliDriver(object):
             command.execute()
         return 0
 
+class DirectorySelector(object):
+    def select_directory(self, directories):
+        count = 1
+        print "Select the directory for the release:"
+        for directory in directories:
+            print '{0}. {1}'.format(count, directory)
+            count += 1
+
 if __name__ == '__main__':
     sys.exit(main())
