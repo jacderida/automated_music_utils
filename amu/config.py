@@ -83,8 +83,10 @@ class ConfigurationProvider(object):
 
     def get_releases_destination_with_mask_replaced(self, release_model):
         config = self._get_config_parser()
-        selected_directory = self._directory_selector.select_directory(['Electronic', 'Rock'])
-        replaced_mask = self._mask_replacer.replace_directory_mask(config.get('masks', 'default'), release_model)
+        release_directories = config.get('directories', 'release_directories')
+        release_masks = config.get('masks', 'releases')
+        selected_directory = self._directory_selector.select_directory(release_directories.split(','))
+        replaced_mask = self._mask_replacer.replace_directory_mask(release_masks, release_model)
         releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))
         return os.path.join(releases_base_directory, replaced_mask)
 
