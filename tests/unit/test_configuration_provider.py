@@ -574,7 +574,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
-        self.assertEqual('/home/user/Music/directory_mask', result)
+        directory_selector_mock.select_directory.assert_called_once_with(['Electronic', 'Rock'])
 
     @mock.patch('subprocess.call')
     def test__get_flac_path__flac_is_on_path__flac_returned(self, subprocess_mock):
