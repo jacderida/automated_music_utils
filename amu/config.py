@@ -103,6 +103,8 @@ class ConfigurationProvider(object):
 
     def _get_release_masks(self, config):
         release_masks = config.get('masks', 'releases')
+        if not release_masks:
+            raise ConfigurationError('The masks releases setting in the amu_config file must have a value.')
         return release_masks.split('@')
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
