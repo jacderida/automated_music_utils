@@ -85,10 +85,10 @@ class ConfigurationProvider(object):
         config = self._get_config_parser()
         release_directories = config.get('directories', 'release_directories')
         release_masks = config.get('masks', 'releases')
-        selected_directory = self._directory_selector.select_directory(release_directories.split(','))
-        replaced_mask = self._mask_replacer.replace_directory_mask(release_masks, release_model)
+        index, selected_directory = self._directory_selector.select_directory(release_directories.split(','))
+        replaced_mask = self._mask_replacer.replace_directory_mask(release_masks.split(',')[index], release_model)
         releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))
-        return os.path.join(releases_base_directory, replaced_mask)
+        return os.path.join(releases_base_directory, selected_directory, replaced_mask)
 
     def get_mixes_destination(self):
         return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
