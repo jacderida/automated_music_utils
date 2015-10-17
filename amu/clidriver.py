@@ -119,6 +119,8 @@ class DirectorySelector(object):
             selection = self._get_input()
             try:
                 numeric_selection = int(selection)
+                if numeric_selection < 1:
+                    raise ValueError
                 return numeric_selection
             except ValueError:
                 print 'Please enter a value between 1 and {0}.'.format(length)
