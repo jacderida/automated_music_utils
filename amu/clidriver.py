@@ -111,8 +111,17 @@ class DirectorySelector(object):
         for directory in directories:
             print '{0}. {1}'.format(count, directory)
             count += 1
-        numeric_selection = int(self._get_input())
+        numeric_selection = self._get_valid_input(len(directories))
         return directories[numeric_selection - 1]
+
+    def _get_valid_input(self, length):
+        while True:
+            selection = self._get_input()
+            try:
+                numeric_selection = int(selection)
+                return numeric_selection
+            except ValueError:
+                print 'Please enter a value between 1 and {0}.'.format(length)
 
     def _get_input(self):
         return raw_input()
