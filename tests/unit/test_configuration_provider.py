@@ -376,7 +376,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         path_exists_mock.return_value = True
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
@@ -405,7 +405,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         path_exists_mock.return_value = True
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
@@ -435,7 +435,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         path_exists_mock.return_value = True
         mask_replacer_mock = Mock()
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(mask_replacer_mock, directory_selector_mock)
@@ -462,7 +462,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         path_exists_mock.return_value = True
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
@@ -492,7 +492,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = True
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
@@ -521,7 +521,7 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         expanduser_mock.side_effect = ['/home/user/', '/home/user/Music']
         path_exists_mock.return_value = True
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '~/Music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '~/Music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
@@ -577,12 +577,41 @@ class ConfigurationProviderTest(unittest.TestCase):
 
         expanduser_mock.side_effect = ['/home/user/', '/home/user/Music']
         path_exists_mock.return_value = True
-        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '~/Music']
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '~/Music']
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
         directory_selector_mock.select_directory.assert_called_once_with(['Electronic', 'Rock', 'Ambient'])
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_releases_destination_with_mask_replaced__release_directories_and_release_masks_are_different_sizes__raises_configuration_error(self, config_get_mock, expanduser_mock, path_exists_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        expanduser_mock.side_effect = ['/home/user/', '/home/user/Music']
+        path_exists_mock.return_value = True
+        config_get_mock.side_effect = ['Electronic,Rock', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '~/Music']
+        directory_selector_mock = Mock()
+        directory_selector_mock.select_directory.return_value = 0
+        with self.assertRaisesRegexp(ConfigurationError, 'The release_directories and the mask releases settings must have 2 lists of the same size.'):
+            config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+            result = config_provider.get_releases_destination_with_mask_replaced(release_model)
 
     @mock.patch('subprocess.call')
     def test__get_flac_path__flac_is_on_path__flac_returned(self, subprocess_mock):
