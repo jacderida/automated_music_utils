@@ -83,15 +83,23 @@ class ConfigurationProvider(object):
 
     def get_releases_destination_with_mask_replaced(self, release_model):
         config = self._get_config_parser()
-        release_directories = config.get('directories', 'release_directories')
-        release_masks = config.get('masks', 'releases')
-        index, selected_directory = self._directory_selector.select_directory(release_directories.split(','))
-        replaced_mask = self._mask_replacer.replace_directory_mask(release_masks.split(',')[index], release_model)
+        release_directory_list = self._get_release_directories(config)
+        release_masks = self._get_release_masks(config)
+        index = self._directory_selector.select_directory(release_directory_list)
+        replaced_mask = self._mask_replacer.replace_directory_mask(release_masks[index], release_model)
         releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))
-        return os.path.join(releases_base_directory, selected_directory, replaced_mask)
+        return os.path.join(releases_base_directory, release_directory_list[index], replaced_mask)
 
     def get_mixes_destination(self):
         return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
+
+    def _get_release_directories(self, config):
+        release_directories = config.get('directories', 'release_directories')
+        return release_directories.split(',')
+
+    def _get_release_masks(self, config):
+        release_masks = config.get('masks', 'releases')
+        return release_masks.split(',')
 
     def _get_verified_path_from_environment_variable(self, path_from_env_variable, env_variable_name, program):
         if not os.path.exists(path_from_env_variable):

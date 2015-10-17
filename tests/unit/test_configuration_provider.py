@@ -378,7 +378,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         mask_call = config_get_mock.mock_calls[2]
@@ -407,7 +407,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         mask_call = config_get_mock.mock_calls[1]
@@ -437,7 +437,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         mask_replacer_mock = Mock()
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(mask_replacer_mock, directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         mask_replacer_mock.replace_directory_mask.assert_called_once_with('electronic_directory_mask', release_model)
@@ -464,7 +464,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
         self.assertEqual('/path/to/music/Electronic/electronic_directory_mask', result)
@@ -494,7 +494,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '/path/to/music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.get_releases_destination_with_mask_replaced(release_model)
         config_read_mock.assert_called_with('/home/user/.amu_config')
@@ -523,7 +523,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '~/Music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
         self.assertEqual('/home/user/Music/Electronic/electronic_directory_mask', result)
@@ -550,7 +550,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = False
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_releases_destination_with_mask_replaced(release_model)
@@ -579,7 +579,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask,rock_directory_mask,ambient_directory_mask', '~/Music']
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_releases_destination_with_mask_replaced(release_model)
         directory_selector_mock.select_directory.assert_called_once_with(['Electronic', 'Rock', 'Ambient'])
@@ -588,7 +588,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     def test__get_flac_path__flac_is_on_path__flac_returned(self, subprocess_mock):
         subprocess_mock.return_value = 0
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_path()
         self.assertEqual('flac', result)
@@ -602,7 +602,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = '/some/path/to/flac'
         path_exists_mock.return_value = True
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
@@ -616,7 +616,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         environ_mock.get.return_value = '/some/incorrect/path/to/flac'
         path_exists_mock.return_value = False
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         with self.assertRaisesRegexp(ConfigurationError, 'The path specified by FLAC_PATH is incorrect. Please provide a valid path for flac.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_flac_path()
@@ -631,7 +631,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         path_exists_mock.return_value = True
         config_get_mock.return_value = '/some/path/to/flac'
         directory_selector_mock = Mock()
-        directory_selector_mock.select_directory.return_value = (0, 'Electronic')
+        directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         result = config_provider.get_flac_path()
         self.assertEqual('/some/path/to/flac', result)
