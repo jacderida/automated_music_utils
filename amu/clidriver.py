@@ -111,6 +111,11 @@ class DirectorySelector(object):
         for directory in directories:
             print '{0}. {1}'.format(count, directory)
             count += 1
+        numeric_selection = int(self._get_input())
+        return directories[numeric_selection - 1]
+
+    def _get_input(self):
+        return raw_input()
 
 if __name__ == '__main__':
     sys.exit(main())
