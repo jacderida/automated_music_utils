@@ -35,7 +35,7 @@ class DirectorySelectorTest(unittest.TestCase):
 9. Rock -- Krautrock -- Psychedelic Rock""", output)
 
     @mock.patch('amu.clidriver.DirectorySelector._get_input')
-    def test__select_directory__a_directory_is_selected__the_correct_directory_should_be_returned(self, input_mock):
+    def test__select_directory__a_directory_is_selected__the_correct_directory_index_should_be_returned(self, input_mock):
         input_mock.return_value = '7'
         selector = DirectorySelector()
         selected = selector.select_directory([
@@ -49,7 +49,7 @@ class DirectorySelectorTest(unittest.TestCase):
             'Library -- Soundtracks',
             'Rock -- Krautrock -- Psychedelic Rock',
         ])
-        self.assertEqual(selected, 'Jazz -- Exotica')
+        self.assertEqual(selected, 6)
 
     @mock.patch('amu.clidriver.DirectorySelector._get_input')
     def test__select_directory__a_non_integer_value_is_provided_for_input__it_should_prompt_to_re_enter_input(self, input_mock):

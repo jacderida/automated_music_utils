@@ -112,7 +112,7 @@ class DirectorySelector(object):
             print '{0}. {1}'.format(count, directory)
             count += 1
         numeric_selection = self._get_valid_input(len(directories))
-        return directories[numeric_selection - 1]
+        return numeric_selection - 1
 
     def _get_valid_input(self, length):
         while True:
