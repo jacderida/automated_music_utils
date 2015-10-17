@@ -127,7 +127,7 @@ class Mp3Tagger(object):
                  title='', year='', genre='', comment='',
                  track_number=0, track_total=0, disc_number=0, disc_total=0):
         print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(
-            source, artist, album, title, year, genre)
+            source.decode('utf-8'), artist.decode('utf-8'), album.decode('utf-8'), title.decode('utf-8'), str(year).decode('utf-8'), genre.decode('utf-8'))
         if source:
             if not os.path.exists(source):
                 raise TaggerError('The source {0} does not exist.'.format(source))
