@@ -119,7 +119,7 @@ class DirectorySelector(object):
             selection = self._get_input()
             try:
                 numeric_selection = int(selection)
-                if numeric_selection < 1:
+                if numeric_selection < 1 or numeric_selection > length:
                     raise ValueError
                 return numeric_selection
             except ValueError:

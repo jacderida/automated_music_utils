@@ -88,3 +88,22 @@ class DirectorySelectorTest(unittest.TestCase):
             ])
             output = out.getvalue().strip()
             self.assertIn('Please enter a value between 1 and 9.', output)
+
+    @mock.patch('amu.clidriver.DirectorySelector._get_input')
+    def test__select_directory__greater_than_9_is_provided_for_input__it_should_prompt_to_re_enter_input(self, input_mock):
+        input_mock.side_effect = ['10', '2']
+        with captured_output() as (out, _):
+            selector = DirectorySelector()
+            selector.select_directory([
+                'Ambient -- Drone -- Experimental',
+                'Early Electronic -- Tape Manipulation',
+                'Electronic (By Artist)',
+                'Electronic (By Label)',
+                'Hip Hop -- Old School Electro',
+                'Industrial',
+                'Jazz -- Exotica',
+                'Library -- Soundtracks',
+                'Rock -- Krautrock -- Psychedelic Rock',
+            ])
+            output = out.getvalue().strip()
+            self.assertIn('Please enter a value between 1 and 9.', output)
