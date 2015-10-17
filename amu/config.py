@@ -97,6 +97,8 @@ class ConfigurationProvider(object):
 
     def _get_release_directories(self, config):
         release_directories = config.get('directories', 'release_directories')
+        if not release_directories:
+            raise ConfigurationError('The release_directories setting in the amu_config file must have a value.')
         return release_directories.split(',')
 
     def _get_release_masks(self, config):
