@@ -135,8 +135,19 @@ class GenreSelector(object):
         for genre in genres:
             print '{0}. {1}'.format(count, genre)
             count += 1
-        selection = int(self._get_input())
-        return genres[selection - 1]
+        return self._get_selection(genres)
+
+    def _get_selection(self, genres):
+        while True:
+            selection = self._get_input()
+            try:
+                numeric_selection = int(selection)
+                if numeric_selection < 1:
+                    print 'Please enter a value between 1 and {0}.'.format(len(genres))
+                    continue
+                return genres[numeric_selection - 1]
+            except ValueError:
+                raise
 
     def _get_input(self):
         return raw_input()

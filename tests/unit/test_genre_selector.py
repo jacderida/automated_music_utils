@@ -27,7 +27,7 @@ class GenreSelectorTests(unittest.TestCase):
 5. Ambient""", output)
 
     @mock.patch('amu.clidriver.GenreSelector._get_input')
-    def test__select_genre__a_genre_is_selected__the_correct_genre_should_be_returned(self, input_mock):
+    def test__select_genre__a_numeric_selection_is_made_from_provided_list__the_correct_genre_should_be_returned(self, input_mock):
         input_mock.return_value = '3'
         selector = GenreSelector()
         selected = selector.select_genre([
@@ -38,3 +38,18 @@ class GenreSelectorTests(unittest.TestCase):
             'Ambient',
         ])
         self.assertEqual(selected, 'Electro')
+
+    @mock.patch('amu.clidriver.GenreSelector._get_input')
+    def test__select_genre__a_numeric_selection_is_made_that_is_less_than_1__it_should_prompt_to_re_enter_input(self, input_mock):
+        input_mock.side_effect = ['0', '3']
+        with captured_output() as (out, _):
+            selector = GenreSelector()
+            selected = selector.select_genre([
+                'Electronic',
+                'Techno',
+                'Electro',
+                'Experimental',
+                'Ambient',
+            ])
+        output = out.getvalue().strip()
+        self.assertIn('Please enter a value between 1 and 5.', output)
