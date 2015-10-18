@@ -21,7 +21,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(release.country, 'Belgium')
         self.assertEqual(release.original_year, '1992')
         self.assertEqual(release.year, '2008')
-        self.assertEqual(release.genre, 'Electronic')
+        self.assertEqual(release.genre, 'Electronic, Techno, Electro, Experimental, Ambient')
 
     def test__from_discogs_release__release_has_single_disc__the_track_number_and_totals_should_be_assigned_correctly(self):
         client = discogs_client.Client('amu/0.1')

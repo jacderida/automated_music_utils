@@ -153,7 +153,9 @@ Tracklist:
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
         release_model.format_quantity = ReleaseModel._get_format_quantity_from_discogs_model(release.formats)
         release_model.country = release.country
-        release_model.genre = ReleaseModel._get_genre_from_discogs_model(release.genres)
+        genres = list(release.genres)
+        genres.extend(release.styles)
+        release_model.genre = ReleaseModel._get_genre_from_discogs_model(genres)
         ReleaseModel._get_date_from_discogs_model(release_model, release)
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
