@@ -147,7 +147,7 @@ class GenreSelector(object):
                     continue
                 return genres[numeric_selection - 1]
             except ValueError:
-                raise
+                return selection
 
     def _get_input(self):
         return raw_input()

@@ -68,3 +68,16 @@ class GenreSelectorTests(unittest.TestCase):
             ])
         output = out.getvalue().strip()
         self.assertIn('Please enter a value between 1 and 5.', output)
+
+    @mock.patch('amu.clidriver.GenreSelector._get_input')
+    def test__select_genre__a_free_text_selection_is_made__it_should_return_the_free_text_selection(self, input_mock):
+        input_mock.side_effect = ['Early Electronic']
+        selector = GenreSelector()
+        selected = selector.select_genre([
+            'Electronic',
+            'Techno',
+            'Electro',
+            'Experimental',
+            'Ambient',
+        ])
+        self.assertEqual('Early Electronic', selected)
