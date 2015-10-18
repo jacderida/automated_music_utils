@@ -135,6 +135,11 @@ class GenreSelector(object):
         for genre in genres:
             print '{0}. {1}'.format(count, genre)
             count += 1
+        selection = int(self._get_input())
+        return genres[selection - 1]
+
+    def _get_input(self):
+        return raw_input()
 
 if __name__ == '__main__':
     sys.exit(main())
