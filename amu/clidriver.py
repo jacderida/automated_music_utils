@@ -107,7 +107,7 @@ class CliDriver(object):
 class DirectorySelector(object):
     def select_directory(self, directories):
         count = 1
-        print "Select the directory for the release:"
+        print 'Select the directory for the release:'
         for directory in directories:
             print '{0}. {1}'.format(count, directory)
             count += 1
@@ -127,6 +127,14 @@ class DirectorySelector(object):
 
     def _get_input(self):
         return raw_input()
+
+class GenreSelector(object):
+    def select_genre(self, genres):
+        count = 1
+        print "Select the genre from what's available from the discogs release, or provide a free text value:"
+        for genre in genres:
+            print '{0}. {1}'.format(count, genre)
+            count += 1
 
 if __name__ == '__main__':
     sys.exit(main())
