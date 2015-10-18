@@ -16,8 +16,6 @@ class TaggerError(Exception):
 
 class LameEncoder(object):
     def __init__(self, config_provider):
-        if config_provider is None:
-            config_provider = ConfigurationProvider(MaskReplacer())
         self._config_provider = config_provider
 
     def encode(self, source, destination):
@@ -44,8 +42,6 @@ class LameEncoder(object):
 
 class FlacEncoder(object):
     def __init__(self, config_provider):
-        if config_provider is None:
-            config_provider = ConfigurationProvider(MaskReplacer())
         self._config_provider = config_provider
 
     def encode(self, source, destination):
@@ -94,8 +90,6 @@ class FlacEncoder(object):
 
 class RubyRipperCdRipper(object):
     def __init__(self, config_provider):
-        if config_provider is None:
-            config_provider = ConfigurationProvider(MaskReplacer())
         self._config_provider = config_provider
 
     def rip_cd(self, destination):
