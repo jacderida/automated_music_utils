@@ -428,13 +428,6 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(release.year, '1995')
         self.assertEqual(release.original_year, '1995')
 
-    def test__from_discogs_release__release_has_multiple_genres__the_full_list_of_genres_are_used(self):
-        client = discogs_client.Client('amu/0.1')
-        discogs_release = client.release(1952653)
-        discogs_release.refresh()
-        release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.genre, 'Electronic, Stage & Screen')
-
     def test__from_discogs_release__release_has_multiple_labels__the_first_label_is_taken(self):
         # Note: This will be refactored later to use a list of labels rather than taking the first.
         client = discogs_client.Client('amu/0.1')
