@@ -53,3 +53,18 @@ class GenreSelectorTests(unittest.TestCase):
             ])
         output = out.getvalue().strip()
         self.assertIn('Please enter a value between 1 and 5.', output)
+
+    @mock.patch('amu.clidriver.GenreSelector._get_input')
+    def test__select_genre__a_numeric_selection_is_made_that_is_greater_than_genre_length__it_should_prompt_to_re_enter_input(self, input_mock):
+        input_mock.side_effect = ['6', '3']
+        with captured_output() as (out, _):
+            selector = GenreSelector()
+            selected = selector.select_genre([
+                'Electronic',
+                'Techno',
+                'Electro',
+                'Experimental',
+                'Ambient',
+            ])
+        output = out.getvalue().strip()
+        self.assertIn('Please enter a value between 1 and 5.', output)
