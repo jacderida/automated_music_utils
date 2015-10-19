@@ -198,6 +198,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
@@ -264,6 +265,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
@@ -333,6 +335,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -375,6 +378,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         with self.assertRaisesRegexp(CommandParsingError, 'The source has 5 tracks and the discogs release has 4. The number of tracks on both must be the same.'):
             parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
@@ -430,6 +434,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -485,6 +490,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -540,6 +546,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -596,6 +603,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, AddTagCommand)]
@@ -652,6 +660,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
@@ -702,6 +711,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -880,6 +890,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
@@ -953,6 +964,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
@@ -1037,6 +1049,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -1110,6 +1123,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -1234,6 +1248,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
@@ -1308,6 +1323,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, AddTagCommand)]
@@ -1383,6 +1399,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
 
         parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
