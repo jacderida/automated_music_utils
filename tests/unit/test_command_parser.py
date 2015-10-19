@@ -17,8 +17,8 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         command = parser.from_args(args)[0]
         self.assertIsInstance(command, RipCdCommand)
 
@@ -26,8 +26,8 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         command = parser.from_args(args)[0]
         self.assertEqual(os.getcwd(), command.destination)
 
@@ -35,8 +35,8 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['rip', '--destination=/some/path'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         command = parser.from_args(args)[0]
         self.assertEqual('/some/path', command.destination)
 
@@ -51,9 +51,9 @@ class CommandParserTest(unittest.TestCase):
             '--source=/some/song.wav',
             '--destination=some/song.mp3'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/song.wav', 'some/song.mp3')
         self.assertEqual(1, len(commands))
@@ -63,9 +63,9 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
@@ -75,9 +75,9 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--source=/some/source'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/source', os.getcwd())
 
@@ -86,9 +86,9 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
@@ -98,15 +98,15 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--destination=/some/destination'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         encode_command_parser_mock.return_value = [EncodeWavCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(os.getcwd(), '/some/destination')
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_keep_source_set__keep_source_should_be_true(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3', '--keep-source'])
@@ -114,7 +114,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
@@ -123,7 +123,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_without_keep_source_specified__keep_source_should_be_false(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
@@ -131,7 +131,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
@@ -140,20 +140,20 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_when_there_are_no_wavs_to_encode__throws_command_parsing_error(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
         encode_command_parser_mock.return_value = []
         with self.assertRaisesRegexp(CommandParsingError, 'The source directory has no wavs to encode'):
-            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
             parser.from_args(args)
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_4_tag_mp3_commands(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -199,7 +199,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual(4, len(commands))
 
@@ -207,7 +207,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_sources_from_the_encode_commands_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -265,16 +265,82 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual('/some/path/to/mp3s/01 - Track 01.mp3', commands[0].source)
         self.assertEqual('/some/path/to/mp3s/02 - Track 02.mp3', commands[1].source)
         self.assertEqual('/some/path/to/mp3s/03 - Track 03.mp3', commands[2].source)
         self.assertEqual('/some/path/to/mp3s/04 - Track 04.mp3', commands[3].source)
 
+    @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_genre_selector_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--discogs-id=451034'
+        ])
+        commands = []
+        command1 = EncodeWavCommand(config_mock, encoder_mock)
+        command1.source = '/some/path/to/wavs/01 - Track 01.wav'
+        command1.destination = '/some/path/to/mp3s/01 - Track 01.mp3'
+        commands.append(command1)
+        command2 = EncodeWavCommand(config_mock, encoder_mock)
+        command2.source = '/some/path/to/wavs/02 - Track 02.wav'
+        command2.destination = '/some/path/to/mp3s/02 - Track 02.mp3'
+        commands.append(command2)
+        command3 = EncodeWavCommand(config_mock, encoder_mock)
+        command3.source = '/some/path/to/wavs/03 - Track 03.wav'
+        command3.destination = '/some/path/to/mp3s/03 - Track 03.mp3'
+        commands.append(command3)
+        command4 = EncodeWavCommand(config_mock, encoder_mock)
+        command4.source = '/some/path/to/wavs/04 - Track 04.wav'
+        command4.destination = '/some/path/to/mp3s/04 - Track 04.mp3'
+        commands.append(command4)
+        encode_command_parser_mock.return_value = commands
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
+        ]
+        move_file_command_parser_mock.return_value = [
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock)
+        ]
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic, Acid'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
+        parser.from_args(args)
+        genre_selector_mock.select_genre.assert_called_once_with(['Electronic', 'Acid'])
+
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -311,14 +377,14 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         with self.assertRaisesRegexp(CommandParsingError, 'The source has 5 tracks and the discogs release has 4. The number of tracks on both must be the same.'):
-            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
             parser.from_args(args)
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -365,7 +431,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         metadata_mock.get_release_by_id.assert_called_once_with(451034)
 
@@ -373,7 +439,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_be_called_correctly(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -420,7 +486,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/path/to/wavs', '/some/replaced/mask')
 
@@ -428,7 +494,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_config_provider_should_supply_the_destination(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -475,7 +541,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         config_mock.get_releases_destination_with_mask_replaced.assert_called_once_with(release_model)
 
@@ -483,7 +549,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -531,7 +597,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, AddTagCommand)]
         self.assertEqual(4, len(commands))
 
@@ -539,7 +605,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__4_move_audio_file_commands_are_generated(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -587,7 +653,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
         self.assertEqual(4, len(commands))
 
@@ -595,7 +661,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_add_artwork_command_parser_is_called_correctly(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -637,7 +703,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         command_args = artwork_command_parser_mock.call_args[0][0]
         self.assertIsInstance(command_args[0], EncodeWavCommand)
@@ -648,7 +714,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__when_encode_cd_to_mp3_command_is_specified__it_should_use_the_encoder_command_parser(self, encode_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -663,7 +729,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/destination')
         self.assertEqual(3, len(commands))
@@ -674,7 +740,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__when_encode_cd_to_mp3_command_is_specified__it_should_use_a_directory_with_a_guid_for_the_rip_destination(self, encode_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -690,7 +756,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         temp_path = stored_args_mock.call_args[0][0]
         parsed_uuid = temp_path.split('/tmp/')[1]
@@ -699,7 +765,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_no_optional_destination__destination_should_be_current_working_directory(self, encode_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
@@ -709,13 +775,13 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), os.getcwd())
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_keep_source_set__keep_source_should_be_true(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -729,14 +795,14 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertTrue(commands[1].keep_source)
         self.assertTrue(commands[2].keep_source)
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_rip_to_mp3_command_without_keep_source_specified__keep_source_should_be_false(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3'])
@@ -745,7 +811,7 @@ class CommandParserTest(unittest.TestCase):
             EncodeWavCommand(config_mock, encoder_mock),
             EncodeWavCommand(config_mock, encoder_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertFalse(commands[1].keep_source)
         self.assertFalse(commands[2].keep_source)
@@ -754,7 +820,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__it_should_return_12_tag_mp3_commands(self, encode_command_parser_mock, move_file_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=3535'])
@@ -815,7 +881,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual(12, len(commands))
 
@@ -823,7 +889,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__add_tag_sources_should_be_specified_correctly(self, encode_command_parser_mock, move_file_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -888,7 +954,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if type(x) == AddTagCommand]
         self.assertEqual('/some/replaced/mask/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/replaced/mask/02 - Track 2.mp3', commands[1].source)
@@ -907,7 +973,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_use_the_correct_destination(self, encode_command_parser_mock, move_file_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -972,13 +1038,13 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/replaced/mask')
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'cd', 'mp3', '--discogs-id=3535'])
@@ -1024,14 +1090,14 @@ class CommandParserTest(unittest.TestCase):
         metadata_mock.get_release_by_id.return_value = release_model
 
         with self.assertRaisesRegexp(CommandParsingError, 'The source has 11 tracks and the discogs release has 12. The number of tracks on both must be the same.'):
-            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+            parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
             parser.from_args(args)
 
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, move_file_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -1096,7 +1162,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         metadata_mock.get_release_by_id.assert_called_once_with(3535)
 
@@ -1104,7 +1170,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock, move_file_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -1170,7 +1236,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, AddTagCommand)]
         encode_command_parser_mock.assert_called_once_with(utils.AnyStringWith('/tmp'), '/some/custom/destination')
         self.assertEqual(12, len(commands))
@@ -1179,7 +1245,7 @@ class CommandParserTest(unittest.TestCase):
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.EncodeCommandParser.parse_cd_rip')
     def test__from_args__encode_cd_to_mp3_command__12_move_audio_file_commands_are_generated(self, encode_command_parser_mock, move_file_command_parser_mock, gettempdir_mock):
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args([
@@ -1245,7 +1311,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
         metadata_mock.get_release_by_id.return_value = release_model
 
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
         self.assertEqual(12, len(commands))
 
@@ -1266,9 +1332,9 @@ class CommandParserTest(unittest.TestCase):
             '--track-number=2',
             '--track-total=15'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         tag_command_parser_mock.return_value = [AddTagCommand(config_mock, tagger_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         tag_command_parser_mock.assert_called_once()
         self.assertEqual(1, len(commands))
@@ -1290,9 +1356,9 @@ class CommandParserTest(unittest.TestCase):
             '--track-number=2',
             '--track-total=15'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         tag_command_parser_mock.return_value = [AddTagCommand(config_mock, tagger_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
         self.assertEqual('Aphex Twin', command_args.artist)
@@ -1321,9 +1387,9 @@ class CommandParserTest(unittest.TestCase):
             '--track-number=2',
             '--track-total=15'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         tag_command_parser_mock.return_value = [AddTagCommand(config_mock, tagger_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         command_args = tag_command_parser_mock.call_args[0][0]
         self.assertEqual('/some/current/working/directory', command_args.source)
@@ -1356,7 +1422,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         metadata_mock.get_release_by_id.return_value = release_model
         tag_command_parser_mock.return_value = [
             AddTagCommand(config_mock, tagger_mock),
@@ -1370,7 +1436,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertEqual(8, len(commands))
 
@@ -1402,7 +1468,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         metadata_mock.get_release_by_id.return_value = release_model
         tag_command_parser_mock.return_value = [
             AddTagCommand(config_mock, tagger_mock),
@@ -1416,7 +1482,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         tag_command_parser_mock.assert_called_once_with('/some/source', release_model)
 
@@ -1448,7 +1514,7 @@ class CommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         metadata_mock.get_release_by_id.return_value = release_model
         config_mock.get_releases_destination_with_mask_replaced.return_value = '/replaced/mask/destination'
         tag_command_parser_mock.return_value = [
@@ -1463,7 +1529,7 @@ class CommandParserTest(unittest.TestCase):
             MoveAudioFileCommand(config_mock),
             MoveAudioFileCommand(config_mock)
         ]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         move_file_command_parser_mock.assert_called_once_with('/some/source', '/replaced/mask/destination', release_model)
 
@@ -1477,9 +1543,9 @@ class CommandParserTest(unittest.TestCase):
             'mp3',
             '--source=/some/path/to/song.mp3',
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         tag_command_parser_mock.return_value = [RemoveTagCommand(config_mock, tagger_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         tag_command_parser_mock.assert_called_once_with('/some/path/to/song.mp3')
 
@@ -1490,9 +1556,9 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['tag', 'remove', 'mp3'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         tag_command_parser_mock.return_value = [RemoveTagCommand(config_mock, tagger_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         tag_command_parser_mock.assert_called_once_with('/some/current/working/directory')
 
@@ -1500,8 +1566,8 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['fetch', '123456'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertIsInstance(commands[0], FetchReleaseCommand)
 
@@ -1509,8 +1575,8 @@ class CommandParserTest(unittest.TestCase):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['fetch', '123456'])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertEqual(commands[0].discogs_id, 123456)
 
@@ -1524,8 +1590,8 @@ class CommandParserTest(unittest.TestCase):
             '--source=/some/source/cover.jpg',
             '--destination=/some/destination/audio.mp3'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertIsInstance(commands[0], AddArtworkCommand)
 
@@ -1540,8 +1606,8 @@ class CommandParserTest(unittest.TestCase):
             '--source=/some/source/cover.jpg',
             '--destination=/some/destination/audio.mp3'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination/audio.mp3')
 
@@ -1557,8 +1623,8 @@ class CommandParserTest(unittest.TestCase):
             '--destination=/some/destination/audio.mp3'
         ])
         getcwd_mock.return_value = '/some/source'
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         artwork_parser_mock.assert_called_once_with('/some/source', '/some/destination/audio.mp3')
 
@@ -1574,8 +1640,8 @@ class CommandParserTest(unittest.TestCase):
             '--source=/some/source/cover.jpg'
         ])
         getcwd_mock.return_value = '/some/destination'
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination')
 
@@ -1589,9 +1655,9 @@ class CommandParserTest(unittest.TestCase):
             '--source=/some/source/song.flac',
             '--destination=/some/destination/song.wav'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         decode_parser_mock.return_value = [DecodeAudioCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         self.assertIsInstance(commands[0], DecodeAudioCommand)
 
@@ -1605,9 +1671,9 @@ class CommandParserTest(unittest.TestCase):
             '--source=/some/source/song.flac',
             '--destination=/some/destination/song.wav'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         decode_parser_mock.return_value = [DecodeAudioCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         decode_parser_mock.assert_called_once_with('/some/source/song.flac', '/some/destination/song.wav')
 
@@ -1621,10 +1687,10 @@ class CommandParserTest(unittest.TestCase):
             'flac',
             '--destination=/some/destination'
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         getcwd_mock.return_value = '/some/current/directory'
         decode_parser_mock.return_value = [DecodeAudioCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         decode_parser_mock.assert_called_once_with('/some/current/directory', '/some/destination')
 
@@ -1638,10 +1704,10 @@ class CommandParserTest(unittest.TestCase):
             'flac',
             '--source=/some/source',
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         getcwd_mock.return_value = '/some/current/directory'
         decode_parser_mock.return_value = [DecodeAudioCommand(config_mock, encoder_mock)]
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         commands = parser.from_args(args)
         decode_parser_mock.assert_called_once_with('/some/source', '/some/current/directory')
 
@@ -1658,8 +1724,8 @@ class CommandParserTest(unittest.TestCase):
             '--year=2006',
             '--comment=blah',
         ])
-        config_mock, cd_ripper_mock, encoder_mock, metadata_mock = (Mock(),)*4
-        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock)
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        parser = CommandParser(config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         args_to_mix_parser = mix_parser_mock.mock_calls[0][1][0]
         self.assertEqual(args_to_mix_parser.source, '/some/source/mix.mp3')

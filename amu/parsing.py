@@ -19,12 +19,13 @@ class CommandParser(object):
     """ Responsible for parsing the string based command from the command line
         into a command object that can be executed.
     """
-    def __init__(self, configuration_provider, cd_ripper, encoder, metadata_service):
+    def __init__(self, configuration_provider, cd_ripper, encoder, metadata_service, genre_selector):
         self._configuration_provider = configuration_provider
         self._cd_ripper = cd_ripper
         self._encoder = encoder
         self._metadata_service = metadata_service
         self._mask_replacer = MaskReplacer()
+        self._genre_selector = genre_selector
 
     def from_args(self, args):
         commands = {
@@ -83,6 +84,7 @@ class CommandParser(object):
             destination = os.getcwd()
         if args.discogs_id:
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
+            release_model.genre = self._genre_selector.select_genre([x.strip() for x in release_model.genre.split(',')])
             if not args.destination:
                 destination = self._configuration_provider.get_releases_destination_with_mask_replaced(release_model)
         return self._get_encode_commands(args, destination, release_model)
