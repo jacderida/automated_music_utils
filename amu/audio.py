@@ -33,12 +33,12 @@ class LameEncoder(object):
             source,
             destination
         ]
-        print '[encode] Running lame with {0}'.format(subprocess_args)
+        print u'[encode] Running lame with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         lines_iterator = iter(popen.stdout.readline, '')
         for line in lines_iterator:
             if line:
-                print '[encode] {0}'.format(line.strip())
+                print u'[encode] {0}'.format(line.strip().decode('utf-8'))
 
 class FlacEncoder(object):
     def __init__(self, config_provider):
@@ -59,12 +59,12 @@ class FlacEncoder(object):
             source,
             destination
         ]
-        print '[encode] Running flac with {0}'.format(subprocess_args)
+        print u'[encode] Running flac with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         lines_iterator = iter(popen.stdout.readline, '')
         for line in lines_iterator:
             if line:
-                print '[encode] {0}'.format(line.strip())
+                print u'[encode] {0}'.format(line.strip().decode('utf-8'))
 
     def decode(self, source, destination):
         if not source:
@@ -81,12 +81,12 @@ class FlacEncoder(object):
             source,
             '--output-name={0}'.format(destination)
         ]
-        print '[decode] Running flac with {0}'.format(subprocess_args)
+        print u'[decode] Running flac with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         lines_iterator = iter(popen.stdout.readline, '')
         for line in lines_iterator:
             if line:
-                print '[decode] {0}'.format(line.strip())
+                print u'[decode] {0}'.format(line.strip().decode('utf-8'))
 
 class RubyRipperCdRipper(object):
     def __init__(self, config_provider):
@@ -106,12 +106,12 @@ class RubyRipperCdRipper(object):
             '--file',
             temp_config_path
         ]
-        print "[rip] Running rubyripper with {0}".format(subprocess_args)
+        print u'[rip] Running rubyripper with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
         lines_iterator = iter(popen.stdout.readline, "")
         for line in lines_iterator:
             if line:
-                print "[rip] {0}".format(line.strip())
+                print u'[rip] {0}'.format(line.strip().decode('utf-8'))
         utils.copy_content_to_directory(temp_path, expanded_destination)
         shutil.rmtree(temp_path)
         os.remove(temp_config_path)
@@ -120,8 +120,7 @@ class Mp3Tagger(object):
     def add_tags(self, source, artist='', album_artist='', album='',
                  title='', year='', genre='', comment='',
                  track_number=0, track_total=0, disc_number=0, disc_total=0):
-        print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(
-            source.decode('utf-8'), artist.decode('utf-8'), album.decode('utf-8'), title.decode('utf-8'), str(year).decode('utf-8'), genre.decode('utf-8'))
+        print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(source, artist, album, title, str(year), genre)
         if source:
             if not os.path.exists(source):
                 raise TaggerError('The source {0} does not exist.'.format(source))
@@ -205,7 +204,7 @@ class Mp3Tagger(object):
         elif artwork_type == 'png':
             mime_type = 'image/png'
         tag = self._get_tag(destination)
-        print u'[artwork] Adding {0} to {1}'.format(source.decode('utf-8'), destination.decode('utf-8'))
+        print u'[artwork] Adding {0} to {1}'.format(source, destination)
         tag.add(APIC(encoding=3, mime=mime_type, type=3, desc=u'cover', data=open(source).read()))
         tag.save()
 
