@@ -25,7 +25,7 @@ class TrackModel(object):
         return number
 
     @staticmethod
-    def from_discogs_track(track, track_number, track_total, disc_number, disc_total):
+    def from_discogs_track(track, track_number, track_total, disc_number, disc_total, title=None):
         """ Converts a discogs track to a track in our domain.
 
         :track: The discogs track.
@@ -39,7 +39,7 @@ class TrackModel(object):
         track_model.track_total = track_total
         track_model.disc_number = disc_number
         track_model.disc_total = disc_total
-        track_model.title = track.title
+        track_model.title = title if title else track.title
         if 'artists' in track.data:
             track_model.artist = ArtistHelper.get_artists(track.data['artists'])
         return track_model
@@ -226,36 +226,67 @@ Tracklist:
 
     @staticmethod
     def _get_tracks_from_discogs_model(release_model, tracklist):
-        track_data = ReleaseModel._get_track_data(release_model, tracklist)
+        """
+        BEWARE!
+
+        There's a lot of really messy code in here for dealing with index and header tracks,
+        and trying to determine the positional data for all the tracks (you can't do it by making
+        a single pass over the tracklist). It's even more messy for multi disc releases. I couldn't
+        find a generic way to do both, hence why there are lots of different code paths.
+
+        I'm not proud of it, but I've tried to name the methods as descriptively as I can; hopefully
+        it might be somewhat coherent.
+
+        At the very least, don't be afraid to change; there are tests that will let you know if you've
+        broken anything.
+        """
+        track_data = ReleaseModel._get_positional_track_data(release_model, tracklist)
         i = 0
         for track in tracklist:
-            if track.position:
+            if track.track_type == 'index':
+                index_title = track.title
+                for sub_track in track.subtracks:
+                    track_model = TrackModel.from_discogs_track(
+                        sub_track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3],
+                        title='{0}: {1}'.format(index_title, sub_track.title))
+                    i += 1
+                    release_model.add_track(track_model)
+            elif track.track_type == 'track':
                 track_model = TrackModel.from_discogs_track(
                     track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3])
                 i += 1
                 release_model.add_track(track_model)
 
     @staticmethod
-    def _get_track_data(release_model, tracklist):
+    def _get_positional_track_data(release_model, tracklist):
         if 'CD' in release_model.format:
             if release_model.format_quantity == 1:
-                return ReleaseModel._get_single_disc_track_data(tracklist)
-            return ReleaseModel._get_multi_disc_track_data(release_model.format_quantity, tracklist)
-        return ReleaseModel._get_single_disc_track_data(tracklist)
+                return ReleaseModel._get_single_disc_positional_track_data(tracklist)
+            return ReleaseModel._get_multi_disc_positional_track_data(release_model.format_quantity, tracklist)
+        return ReleaseModel._get_single_disc_positional_track_data(tracklist)
 
     @staticmethod
-    def _get_single_disc_track_data(tracklist):
+    def _get_single_disc_positional_track_data(tracklist):
         track_totals = []
         track_number = 1
-        track_total = len([x for x in tracklist if x.position])
+        track_total = 0
         for track in tracklist:
-            if track.position: # Track with no position is an index track.
+            if track.track_type == 'index':
+                track_total += len(track.subtracks)
+            elif track.track_type == 'track':
+                track_total += 1
+        for track in tracklist:
+            if track.track_type == 'index':
+                for _ in track.subtracks:
+                    track_totals.append((track_number, track_total, 1, 1))
+                    track_number += 1
+            elif track.track_type == 'track':
                 track_totals.append((track_number, track_total, 1, 1))
                 track_number += 1
         return track_totals
 
     @staticmethod
-    def _get_multi_disc_track_data(disc_total, tracklist):
+    def _get_multi_disc_positional_track_data(disc_total, tracklist):
         track_totals_per_disc = ReleaseModel._get_track_totals_per_disc(tracklist)
         i = 0
         track_data = []
