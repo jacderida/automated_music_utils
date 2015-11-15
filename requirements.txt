@@ -5,6 +5,6 @@ mock==1.0.1
 nose==1.3.4
 xunitmerge==1.0.3
 rednose==0.4.1
-discogs_client
 pytagger
 mutagen
+git+https://github.com/jacderida/discogs_client.git@add_subtracks
