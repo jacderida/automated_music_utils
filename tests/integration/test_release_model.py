@@ -626,3 +626,10 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual('Four Telemetry Tapes: No. 2', tracks[10].title)
         self.assertEqual('Four Telemetry Tapes: No. 3', tracks[11].title)
         self.assertEqual('Four Telemetry Tapes: No. 4', tracks[12].title)
+
+    def test__from_discogs_release__release_has_no_styles__the_genre_should_be_assigned_without_styles(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(572756)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        self.assertEqual(release_model.genre, 'Hip Hop')
