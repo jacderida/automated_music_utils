@@ -292,7 +292,6 @@ Tracklist:
     @staticmethod
     def _get_multi_disc_positional_track_data(disc_total, tracklist):
         track_totals_per_disc = ReleaseModel._get_track_totals_per_disc(tracklist)
-        print track_totals_per_disc
         i = 0
         track_data = []
         track_number = 1
@@ -322,7 +321,6 @@ Tracklist:
                     track_number = 1
                 else:
                     track_number += 1
-        print track_data
         return track_data
 
     @staticmethod
