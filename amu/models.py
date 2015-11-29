@@ -233,7 +233,7 @@ Tracklist:
         There's a lot of really messy code in here. This is especially because you can't deal with all the issues
         by making a single pass over the tracklist. Multi disc releases also make things more complicated.
 
-        One issue is dealing getting positional data for the tracks. The positional data is in the form of a 4 element tuple,
+        One issue is getting positional data for the tracks. The positional data is in the form of a 4 element tuple,
         the values being track number, total tracks on the current disc, disc number, and disc total.
 
         Another is dealing with index tracks that have sub tracks.
@@ -292,6 +292,7 @@ Tracklist:
     @staticmethod
     def _get_multi_disc_positional_track_data(disc_total, tracklist):
         track_totals_per_disc = ReleaseModel._get_track_totals_per_disc(tracklist)
+        print track_totals_per_disc
         i = 0
         track_data = []
         track_number = 1
@@ -321,6 +322,7 @@ Tracklist:
                     track_number = 1
                 else:
                     track_number += 1
+        print track_data
         return track_data
 
     @staticmethod
@@ -337,11 +339,12 @@ Tracklist:
             if track.track_type == 'index':
                 for subtrack in track.subtracks:
                     if '-' in subtrack.position or '.' in subtrack.position:
-                        discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)
+                        discogs_disc_number = ReleaseModel._get_disc_number_from_position(subtrack.position)
                         if discogs_disc_number != disc_number:
                             disc_number += 1
                             track_totals_per_disc.append(track_total - 1)
-                        track_total = 1
+                            track_total = 1
+                        track_total += 1
             elif track.track_type == 'track':
                 if '-' in track.position or '.' in track.position:
                     discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)

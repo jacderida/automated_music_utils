@@ -134,7 +134,7 @@ class GenreSelector(object):
         count = 1
         print "Select the genre from what's available from the discogs release, or provide a free text value:"
         for genre in genres:
-            print '{0}. {1}'.format(count, genre)
+            print u'{0}. {1}'.format(count, genre)
             count += 1
         return self._get_selection(genres)
 
