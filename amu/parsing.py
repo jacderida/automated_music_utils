@@ -49,11 +49,11 @@ class CommandParser(object):
             if args.source:
                 source = args.source
             else:
-                source = os.getcwd()
+                source = os.getcwd().decode('utf-8')
             if args.destination:
                 destination = args.destination
             else:
-                destination = os.getcwd()
+                destination = os.getcwd().decode('utf-8')
             parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
             return parser.parse_add_artwork_command(source, destination)
 
