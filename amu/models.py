@@ -230,15 +230,18 @@ Tracklist:
         """
         BEWARE!
 
-        There's a lot of really messy code in here for dealing with index and header tracks,
-        and trying to determine the positional data for all the tracks (you can't do it by making
-        a single pass over the tracklist). It's even more messy for multi disc releases. I couldn't
-        find a generic way to do both, hence why there are lots of different code paths.
+        There's a lot of really messy code in here. This is especially because you can't deal with all the issues
+        by making a single pass over the tracklist. Multi disc releases also make things more complicated.
+
+        One issue is dealing getting positional data for the tracks. The positional data is in the form of a 4 element tuple,
+        the values being track number, total tracks on the current disc, disc number, and disc total.
+
+        Another is dealing with index tracks that have sub tracks.
 
         I'm not proud of it, but I've tried to name the methods as descriptively as I can; hopefully
         it might be somewhat coherent.
 
-        At the very least, don't be afraid to change; there are tests that will let you know if you've
+        At the very least, don't be afraid to change. There are tests that will let you know if you've
         broken anything.
         """
         track_data = ReleaseModel._get_positional_track_data(release_model, tracklist)
@@ -295,7 +298,19 @@ Tracklist:
         track_total = track_totals_per_disc[i]
         disc_number = 1
         for track in tracklist:
-            if track.position: # Track with no position is an index track.
+            if track.track_type == 'index':
+                for _ in track.subtracks:
+                    track_data.append((track_number, track_total, disc_number, disc_total))
+                    if track_number == track_total:
+                        i += 1
+                        if i >= len(track_totals_per_disc): # We are on the last track - bail out.
+                            break
+                        disc_number += 1
+                        track_total = track_totals_per_disc[i]
+                        track_number = 1
+                    else:
+                        track_number += 1
+            elif track.track_type == 'track':
                 track_data.append((track_number, track_total, disc_number, disc_total))
                 if track_number == track_total:
                     i += 1
@@ -310,11 +325,24 @@ Tracklist:
 
     @staticmethod
     def _get_track_totals_per_disc(tracklist):
+        """
+        I realise there's quite a bit of duplicate code in both of the loop bodies down there,
+        but due to the fact that all the variables need to be shared, it was difficult to split
+        out into its own method.
+        """
         track_totals_per_disc = []
         track_total = 1
         disc_number = 1
         for track in tracklist:
-            if track.position:
+            if track.track_type == 'index':
+                for subtrack in track.subtracks:
+                    if '-' in subtrack.position or '.' in subtrack.position:
+                        discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)
+                        if discogs_disc_number != disc_number:
+                            disc_number += 1
+                            track_totals_per_disc.append(track_total - 1)
+                        track_total = 1
+            elif track.track_type == 'track':
                 if '-' in track.position or '.' in track.position:
                     discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)
                     if discogs_disc_number != disc_number:
