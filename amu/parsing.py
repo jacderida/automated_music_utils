@@ -134,7 +134,7 @@ class CommandParser(object):
         if args.source:
             source = args.source
         else:
-            source = unicode(os.getcwd())
+            source = os.getcwd().decode('utf-8')
         commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
         encode_commands = encode_command_parser.parse_wav_to_mp3(source, destination)
