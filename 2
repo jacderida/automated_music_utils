@@ -109,23 +109,27 @@ class ReleaseModel(object):
         self._tracks = []
 
     def __repr__(self):
+        #return u"""ID: {0}
+#Artist: {1}
+#Title: {2}
+#Label: {3}
+#Cat No: {4}
+#Format: {5}
+#Country: {6}
+#Released: {7}
+#Originally Released: {8}
+#Genre: {9}
+#Style: {10}
+#Tracklist:
+#{11}
+        #""".format(
+            #self.discogs_id, self.artist, self.title, self.label,
+            #self.catno, self.format, self.country, self.year, self.original_year,
+            #self.genre, self.style, self._get_string_based_tracklist())
         return u"""ID: {0}
 Artist: {1}
-Title: {2}
-Label: {3}
-Cat No: {4}
-Format: {5}
-Country: {6}
-Released: {7}
-Originally Released: {8}
-Genre: {9}
-Style: {10}
-Tracklist:
-{11}
         """.format(
-            self.discogs_id, self.artist, self.title, self.label,
-            self.catno, self.format, self.country, self.year, self.original_year,
-            self.genre, self.style, self._get_string_based_tracklist())
+            self.discogs_id, self.artist)
 
     def _get_string_based_tracklist(self):
         tracklist = ''

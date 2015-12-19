@@ -356,7 +356,7 @@ class FetchReleaseCommand(Command):
 
     def execute(self):
         release_model = self._metadata_service.get_release_by_id(self.discogs_id)
-        print release_model
+        print unicode(release_model)
 
 class AddArtworkCommand(Command):
     def __init__(self, config_provider, tagger):
