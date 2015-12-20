@@ -230,31 +230,6 @@ class ReleaseModelTest(unittest.TestCase):
             output = out.getvalue().strip()
             self.assertIn('Released: 2000', output)
 
-    def test__repr__populated_release_model__should_print_out_the_original_year_of_release(self):
-        release_model = ReleaseModel()
-        release_model.discogs_id = 12345
-        release_model.artist = 'Legowelt'
-        release_model.title = 'Pimpshifter'
-        release_model.label = 'Bunker Records'
-        release_model.catno = 'BUNKER 3002'
-        release_model.format = 'Vinyl'
-        release_model.country = 'Netherlands'
-        release_model.year = '2000'
-        release_model.original_year = '1999'
-        release_model.genre = 'Electronic'
-        release_model.style = 'Electro'
-        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
-        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
-        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
-        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
-        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
-        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
-
-        with captured_output() as (out, _):
-            print release_model
-            output = out.getvalue().strip()
-            self.assertIn('Originally Released: 1999', output)
-
     def test__repr__populated_release_model__should_print_out_the_genre(self):
         release_model = ReleaseModel()
         release_model.discogs_id = 12345

@@ -13,3 +13,11 @@ class DiscogsMetadataServiceTest(unittest.TestCase):
         with self.assertRaisesRegexp(ReleaseNotFoundError, 'There is no release with ID invalid_id.'):
             service = DiscogsMetadataService()
             service.get_release_by_id('invalid_id')
+
+    def test__from_discogs_release__release_is_reissue__the_original_label_details_should_be_populated(self):
+        service = DiscogsMetadataService()
+        release = service.get_release_by_id(792244)
+        self.assertIsNotNone(release.original_release)
+        self.assertEqual(release.original_release.year, '1969')
+        self.assertEqual(release.original_release.label, 'Liberty')
+        self.assertEqual(release.original_release.catno, 'LBS 83 279 I')

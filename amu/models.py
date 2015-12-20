@@ -103,7 +103,7 @@ class ReleaseModel(object):
         self._format_quantity = 0
         self._country = ''
         self._year = ''
-        self._original_year = ''
+        self._original_release = None
         self._genre = ''
         self._style = ''
         self._tracks = []
@@ -117,14 +117,13 @@ Cat No: {4}
 Format: {5}
 Country: {6}
 Released: {7}
-Originally Released: {8}
-Genre: {9}
-Style: {10}
+Genre: {8}
+Style: {9}
 Tracklist:
-{11}
+{10}
         """.format(
             self.discogs_id, self.artist, self.title, self.label,
-            self.catno, self.format, self.country, self.year, self.original_year,
+            self.catno, self.format, self.country, self.year,
             self.genre, self.style, self._get_string_based_tracklist())
 
     def _get_string_based_tracklist(self):
@@ -148,8 +147,6 @@ Tracklist:
         release_model.discogs_id = release.id
         release_model.artist = ArtistHelper.get_artists(release.data["artists"])
         release_model.title = release.title
-        release_model.label = ReleaseModel._get_labels_from_discogs_model(release.labels)
-        release_model.catno = ReleaseModel._get_cat_numbers_from_discogs_model(release)
         release_model.format = ReleaseModel._get_format_from_discogs_model(release.formats)
         release_model.format_quantity = ReleaseModel._get_format_quantity_from_discogs_model(release.formats)
         release_model.country = release.country
@@ -157,18 +154,17 @@ Tracklist:
         if release.styles:
             genres.extend(release.styles)
         release_model.genre = ReleaseModel._get_genre_from_discogs_model(genres)
-        ReleaseModel._get_date_from_discogs_model(release_model, release)
+        ReleaseModel._get_label_data_from_discogs_model(release_model, release)
         ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
         return release_model
 
     @staticmethod
-    def _get_date_from_discogs_model(release_model, release):
+    def _get_label_data_from_discogs_model(release_model, release):
+        release_model.label = remove_number_from_duplicate_entry(release.labels[0].name)
+        release_model.catno = ReleaseModel._get_cat_numbers_from_discogs_model(release)
         release_model.year = 'Unknown'
         if release.year != 0:
             release_model.year = str(release.year)
-            release_model.original_year = str(release.year)
-        if release.master != None:
-            release_model.original_year = str(release.master.main_release.year)
 
     @staticmethod
     def get_artists_from_discogs_model(artist_data):
@@ -215,10 +211,6 @@ Tracklist:
             if i < len(genres) - 1:
                 genre_string += ', '
         return genre_string
-
-    @staticmethod
-    def _get_labels_from_discogs_model(labels):
-        return remove_number_from_duplicate_entry(labels[0].name)
 
     @staticmethod
     def _get_cat_numbers_from_discogs_model(release):
@@ -396,6 +388,14 @@ Tracklist:
         self._catno = value
 
     @property
+    def original_release(self):
+        return self._original_release
+
+    @original_release.setter
+    def original_release(self, value):
+        self._original_release = value
+
+    @property
     def title(self):
         return self._title
 
@@ -434,14 +434,6 @@ Tracklist:
     @year.setter
     def year(self, value):
         self._year = value
-
-    @property
-    def original_year(self):
-        return self._original_year
-
-    @original_year.setter
-    def original_year(self, value):
-        self._original_year = value
 
     @property
     def genre(self):

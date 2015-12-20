@@ -1,3 +1,4 @@
+import copy
 import mock
 import unittest
 from amu.commands import AddTagCommand
@@ -793,7 +794,6 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.catno = 'BUNKER 3002'
         release_model.format = 'Vinyl'
         release_model.country = 'Netherlands'
-        release_model.original_year = '1999'
         release_model.year = '2000'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
@@ -803,6 +803,9 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+        original_release = copy.deepcopy(release_model)
+        original_release.year = '1999'
+        release_model.original_release = original_release
         source_path = '/some/path/to/mp3s'
         walk_mock.return_value = [
             (source_path, (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3', '05 - Track 5.mp3', '06 - Track 6.mp3')),
@@ -2154,7 +2157,6 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.format = 'Vinyl'
         release_model.format_quantity = 1
         release_model.country = 'UK'
-        release_model.original_year = '2004'
         release_model.year = '2005'
         release_model.genre = 'Electronic'
         release_model.style = 'Breakbeat, House, Acid, Electro'
@@ -2162,6 +2164,9 @@ class TagCommandParserTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        original_release = copy.deepcopy(release_model)
+        original_release.year = '2004'
+        release_model.original_release = original_release
 
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
@@ -2734,6 +2739,9 @@ class TagCommandParserTest(unittest.TestCase):
             '/some/path/to/mp3s/05 - Track 05.mp3',
             '/some/path/to/mp3s/06 - Track 06.mp3'
         ]
+        original_release = copy.deepcopy(release_model)
+        original_release.year = '2004'
+        release_model.original_release = original_release
 
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)

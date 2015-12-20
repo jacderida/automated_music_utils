@@ -1,3 +1,4 @@
+import copy
 import unittest
 from amu.metadata import InvalidMaskError
 from amu.metadata import MaskReplacer
@@ -146,7 +147,6 @@ class MaskReplacerTest(unittest.TestCase):
         release_model.format = 'Vinyl'
         release_model.country = 'Netherlands'
         release_model.year = '2000'
-        release_model.original_year = '1998'
         release_model.genre = 'Electronic'
         release_model.style = 'Electro'
         release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
@@ -155,6 +155,9 @@ class MaskReplacerTest(unittest.TestCase):
         release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
         release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
         release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+        original_release = copy.deepcopy(release_model)
+        original_release.year = '1998'
+        release_model._original_release = original_release
 
         mask_replacer = MaskReplacer()
         replaced_directory = mask_replacer.replace_directory_mask('/music/%Y', release_model)

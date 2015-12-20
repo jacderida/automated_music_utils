@@ -19,7 +19,6 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(release.catno, 'AMB3922RM')
         self.assertEqual(release.format, 'CD, Album, Reissue, Remastered')
         self.assertEqual(release.country, 'Belgium')
-        self.assertEqual(release.original_year, '1992')
         self.assertEqual(release.year, '2008')
         self.assertEqual(release.genre, 'Electronic, Techno, Electro, Experimental, Ambient')
 
@@ -391,14 +390,6 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         self.assertEqual(18, tracks[36].track_total)
         self.assertEqual('Barclays Bank (Excerpt)', tracks[36].title)
 
-    def test__from_discogs_release__release_is_a_reissue__original_year_and_release_year_are_assigned_correctly(self):
-        client = discogs_client.Client('amu/0.1')
-        discogs_release = client.release(1303737)
-        discogs_release.refresh()
-        release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.original_year, '1992')
-        self.assertEqual(release.year, '2008')
-
     def test__from_discogs_release__release_artist_is_anv__anv_is_resolved(self):
         client = discogs_client.Client('amu/0.1')
         discogs_release = client.release(28763)
@@ -419,14 +410,6 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.artist, 'Aphex Twin / Gavin Bryars')
-
-    def test__from_discogs_release__release_has_no_master__original_year_and_release_year_are_assigned_correctly(self):
-        client = discogs_client.Client('amu/0.1')
-        discogs_release = client.release(202433)
-        discogs_release.refresh()
-        release = ReleaseModel.from_discogs_release(discogs_release)
-        self.assertEqual(release.year, '1995')
-        self.assertEqual(release.original_year, '1995')
 
     def test__from_discogs_release__release_has_multiple_labels__the_first_label_is_taken(self):
         # Note: This will be refactored later to use a list of labels rather than taking the first.

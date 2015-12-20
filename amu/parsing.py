@@ -392,7 +392,7 @@ class TagCommandParser(object):
         command_args.album_artist = release_model.artist
         command_args.album = release_model.title
         command_args.title = track.title
-        command_args.year = release_model.original_year
+        command_args.year = release_model.original_release.year if release_model.original_release != None else release_model.year
         command_args.genre = release_model.genre
         command_args.comment = u'{0} ({1})'.format(release_model.label, release_model.catno)
         command_args.track_number = track.track_number

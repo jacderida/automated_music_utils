@@ -22,7 +22,12 @@ class DiscogsMetadataService(object):
             client = discogs_client.Client('amu/0.1')
             release = client.release(id)
             release.refresh()
-            return ReleaseModel.from_discogs_release(release)
+            release_model = ReleaseModel.from_discogs_release(release)
+            if release.master != None:
+                original_release = client.release(release.master.main_release.id)
+                original_release.refresh()
+                release_model.original_release = ReleaseModel.from_discogs_release(original_release)
+            return release_model
         except HTTPError, ex:
             if ex.status_code == 404:
                 raise ReleaseNotFoundError('There is no release with ID {0}.'.format(id))
@@ -37,7 +42,7 @@ class MaskReplacer(object):
             'c' : release_model.catno,
             'C' : release_model.country,
             'y' : release_model.year,
-            'Y' : release_model.original_year,
+            'Y' : release_model.original_release.year if release_model.original_release != None else 'Unknown',
             'g' : release_model.genre,
             's' : release_model.style
         }
