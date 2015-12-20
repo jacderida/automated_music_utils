@@ -37,6 +37,7 @@ class MaskReplacer(object):
     def replace_directory_mask(self, masked_directory, release_model):
         mask_options = {
             'l' : release_model.label,
+            'L' : release_model.original_release.label if release_model.original_release != None else 'Unknown',
             'a' : release_model.artist,
             'A' : release_model.title,
             'c' : release_model.catno,
