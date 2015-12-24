@@ -247,7 +247,7 @@ Tracklist:
                         title='{0}: {1}'.format(index_title, sub_track.title))
                     i += 1
                     release_model.add_track(track_model)
-            elif track.track_type == 'track':
+            elif track.track_type == 'track' and track.position != 'Video':
                 track_model = TrackModel.from_discogs_track(
                     track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3])
                 i += 1
@@ -269,14 +269,14 @@ Tracklist:
         for track in tracklist:
             if track.track_type == 'index':
                 track_total += len(track.subtracks)
-            elif track.track_type == 'track':
+            elif track.track_type == 'track' and track.position != 'Video':
                 track_total += 1
         for track in tracklist:
             if track.track_type == 'index':
                 for _ in track.subtracks:
                     track_totals.append((track_number, track_total, 1, 1))
                     track_number += 1
-            elif track.track_type == 'track':
+            elif track.track_type == 'track' and track.position != 'Video':
                 track_totals.append((track_number, track_total, 1, 1))
                 track_number += 1
         return track_totals
@@ -302,7 +302,7 @@ Tracklist:
                         track_number = 1
                     else:
                         track_number += 1
-            elif track.track_type == 'track':
+            elif track.track_type == 'track' and track.position != 'Video':
                 track_data.append((track_number, track_total, disc_number, disc_total))
                 if track_number == track_total:
                     i += 1
@@ -335,7 +335,7 @@ Tracklist:
                             track_totals_per_disc.append(track_total - 1)
                             track_total = 1
                         track_total += 1
-            elif track.track_type == 'track':
+            elif track.track_type == 'track' and track.position != 'Video':
                 if '-' in track.position or '.' in track.position:
                     discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)
                     if discogs_disc_number != disc_number:

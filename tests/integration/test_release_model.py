@@ -751,3 +751,11 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release_model = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release_model.genre, 'Hip Hop')
+
+    def test__from_discogs_release__release_has_video_track__the_tracklist_should_not_include_video_track(self):
+        client = discogs_client.Client('amu/0.1')
+        discogs_release = client.release(6155227)
+        discogs_release.refresh()
+        release_model = ReleaseModel.from_discogs_release(discogs_release)
+        tracks = release_model.get_tracks()
+        self.assertEqual(16, len(tracks)) # With the video track it would be 17.
