@@ -1,4 +1,5 @@
 import os
+import shutil
 from mutagen import File
 from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPOS, TRCK
 from amu.audio import LameEncoder, RubyRipperCdRipper
@@ -332,7 +333,7 @@ class MoveAudioFileCommand(Command):
         directory = os.path.dirname(self._destination)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        os.rename(self.source, self.destination)
+        shutil.move(self.source, self.destination)
 
 class FetchReleaseCommand(Command):
     def __init__(self, config_provider, metadata_service):

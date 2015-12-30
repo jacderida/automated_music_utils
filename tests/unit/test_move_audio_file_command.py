@@ -6,7 +6,7 @@ from amu.commands import MoveAudioFileCommand
 
 class MoveAudioFileCommandTest(unittest.TestCase):
     @mock.patch('os.path.exists')
-    @mock.patch('os.rename')
+    @mock.patch('shutil.move')
     @mock.patch('amu.config.ConfigurationProvider')
     def test__execute__valid_source_and_destination__file_is_moved(self, config_mock, rename_mock, exists_mock):
         exists_mock.return_value = True
@@ -17,7 +17,7 @@ class MoveAudioFileCommandTest(unittest.TestCase):
         rename_mock.assert_called_once_with('/some/mp3/source/01 - Track 1.mp3', '/some/other/mp3/destination/01 - Track 1.mp3')
 
     @mock.patch('os.makedirs')
-    @mock.patch('os.rename')
+    @mock.patch('shutil.move')
     @mock.patch('amu.config.ConfigurationProvider')
     def test__execute__destination_directory_does_not_exist__destination_directories_are_created(self, config_mock, rename_mock, makedirs_mock):
         command = MoveAudioFileCommand(config_mock)
