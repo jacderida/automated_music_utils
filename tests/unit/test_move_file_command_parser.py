@@ -1296,3 +1296,38 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         command = parser.parse_from_release_model(source_path, '/some/destination', release_model)[0]
         self.assertEqual('/some/source/cover.png', command.source)
         self.assertEqual('/some/destination/cover.png', command.destination)
+
+    @mock.patch('os.listdir')
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.walk')
+    def test__parse_from_release_model__release_has_track_title_with_forbidden_character__forbidden_character_is_replaced_with_a_space(self, walk_mock, isdir_mock, listdir_mock):
+        walk_mock.return_value = [
+            ('/some/source', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
+        ]
+        listdir_mock.return_value = [
+            '01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'
+        ]
+        isdir_mock.side_effect = [True, True]
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor\Spyboter.A', 4, 4, 1, 1)
+
+        config_mock = Mock()
+        parser = MoveAudioFileCommandParser(config_mock)
+        commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
+        self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
+        self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
+        self.assertEqual('/some/destination/03 - W32.Deadcode.A.mp3', commands[2].destination)
+        self.assertEqual('/some/destination/04 - Backdoor Spyboter.A.mp3', commands[3].destination)
