@@ -821,3 +821,13 @@ class CommandParsingError(Exception):
     def __init__(self, message):
         super(CommandParsingError, self).__init__(message)
         self.message = message
+
+def replace_forbidden_characters(input_string):
+    forbidden_characters = ('/', '\\', '?', '<', '>', ':', '*', '|', '"')
+    replaced_title = ''
+    for char in input_string:
+        if char in forbidden_characters:
+            replaced_title += ' '
+        else:
+            replaced_title += char
+    return replaced_title
