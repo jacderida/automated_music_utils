@@ -120,7 +120,8 @@ class CommandParser(object):
 
     def _get_encode_cd_commands(self, args, destination, release_model):
         commands = []
-        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, args.encoding_to)
+        encoder = self._get_encoder_based_on_destination_encoding(args.encoding_to)
+        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, encoder, args.encoding_to)
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         encode_commands = encode_command_parser.parse_cd_rip(source, destination)
         commands.extend(encode_commands)
@@ -137,7 +138,8 @@ class CommandParser(object):
         else:
             source = os.getcwd().decode('utf-8')
         commands = []
-        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, args.encoding_to)
+        encoder = self._get_encoder_based_on_destination_encoding(args.encoding_to)
+        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, encoder, args.encoding_to)
         encode_commands = encode_command_parser.parse_wav(source, destination)
         commands.extend(encode_commands)
         track_count = len(encode_commands)
@@ -149,6 +151,12 @@ class CommandParser(object):
             move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
             commands.extend(move_file_parser.parse_from_encode_commands(encode_commands, release_model))
         return commands
+
+    def _get_encoder_based_on_destination_encoding(self, encoding_destination):
+        if encoding_destination == 'mp3':
+            return LameEncoder(self._configuration_provider)
+        elif encoding_destination == 'flac':
+            return FlacEncoder(self._configuration_provider)
 
     def _get_release_tag_commands(self, args, commands, destination, release_model):
         release_track_count = len(release_model.get_tracks())
@@ -199,11 +207,6 @@ class EncodeCommandParser(object):
             return self._get_single_file_command(source, destination)
         return self._get_directory_command(source, destination)
 
-    def _get_encoder_based_on_destination_encoding(self, encoding_destination):
-        if encoding_destination == 'mp3':
-            return LameEncoder(self._configuration_provider)
-        elif encoding_destination == 'flac':
-            return FlacEncoder(self._configuration_provider)
 
     def _get_single_file_command(self, source, destination):
         if not destination.endswith(self._encoding_destination):

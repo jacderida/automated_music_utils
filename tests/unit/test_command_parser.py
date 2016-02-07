@@ -140,7 +140,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_when_there_are_no_wavs_to_encode__throws_command_parsing_error(self, encode_command_parser_mock):
-        config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
+        config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
         args = arg_parser.parse_args(['encode', 'wav', 'mp3'])
