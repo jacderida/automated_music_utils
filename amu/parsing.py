@@ -331,7 +331,7 @@ class TagCommandParser(object):
             break
         return commands
 
-    def parse_add_mp3_tag_command(self, command_args):
+    def parse_add_tag_command(self, command_args):
         if os.path.isfile(command_args.source):
             return self._get_single_file_command(command_args)
         if command_args.track_total != 0:
