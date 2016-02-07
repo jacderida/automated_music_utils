@@ -302,7 +302,7 @@ class TagCommandParser(object):
         and so the track files don't yet exist. That method relies on there being pre-existing
         files to use for the source for the command.
 
-        :source_path: The path where the MP3s will eventually be.
+        :source_path: The path where the encoded files will eventually be.
         :release_model: The release model with the metadata for the tags.
         :returns: A list of add tag commands.
 
@@ -310,7 +310,7 @@ class TagCommandParser(object):
         commands = []
         track_number = 1
         for track in release_model.get_tracks():
-            track_name = utils.get_track_name(track_number, "mp3")
+            track_name = utils.get_track_name(track_number, self._source_format)
             full_source_path = os.path.join(source_path, track_name)
             commands.append(self._get_add_tag_command_from_release_model(full_source_path, release_model, track))
             track_number += 1
@@ -324,13 +324,13 @@ class TagCommandParser(object):
             if len(directories) > 0:
                 for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
-                    for source_file in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]:
+                    for source_file in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.{0}'.format(self._source_format))]:
                         full_source_path = os.path.join(full_source_directory, source_file)
                         command = self._get_add_tag_command_from_release_model(full_source_path, release_model, tracks[i])
                         commands.append(command)
                         i += 1
             else:
-                for source_file in [f for f in sorted(files) if f.endswith('.mp3')]:
+                for source_file in [f for f in sorted(files) if f.endswith('.{0}'.format(self._source_format))]:
                     full_source = os.path.join(root, source_file)
                     command = self._get_add_tag_command_from_release_model(full_source, release_model, tracks[i])
                     commands.append(command)
@@ -352,7 +352,7 @@ class TagCommandParser(object):
             return [command]
         commands = []
         for root, _, files in os.walk(source):
-            audio_files = [f for f in files if f.endswith('.mp3')]
+            audio_files = [f for f in files if f.endswith('.{0}'.format(self._source_format))]
             for audio_file in audio_files:
                 command = RemoveTagCommand(self._configuration_provider, self._tagger)
                 command.source = os.path.join(root, audio_file)
@@ -372,10 +372,10 @@ class TagCommandParser(object):
                 disc_total = directory_len
                 for directory in sorted(directories):
                     full_source_directory = os.path.join(root, directory)
-                    mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
-                    track_total = len(mp3_files)
+                    source_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.{0}'.format(self._source_format))]
+                    track_total = len(source_files)
                     track_number = 1
-                    for source_file in mp3_files:
+                    for source_file in source_files:
                         full_source_path = os.path.join(full_source_directory, source_file)
                         command_args.disc_number = disc_number
                         command_args.disc_total = disc_total
@@ -386,10 +386,10 @@ class TagCommandParser(object):
                         track_number += 1
                     disc_number += 1
             else:
-                mp3_files = [f for f in sorted(files) if f.endswith('.mp3')]
-                track_total = len(mp3_files)
+                source_files = [f for f in sorted(files) if f.endswith('.{0}'.format(self._source_format))]
+                track_total = len(source_files)
                 track_number = 1
-                for source_file in mp3_files:
+                for source_file in source_files:
                     full_source_path = os.path.join(root, source_file)
                     command = self._get_add_tag_command(full_source_path, command_args)
                     command.track_number = track_number
