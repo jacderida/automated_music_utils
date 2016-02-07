@@ -102,7 +102,8 @@ class CommandParser(object):
 
     def _get_tag_command(self, args):
         source = args.source if args.source else os.getcwd()
-        tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
+        tagger = self._get_tagger_based_on_destination_encoding(args.encoding_to)
+        tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.encoding_to)
         if args.discogs_id:
             commands = []
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
@@ -164,11 +165,16 @@ class CommandParser(object):
         if track_count != release_track_count:
             raise CommandParsingError(
                 'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
-        tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
+        tagger = self._get_tagger_based_on_destination_encoding(args.encoding_to)
+        tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.encoding_to)
         if args.encoding_from == 'cd':
             return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
         return tag_command_parser.parse_from_release_model_with_sources(
             release_model, [x.destination for x in commands])
+
+    def _get_tagger_based_on_destination_encoding(self, encoding_destination):
+        if encoding_destination == 'mp3':
+            return Mp3Tagger(self._configuration_provider)
 
     def _get_add_artwork_commands(self, encode_commands):
         artwork_command_parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
@@ -271,9 +277,10 @@ class DecodeCommandParser(object):
         return commands
 
 class TagCommandParser(object):
-    def __init__(self, configuration_provider, tagger):
+    def __init__(self, configuration_provider, tagger, source_format):
         self._configuration_provider = configuration_provider
         self._tagger = tagger
+        self._source_format = source_format
 
     def parse_from_release_model_with_sources(self, release_model, sources):
         commands = []
@@ -353,7 +360,7 @@ class TagCommandParser(object):
         return commands
 
     def _get_single_file_command(self, command_args):
-        command = self._get_add_mp3_command(command_args.source, command_args)
+        command = self._get_add_tag_command(command_args.source, command_args)
         return [command]
 
     def _get_directory_command(self, command_args):
@@ -372,7 +379,7 @@ class TagCommandParser(object):
                         full_source_path = os.path.join(full_source_directory, source_file)
                         command_args.disc_number = disc_number
                         command_args.disc_total = disc_total
-                        command = self._get_add_mp3_command(full_source_path, command_args)
+                        command = self._get_add_tag_command(full_source_path, command_args)
                         command.track_number = track_number
                         command.track_total = track_total
                         commands.append(command)
@@ -384,7 +391,7 @@ class TagCommandParser(object):
                 track_number = 1
                 for source_file in mp3_files:
                     full_source_path = os.path.join(root, source_file)
-                    command = self._get_add_mp3_command(full_source_path, command_args)
+                    command = self._get_add_tag_command(full_source_path, command_args)
                     command.track_number = track_number
                     command.track_total = track_total
                     commands.append(command)
@@ -408,9 +415,9 @@ class TagCommandParser(object):
         command_args.track_total = track.track_total
         command_args.disc_number = track.disc_number
         command_args.disc_total = track.disc_total
-        return self._get_add_mp3_command(source, command_args)
+        return self._get_add_tag_command(source, command_args)
 
-    def _get_add_mp3_command(self, source, command_args):
+    def _get_add_tag_command(self, source, command_args):
         command = AddTagCommand(self._configuration_provider, self._tagger)
         command.source = source
         command.artist = command_args.artist
