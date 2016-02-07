@@ -4,8 +4,7 @@ import subprocess
 import tempfile
 import uuid
 from amu import utils
-from amu.config import ConfigurationError, ConfigurationProvider
-from amu.metadata import MaskReplacer
+from amu.config import ConfigurationError
 from mutagen import File
 from mutagen.id3 import APIC, COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TPOS, TRCK
 
