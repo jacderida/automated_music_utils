@@ -62,6 +62,16 @@ class MaskReplacer(object):
 
     def _get_replaced_mask(self, mask_options, mask):
         try:
-            return mask_options[mask]
+            return replace_forbidden_characters(mask_options[mask])
         except KeyError:
             raise InvalidMaskError('The mask {0} is not in the list of valid masks.'.format(mask))
+
+def replace_forbidden_characters(input_string):
+    forbidden_characters = ('/', '\\', '?', '<', '>', ':', '*', '|', '"')
+    replaced_title = ''
+    for char in input_string:
+        if char in forbidden_characters:
+            replaced_title += ' '
+        else:
+            replaced_title += char
+    return replaced_title

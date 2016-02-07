@@ -1,5 +1,5 @@
 import unittest
-from amu.parsing import replace_forbidden_characters
+from amu.metadata import replace_forbidden_characters
 
 
 class TestReplaceForbiddenCharacters(unittest.TestCase):

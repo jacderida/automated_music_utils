@@ -276,3 +276,25 @@ class MaskReplacerTest(unittest.TestCase):
         mask_replacer = MaskReplacer()
         replaced_directory = mask_replacer.replace_directory_mask('/music/%L', release_model)
         self.assertEqual('/music/Original Record Label', replaced_directory)
+
+    def test__replace_directory_mask__resolved_mask_contains_forbidden_character__forbidden_character_is_removed(self):
+        release_model = ReleaseModel()
+        release_model.artist = 'Legowelt / Orgue Electronique'
+        release_model.title = 'Klaus Kinski EP / The Nomium Syndrome'
+        release_model.label = 'Bunker Records'
+        release_model.catno = 'BUNKER 3002'
+        release_model.format = 'Vinyl'
+        release_model.country = 'Netherlands'
+        release_model.year = '2000'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Electro'
+        release_model.add_track_directly(None, 'Sturmvogel', 1, 6, 1, 1)
+        release_model.add_track_directly(None, 'Geneva Hideout', 2, 6, 1, 1)
+        release_model.add_track_directly(None, 'Ricky Ramjet', 3, 6, 1, 1)
+        release_model.add_track_directly(None, 'Nuisance Lover', 4, 6, 1, 1)
+        release_model.add_track_directly(None, 'Strange Girl', 5, 6, 1, 1)
+        release_model.add_track_directly(None, 'Total Pussy Control', 6, 6, 1, 1)
+
+        mask_replacer = MaskReplacer()
+        replaced_directory = mask_replacer.replace_directory_mask('/music/%a - %A', release_model)
+        self.assertEqual('/music/Legowelt   Orgue Electronique - Klaus Kinski EP   The Nomium Syndrome', replaced_directory)
