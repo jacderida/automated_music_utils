@@ -102,8 +102,8 @@ class CommandParser(object):
 
     def _get_tag_command(self, args):
         source = args.source if args.source else os.getcwd()
-        tagger = self._get_tagger_based_on_destination_encoding(args.encoding_to)
-        tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.encoding_to)
+        tagger = self._get_tagger_based_on_format(args.format)
+        tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.format)
         if args.discogs_id:
             commands = []
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
@@ -114,10 +114,10 @@ class CommandParser(object):
                 source, self._configuration_provider.get_releases_destination_with_mask_replaced(release_model), release_model))
             return commands
         if args.action == 'remove':
-            return tag_command_parser.parse_remove_mp3_tag_command(source)
+            return tag_command_parser.parse_remove_tag_command(source)
         command_args = AddTagCommandArgs.from_args(args)
         command_args.source = source
-        return tag_command_parser.parse_add_mp3_tag_command(command_args)
+        return tag_command_parser.parse_add_tag_command(command_args)
 
     def _get_encode_cd_commands(self, args, destination, release_model):
         commands = []
@@ -165,16 +165,16 @@ class CommandParser(object):
         if track_count != release_track_count:
             raise CommandParsingError(
                 'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
-        tagger = self._get_tagger_based_on_destination_encoding(args.encoding_to)
+        tagger = self._get_tagger_based_on_format(args.encoding_to)
         tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.encoding_to)
         if args.encoding_from == 'cd':
             return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
         return tag_command_parser.parse_from_release_model_with_sources(
             release_model, [x.destination for x in commands])
 
-    def _get_tagger_based_on_destination_encoding(self, encoding_destination):
-        if encoding_destination == 'mp3':
-            return Mp3Tagger(self._configuration_provider)
+    def _get_tagger_based_on_format(self, format):
+        if format == 'mp3':
+            return Mp3Tagger()
 
     def _get_add_artwork_commands(self, encode_commands):
         artwork_command_parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
@@ -345,7 +345,7 @@ class TagCommandParser(object):
             raise CommandParsingError('With a directory source, a track number and total override cannot be specified.')
         return self._get_directory_command(command_args)
 
-    def parse_remove_mp3_tag_command(self, source):
+    def parse_remove_tag_command(self, source):
         if os.path.isfile(source):
             command = RemoveTagCommand(self._configuration_provider, self._tagger)
             command.source = source
