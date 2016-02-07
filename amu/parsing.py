@@ -120,7 +120,7 @@ class CommandParser(object):
 
     def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
         commands = []
-        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
+        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder, args.encoding_to)
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
         encode_commands = encode_command_parser.parse_cd_rip(source, destination)
         commands.extend(encode_commands)
@@ -137,7 +137,7 @@ class CommandParser(object):
         else:
             source = os.getcwd().decode('utf-8')
         commands = []
-        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
+        encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder, args.encoding_to)
         encode_commands = encode_command_parser.parse_wav(source, destination)
         commands.extend(encode_commands)
         track_count = len(encode_commands)
@@ -167,10 +167,11 @@ class CommandParser(object):
         return artwork_command_parser.parse_from_encode_commands(encode_commands)
 
 class EncodeCommandParser(object):
-    def __init__(self, configuration_provider, cd_ripper, encoder):
+    def __init__(self, configuration_provider, cd_ripper, encoder, encoding_destination):
         self._configuration_provider = configuration_provider
         self._cd_ripper = cd_ripper
         self._encoder = encoder
+        self._encoding_destination = encoding_destination
 
     def parse_cd_rip(self, rip_destination, destination):
         if not rip_destination:
