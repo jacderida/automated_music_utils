@@ -109,7 +109,7 @@ class CommandParser(object):
             release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
             release_model.genre = self._genre_selector.select_genre([x.strip() for x in release_model.genre.split(',')])
             commands.extend(tag_command_parser.parse_from_release_model(source, release_model))
-            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
+            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider, args.format)
             commands.extend(move_file_parser.parse_from_release_model(
                 source, self._configuration_provider.get_releases_destination_with_mask_replaced(release_model), release_model))
             return commands
@@ -129,7 +129,7 @@ class CommandParser(object):
         if release_model:
             # The first command is a rip cd command, which we don't need.
             commands.extend(self._get_release_tag_commands(args, encode_commands[1:], destination, release_model))
-            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
+            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider, args.encoding_to)
             commands.extend(move_file_parser.parse_from_encode_commands(encode_commands[1:], release_model))
         return commands
 
@@ -149,7 +149,7 @@ class CommandParser(object):
         if release_model:
             commands.extend(self._get_release_tag_commands(args, encode_commands, destination, release_model))
             commands.extend(self._get_add_artwork_commands(encode_commands))
-            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
+            move_file_parser = MoveAudioFileCommandParser(self._configuration_provider, args.encoding_to)
             commands.extend(move_file_parser.parse_from_encode_commands(encode_commands, release_model))
         return commands
 
@@ -452,8 +452,9 @@ class TagCommandParser(object):
             command.disc_total = command_args.disc_total
 
 class MoveAudioFileCommandParser(object):
-    def __init__(self, configuration_provider):
+    def __init__(self, configuration_provider, source_format):
         self._configuration_provider = configuration_provider
+        self._source_format = source_format
 
     def parse_from_encode_commands(self, encode_commands, release_model):
         i = 0
@@ -507,8 +508,8 @@ class MoveAudioFileCommandParser(object):
         commands.extend(self._get_move_cover_command(source_path, destination))
         for directory in sorted(directories):
             full_source_directory = os.path.join(source_path, directory)
-            mp3_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.mp3')]
-            for source_file in mp3_files:
+            source_files = [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.{0}'.format(self._source_format))]
+            for source_file in source_files:
                 command = MoveAudioFileCommand(self._configuration_provider)
                 command.source = os.path.join(source_path, directory, source_file)
                 command.destination = self._get_full_destination_from_track(os.path.join(destination, directory), tracks[i])
@@ -519,7 +520,7 @@ class MoveAudioFileCommandParser(object):
     def _get_single_directory_parse_from_release_model_commands(self, release_model, source_path, source_files, destination):
         i = 0
         tracks = release_model.get_tracks()
-        audio_files = [f for f in sorted(source_files) if f.endswith('.mp3')]
+        audio_files = [f for f in sorted(source_files) if f.endswith('.{0}'.format(self._source_format))]
         commands = []
         while i < len(audio_files):
             command = MoveAudioFileCommand(self._configuration_provider)
@@ -547,7 +548,7 @@ class MoveAudioFileCommandParser(object):
             track_number = '0' + str(track.track_number)
         else:
             track_number = track.track_number
-        return os.path.join(destination, '{0} - {1}.mp3'.format(track_number, replace_forbidden_characters(track.title)))
+        return os.path.join(destination, '{0} - {1}.{2}'.format(track_number, replace_forbidden_characters(track.title), self._source_format))
 
 class ArtworkCommandParser(object):
     def __init__(self, configuration_provider, tagger):

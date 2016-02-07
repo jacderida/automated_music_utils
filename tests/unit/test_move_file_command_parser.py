@@ -46,7 +46,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_encode_commands(commands, release_model)
         self.assertEqual(4, len(commands))
 
@@ -88,7 +88,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_encode_commands(commands, release_model)
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - Track 01.mp3', commands[0].source)
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Track 02.mp3', commands[1].source)
@@ -133,7 +133,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_encode_commands(commands, release_model)
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -218,7 +218,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Cow Cud Is A Twin', 11, 12, 1, 1)
         release_model.add_track_directly(None, 'Next Heap With', 12, 12, 1, 1)
 
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_encode_commands(commands, release_model)
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/01 - Acrid Avid Jam Shred.mp3', commands[0].destination)
         self.assertEqual('/Warp Records/[WARP CD 30] Aphex Twin - ...I Care Because You Do (1995)/02 - The Waxen Pith.mp3', commands[1].destination)
@@ -268,7 +268,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         with self.assertRaisesRegexp(CommandParsingError, 'The number of encode commands must be the same as the number of tracks on the release.'):
-            parser = MoveAudioFileCommandParser(config_mock)
+            parser = MoveAudioFileCommandParser(config_mock, 'mp3')
             commands = parser.parse_from_encode_commands(commands, release_model)
 
     @mock.patch('os.listdir')
@@ -309,7 +309,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         command = parser.parse_from_encode_commands(commands, release_model)[4]
         self.assertEqual('/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.jpg', command.source)
         self.assertEqual('/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.jpg', command.destination)
@@ -352,7 +352,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         command = parser.parse_from_encode_commands(commands, release_model)[4]
         self.assertEqual('/source/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.png', command.source)
         self.assertEqual('/destination/Rephlex/[ANALORD 08] AFX - Analord 08 (2005)/cover.png', command.destination)
@@ -386,7 +386,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual(4, len(commands))
 
@@ -418,7 +418,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/source/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/source/02 - Track 2.mp3', commands[1].source)
@@ -453,7 +453,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/source/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/source/02 - Track 2.mp3', commands[1].source)
@@ -488,7 +488,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -523,7 +523,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor/Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -558,7 +558,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor\Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -593,7 +593,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor?Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -628,7 +628,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor<Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -663,7 +663,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor>Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -698,7 +698,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor:Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -733,7 +733,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor*Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -768,7 +768,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor|Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -803,7 +803,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
@@ -831,7 +831,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
 
         with self.assertRaisesRegexp(CommandParsingError, 'The source must be a directory.'):
             config_mock = Mock()
-            parser = MoveAudioFileCommandParser(config_mock)
+            parser = MoveAudioFileCommandParser(config_mock, 'mp3')
             parser.parse_from_release_model('/some/source/file.mp3', '/some/destination', release_model)
 
     @mock.patch('os.makedirs')
@@ -855,7 +855,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         makedirs_mock.assert_called_once_with('/some/destination')
 
@@ -914,7 +914,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model(source_path, '/some/destination', release_model)
         self.assertEqual('/some/destination/cd1/01 - Time To Find Me (AFX Fast Mix).mp3', commands[0].destination)
         self.assertEqual('/some/destination/cd1/02 - Raising The Titanic (Big Drum Mix).mp3', commands[1].destination)
@@ -998,7 +998,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model(source_path, '/some/destination', release_model)
         self.assertEqual('/some/source/cd1/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/source/cd1/02 - Track 2.mp3', commands[1].source)
@@ -1082,7 +1082,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model(source_path, '/some/destination', release_model)
         self.assertEqual('/some/source/cd1/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/source/cd1/02 - Track 2.mp3', commands[1].source)
@@ -1139,7 +1139,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         command = parser.parse_from_release_model('/some/source', '/some/destination', release_model)[4]
         self.assertEqual('/some/source/cover.jpg', command.source)
         self.assertEqual('/some/destination/cover.jpg', command.destination)
@@ -1172,7 +1172,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor"Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         command = parser.parse_from_release_model('/some/source', '/some/destination', release_model)[4]
         self.assertEqual('/some/source/cover.png', command.source)
         self.assertEqual('/some/destination/cover.png', command.destination)
@@ -1232,7 +1232,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         command = parser.parse_from_release_model(source_path, '/some/destination', release_model)[0]
         self.assertEqual('/some/source/cover.jpg', command.source)
         self.assertEqual('/some/destination/cover.jpg', command.destination)
@@ -1292,7 +1292,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         isdir_mock.side_effect = [True, True]
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         command = parser.parse_from_release_model(source_path, '/some/destination', release_model)[0]
         self.assertEqual('/some/source/cover.png', command.source)
         self.assertEqual('/some/destination/cover.png', command.destination)
@@ -1325,7 +1325,7 @@ class TestMoveAudioFileCommandParser(unittest.TestCase):
         release_model.add_track_directly(None, 'Backdoor\Spyboter.A', 4, 4, 1, 1)
 
         config_mock = Mock()
-        parser = MoveAudioFileCommandParser(config_mock)
+        parser = MoveAudioFileCommandParser(config_mock, 'mp3')
         commands = parser.parse_from_release_model('/some/source', '/some/destination', release_model)
         self.assertEqual('/some/destination/01 - PWSteal.Ldpinch.D.mp3', commands[0].destination)
         self.assertEqual('/some/destination/02 - Backdoor.Berbew.Q.mp3', commands[1].destination)
