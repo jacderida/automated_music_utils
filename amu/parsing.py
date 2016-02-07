@@ -91,10 +91,10 @@ class CommandParser(object):
         return self._get_encode_commands(args, destination, release_model)
 
     def _get_encode_commands(self, args, destination, release_model):
-        if args.encoding_from == 'cd' and args.encoding_to == 'mp3':
-            commands = self._get_encode_cd_to_mp3_commands(args, destination, release_model)
-        elif args.encoding_from == 'wav' and args.encoding_to == 'mp3':
-            commands = self._get_encode_wav_to_mp3_commands(args, destination, release_model)
+        if args.encoding_from == 'cd':
+            commands = self._get_encode_cd_commands(args, destination, release_model)
+        elif args.encoding_from == 'wav':
+            commands = self._get_encode_wav_commands(args, destination, release_model)
         if args.keep_source:
             for command in commands:
                 command.keep_source = True
@@ -118,7 +118,7 @@ class CommandParser(object):
         command_args.source = source
         return tag_command_parser.parse_add_mp3_tag_command(command_args)
 
-    def _get_encode_cd_to_mp3_commands(self, args, destination, release_model):
+    def _get_encode_cd_commands(self, args, destination, release_model):
         commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder, args.encoding_to)
         source = os.path.join(tempfile.gettempdir(), str(uuid.uuid4()))
@@ -131,7 +131,7 @@ class CommandParser(object):
             commands.extend(move_file_parser.parse_from_encode_commands(encode_commands[1:], release_model))
         return commands
 
-    def _get_encode_wav_to_mp3_commands(self, args, destination, release_model):
+    def _get_encode_wav_commands(self, args, destination, release_model):
         if args.source:
             source = args.source
         else:
@@ -186,7 +186,7 @@ class EncodeCommandParser(object):
         for i in range(1, track_count + 1):
             command = EncodeWavCommand(self._configuration_provider, self._encoder)
             command.source = os.path.join(rip_destination, utils.get_track_name(i, "wav"))
-            command.destination = os.path.join(destination, utils.get_track_name(i, "mp3"))
+            command.destination = os.path.join(destination, utils.get_track_name(i, self._encoding_destination))
             commands.append(command)
         return commands
 
@@ -200,7 +200,7 @@ class EncodeCommandParser(object):
         return self._get_directory_command(source, destination)
 
     def _get_single_file_command(self, source, destination):
-        if not destination.endswith('.mp3'):
+        if not destination.endswith(self._encoding_destination):
             raise CommandParsingError('If the source is a file, the destination must also be a file.')
         command = EncodeWavCommand(self._configuration_provider, self._encoder)
         command.source = source
@@ -215,19 +215,17 @@ class EncodeCommandParser(object):
                     full_source_directory = os.path.join(root, directory)
                     full_destination_directory = os.path.join(destination, directory)
                     for source_wav in [f for f in sorted(os.listdir(full_source_directory)) if f.endswith('.wav')]:
-                        commands.append(self._get_encode_wav_to_mp3_command(
-                            full_source_directory, full_destination_directory, source_wav))
+                        commands.append(self._get_encode_wav_command(full_source_directory, full_destination_directory, source_wav))
             else:
                 for source_wav in [f for f in sorted(files) if f.endswith('.wav')]:
-                    commands.append(self._get_encode_wav_to_mp3_command(
-                        root, destination, source_wav))
+                    commands.append(self._get_encode_wav_command(root, destination, source_wav))
             break
         return commands
 
-    def _get_encode_wav_to_mp3_command(self, source_directory, destination_directory, source_wav):
+    def _get_encode_wav_command(self, source_directory, destination_directory, source_wav):
         command = EncodeWavCommand(self._configuration_provider, self._encoder)
         command.source = os.path.join(source_directory, source_wav)
-        command.destination = os.path.join(destination_directory, os.path.splitext(source_wav)[0] + '.mp3')
+        command.destination = os.path.join(destination_directory, os.path.splitext(source_wav)[0] + '.{0}'.format(self._encoding_destination))
         return command
 
 class DecodeCommandParser(object):
