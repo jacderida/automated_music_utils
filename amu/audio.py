@@ -57,7 +57,7 @@ class FlacEncoder(object):
             self._config_provider.get_flac_path(),
             self._config_provider.get_flac_encoding_setting(),
             source,
-            destination
+            '--output-name={0}'.format(destination)
         ]
         print u'[encode] Running flac with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

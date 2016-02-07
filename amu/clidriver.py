@@ -96,7 +96,6 @@ class CliDriver(object):
         parser = CommandParser(
             config_provider,
             RubyRipperCdRipper(config_provider),
-            LameEncoder(config_provider),
             DiscogsMetadataService(),
             GenreSelector())
         commands = parser.from_args(self._get_arguments())

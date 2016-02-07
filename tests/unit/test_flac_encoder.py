@@ -27,7 +27,7 @@ class FlacEncoderTest(unittest.TestCase):
             '/opt/flac/flac',
             '-8',
             '/some/path/source',
-            '/some/path/destination'
+            '--output-name=/some/path/destination'
         ]
         subprocess_mock.assert_called_with(subprocess_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
