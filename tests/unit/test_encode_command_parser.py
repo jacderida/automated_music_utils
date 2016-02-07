@@ -7,29 +7,29 @@ from amu.parsing import CommandParsingError, EncodeCommandParser
 class EncodeCommandParserTest(unittest.TestCase):
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__source_and_destination_are_files__returns_single_encode_wav_to_mp3_command(self, isfile_mock, exists_mock):
+    def test__parse_wav__source_and_destination_are_files__returns_single_encode_wav_to_mp3_command(self, isfile_mock, exists_mock):
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         exists_mock.return_value = True
         isfile_mock.return_value = True
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/path/to/song.mp3')
+        commands = parser.parse_wav('/some/path/to/song.wav', '/some/path/to/song.mp3')
         self.assertEqual(1, len(commands))
         self.assertIsInstance(commands[0], EncodeWavCommand)
         self.assertEqual('/some/path/to/song.wav', commands[0].source)
         self.assertEqual('/some/path/to/song.mp3', commands[0].destination)
 
     @mock.patch('os.path.exists')
-    def test__parse_wav_to_mp3__source_does_not_exist__throws_command_parsing_exception(self, exists_mock):
+    def test__parse_wav__source_does_not_exist__throws_command_parsing_exception(self, exists_mock):
         exists_mock.return_value = False
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
         with self.assertRaisesRegexp(CommandParsingError, 'The source directory or wav file must exist'):
-            parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/path/to/song.mp3')
+            parser.parse_wav('/some/path/to/song.wav', '/some/path/to/song.mp3')
 
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__source_is_directory_with_4_wav_files__returns_4_correctly_specified_encode_wav_to_mp3_commands(self, isfile_mock, exists_mock, walk_mock):
+    def test__parse_wav__source_is_directory_with_4_wav_files__returns_4_correctly_specified_encode_wav_to_mp3_commands(self, isfile_mock, exists_mock, walk_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
@@ -37,7 +37,7 @@ class EncodeCommandParserTest(unittest.TestCase):
         ]
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        commands = parser.parse_wav('/some/path/to/wavs', '/some/destination/')
         self.assertEqual(4, len(commands))
         self.assertEqual(commands[0].source, '/some/path/to/wavs/01 - Track 1.wav')
         self.assertEqual(commands[0].destination, '/some/destination/01 - Track 1.mp3')
@@ -52,7 +52,7 @@ class EncodeCommandParserTest(unittest.TestCase):
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__source_is_multi_cd_release__returns_9_correctly_specified_encode_wav_to_mp3_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
+    def test__parse_wav__source_is_multi_cd_release__returns_9_correctly_specified_encode_wav_to_mp3_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
@@ -66,7 +66,7 @@ class EncodeCommandParserTest(unittest.TestCase):
         ]
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        commands = parser.parse_wav('/some/path/to/wavs', '/some/destination/')
         self.assertEqual(9, len(commands))
         self.assertEqual(commands[0].source, '/some/path/to/wavs/cd1/01 - Track 1.wav')
         self.assertEqual(commands[0].destination, '/some/destination/cd1/01 - Track 1.mp3')
@@ -91,7 +91,7 @@ class EncodeCommandParserTest(unittest.TestCase):
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__source_is_multi_cd_release_and_walk_returns_directories_and_files_in_arbitrary_order__returns_18_correctly_specified_encode_wav_to_mp3_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
+    def test__parse_wav__source_is_multi_cd_release_and_walk_returns_directories_and_files_in_arbitrary_order__returns_18_correctly_specified_encode_wav_to_mp3_commands(self, isfile_mock, exists_mock, walk_mock, listdir_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
@@ -109,7 +109,7 @@ class EncodeCommandParserTest(unittest.TestCase):
         ]
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        commands = parser.parse_wav('/some/path/to/wavs', '/some/destination/')
         self.assertEqual(18, len(commands))
         self.assertEqual(commands[0].source, '/some/path/to/wavs/cd1/01 - Track 1.wav')
         self.assertEqual(commands[0].destination, '/some/destination/cd1/01 - Track 1.mp3')
@@ -151,7 +151,7 @@ class EncodeCommandParserTest(unittest.TestCase):
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__source_contains_files_that_are_not_wavs__commands_should_not_be_generated_for_non_wav_files(self, isfile_mock, exists_mock, walk_mock):
+    def test__parse_wav__source_contains_files_that_are_not_wavs__commands_should_not_be_generated_for_non_wav_files(self, isfile_mock, exists_mock, walk_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
@@ -159,21 +159,21 @@ class EncodeCommandParserTest(unittest.TestCase):
         ]
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        commands = parser.parse_wav('/some/path/to/wavs', '/some/destination/')
         self.assertEqual(4, len(commands))
 
     @mock.patch('os.path.exists')
-    def test__parse_wav_to_mp3__destination_is_empty__throws_command_parsing_error(self, exists_mock):
+    def test__parse_wav__destination_is_empty__throws_command_parsing_error(self, exists_mock):
         exists_mock.return_value = True
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         with self.assertRaisesRegexp(CommandParsingError, 'The destination cannot be empty'):
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-            parser.parse_wav_to_mp3('/some/path/to/song.wav', '')
+            parser.parse_wav('/some/path/to/song.wav', '')
 
     @mock.patch('os.walk')
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__wav_files_are_returned_in_arbitrary_order__source_and_destination_are_ordered_correctly(self, isfile_mock, exists_mock, walk_mock):
+    def test__parse_wav__wav_files_are_returned_in_arbitrary_order__source_and_destination_are_ordered_correctly(self, isfile_mock, exists_mock, walk_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = False
         walk_mock.return_value = [
@@ -181,7 +181,7 @@ class EncodeCommandParserTest(unittest.TestCase):
         ]
         config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
         parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-        commands = parser.parse_wav_to_mp3('/some/path/to/wavs', '/some/destination/')
+        commands = parser.parse_wav('/some/path/to/wavs', '/some/destination/')
         self.assertEqual(4, len(commands))
         self.assertEqual(commands[0].source, '/some/path/to/wavs/01 - Track 1.wav')
         self.assertEqual(commands[0].destination, '/some/destination/01 - Track 1.mp3')
@@ -194,13 +194,13 @@ class EncodeCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.path.exists')
     @mock.patch('os.path.isfile')
-    def test__parse_wav_to_mp3__source_is_file_but_destination_is_directory__throws_command_parsing_error(self, isfile_mock, exists_mock):
+    def test__parse_wav__source_is_file_but_destination_is_directory__throws_command_parsing_error(self, isfile_mock, exists_mock):
         exists_mock.return_value = True
         isfile_mock.return_value = True
         with self.assertRaisesRegexp(CommandParsingError, 'If the source is a file, the destination must also be a file.'):
             config_mock, cd_ripper_mock, encoder_mock = (Mock(),)*3
             parser = EncodeCommandParser(config_mock, cd_ripper_mock, encoder_mock)
-            parser.parse_wav_to_mp3('/some/path/to/song.wav', '/some/destination/')
+            parser.parse_wav('/some/path/to/song.wav', '/some/destination/')
 
     @mock.patch('amu.utils.get_number_of_tracks_on_cd')
     def test__parse_cd_rip__cd_has_5_tracks__it_should_generate_a_correctly_specified_rip_cd_command_and_5_correctly_specified_encode_wav_to_mp3_commands(self, number_of_tracks_mock):

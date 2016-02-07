@@ -40,7 +40,7 @@ class CommandParserTest(unittest.TestCase):
         command = parser.from_args(args)[0]
         self.assertEqual('/some/path', command.destination)
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__when_encode_from_wav_to_mp3_is_specified__it_should_use_the_encoder_command_parser(self, encode_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -58,7 +58,7 @@ class CommandParserTest(unittest.TestCase):
         encode_command_parser_mock.assert_called_once_with('/some/song.wav', 'some/song.mp3')
         self.assertEqual(1, len(commands))
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_no_optional_source__source_should_be_current_working_directory(self, encode_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -70,7 +70,7 @@ class CommandParserTest(unittest.TestCase):
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_optional_source__source_should_be_set_correctly(self, encode_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -81,7 +81,7 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with('/some/source', os.getcwd())
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_no_optional_destination__destination_should_be_current_working_directory(self, encode_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -93,7 +93,7 @@ class CommandParserTest(unittest.TestCase):
         current_working_directory = os.getcwd()
         encode_command_parser_mock.assert_called_once_with(current_working_directory, current_working_directory)
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_optional_destination__destination_should_be_set_correctly(self, encode_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -104,7 +104,7 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         encode_command_parser_mock.assert_called_once_with(os.getcwd(), '/some/destination')
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_keep_source_set__keep_source_should_be_true(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
@@ -121,7 +121,7 @@ class CommandParserTest(unittest.TestCase):
         self.assertTrue(commands[0].keep_source)
         self.assertTrue(commands[1].keep_source)
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_without_keep_source_specified__keep_source_should_be_false(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
@@ -138,7 +138,7 @@ class CommandParserTest(unittest.TestCase):
         self.assertFalse(commands[0].keep_source)
         self.assertFalse(commands[1].keep_source)
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_when_there_are_no_wavs_to_encode__throws_command_parsing_error(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
@@ -151,7 +151,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__it_should_return_4_tag_mp3_commands(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -206,7 +206,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_sources_from_the_encode_commands_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -276,7 +276,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_genre_selector_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -341,7 +341,7 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         genre_selector_mock.select_genre.assert_called_once_with(['Electronic', 'Acid'])
 
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_discogs_release_and_cd_have_different_lengths__it_should_raise_a_command_parsing_error(self, encode_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()
@@ -386,7 +386,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -442,7 +442,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_encode_command_parser_should_be_called_correctly(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -498,7 +498,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_config_provider_should_supply_the_destination(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -554,7 +554,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified_and_destination_is_overriden__the_destination_override_should_be_used(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -611,7 +611,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__4_move_audio_file_commands_are_generated(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
         driver = CliDriver()
@@ -668,7 +668,7 @@ class CommandParserTest(unittest.TestCase):
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
-    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav_to_mp3')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
     def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified__the_add_artwork_command_parser_is_called_correctly(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
         config_mock, cd_ripper_mock, encoder_mock, metadata_mock, genre_selector_mock = (Mock(),)*5
         driver = CliDriver()

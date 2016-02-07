@@ -138,7 +138,7 @@ class CommandParser(object):
             source = os.getcwd().decode('utf-8')
         commands = []
         encode_command_parser = EncodeCommandParser(self._configuration_provider, self._cd_ripper, self._encoder)
-        encode_commands = encode_command_parser.parse_wav_to_mp3(source, destination)
+        encode_commands = encode_command_parser.parse_wav(source, destination)
         commands.extend(encode_commands)
         track_count = len(encode_commands)
         if track_count == 0:
@@ -189,7 +189,7 @@ class EncodeCommandParser(object):
             commands.append(command)
         return commands
 
-    def parse_wav_to_mp3(self, source, destination):
+    def parse_wav(self, source, destination):
         if not os.path.exists(source):
             raise CommandParsingError('The source directory or wav file must exist')
         if not destination:
