@@ -25,3 +25,12 @@ class FlacTaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(TaggerError, 'The source /some/non/existent/flac does not exist.'):
             tagger = FlacTagger()
             tagger.add_tags('/some/non/existent/flac')
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.path.exists')
+    def test__add_tags__source_is_directory__raises_tagger_error(self, exists_mock, isdir_mock):
+        exists_mock.return_value = True
+        isdir_mock.return_value = True
+        with self.assertRaisesRegexp(TaggerError, 'The source must not be a directory.'):
+            tagger = FlacTagger()
+            tagger.add_tags('/some/non/existent/flac')

@@ -247,8 +247,10 @@ class FlacTagger(object):
     def add_tags(self, source, artist='', album_artist='', album='',
                  title='', year='', genre='', comment='',
                  track_number=0, track_total=0, disc_number=0, disc_total=0):
-        if not source:
-            raise ValueError('A source must be set for tagging a flac.')
         if source:
             if not os.path.exists(source):
                 raise TaggerError('The source {0} does not exist.'.format(source))
+            if os.path.isdir(source):
+                raise TaggerError('The source must not be a directory.')
+        else:
+            raise ValueError('A source must be set for tagging a flac.')
