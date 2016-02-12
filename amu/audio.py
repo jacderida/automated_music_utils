@@ -242,3 +242,10 @@ class Mp3Tagger(object):
             tag.save()
             tag = ID3(source)
             return tag
+
+class FlacTagger(object):
+    def add_tags(self, source, artist='', album_artist='', album='',
+                 title='', year='', genre='', comment='',
+                 track_number=0, track_total=0, disc_number=0, disc_total=0):
+        if not source:
+            raise ValueError('A source must be set for tagging a flac.')
