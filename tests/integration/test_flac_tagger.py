@@ -1,7 +1,10 @@
 import os
 import shutil
 import unittest
-from amu.audio import FlacTagger
+
+import mock
+
+from amu.audio import FlacTagger, TaggerError
 
 
 class FlacTaggerTest(unittest.TestCase):
@@ -15,3 +18,10 @@ class FlacTaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, 'A source must be set for tagging a flac.'):
             tagger = FlacTagger()
             tagger.add_tags('')
+
+    @mock.patch('os.path.exists')
+    def test__add_tags__source_does_not_exist__raises_tagger_error(self, exists_mock):
+        exists_mock.return_value = False
+        with self.assertRaisesRegexp(TaggerError, 'The source /some/non/existent/flac does not exist.'):
+            tagger = FlacTagger()
+            tagger.add_tags('/some/non/existent/flac')
