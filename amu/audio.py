@@ -125,7 +125,7 @@ class Mp3Tagger(object):
                 raise TaggerError('The source {0} does not exist.'.format(source))
             if os.path.isdir(source):
                 raise TaggerError('The source must not be a directory.')
-        if not source:
+        else:
             raise ValueError('A source must be set for tagging an mp3.')
         tag = self._get_tag(source)
         self._add_artist_frame(tag, artist)
