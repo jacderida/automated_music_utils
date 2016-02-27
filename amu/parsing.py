@@ -106,7 +106,8 @@ class CommandParser(object):
         tag_command_parser = TagCommandParser(self._configuration_provider, Mp3Tagger())
         if args.discogs_id:
             commands = []
-            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
+            collapse_index_tracks = True if args.collapse_index_tracks else False
+            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id), collapse_index_tracks)
             release_model.genre = self._genre_selector.select_genre([x.strip() for x in release_model.genre.split(',')])
             commands.extend(tag_command_parser.parse_from_release_model(source, release_model))
             move_file_parser = MoveAudioFileCommandParser(self._configuration_provider)
