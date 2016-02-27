@@ -438,7 +438,7 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
-        metadata_mock.get_release_by_id.assert_called_once_with(451034)
+        metadata_mock.get_release_by_id.assert_called_once_with(451034, False)
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
@@ -1252,7 +1252,7 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
-        metadata_mock.get_release_by_id.assert_called_once_with(3535)
+        metadata_mock.get_release_by_id.assert_called_once_with(3535, False)
 
     @mock.patch('tempfile.gettempdir')
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
@@ -1874,3 +1874,60 @@ class CommandParserTest(unittest.TestCase):
         self.assertEqual(args_to_mix_parser.title, 'Xltronic Marathon')
         self.assertEqual(args_to_mix_parser.year, '2006')
         self.assertEqual(args_to_mix_parser.comment, 'blah')
+
+    @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
+    @mock.patch('amu.parsing.EncodeCommandParser.parse_wav')
+    def test__from_args__encode_wav_to_mp3_command_with_discogs_id_specified_and_collapse_index_tracks__the_release_should_only_be_fetched_once(self, encode_command_parser_mock, artwork_command_parser_mock, move_file_command_parser_mock):
+        config_mock, cd_ripper_mock, encoder_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*6
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'encode',
+            'wav',
+            'mp3',
+            '--source=/some/path/to/wavs',
+            '--discogs-id=451034',
+            '--collapse-index-tracks'
+        ])
+        encode_command_parser_mock.return_value = [
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+            EncodeWavCommand(config_mock, encoder_mock),
+        ]
+        artwork_command_parser_mock.return_value = [
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock),
+            AddArtworkCommand(config_mock, tagger_mock)
+        ]
+        move_file_command_parser_mock.return_value = [
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock)
+        ]
+        config_mock.get_releases_destination_with_mask_replaced.return_value = '/some/replaced/mask'
+
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+        metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
+
+        parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
+        parser.from_args(args)
+        metadata_mock.get_release_by_id.assert_called_once_with(451034, True)
