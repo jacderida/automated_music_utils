@@ -1,4 +1,3 @@
-import copy
 from amu.utils import remove_number_from_duplicate_entry
 
 
@@ -297,7 +296,6 @@ Tracklist:
             elif track.track_type == 'track' and track.position != 'Video':
                 track_totals.append((track_number, track_total, 1, 1))
                 track_number += 1
-        print track_totals
         return track_totals
 
     @staticmethod
