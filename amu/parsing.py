@@ -118,7 +118,7 @@ class CommandParser(object):
             return tag_command_parser.parse_remove_mp3_tag_command(source)
         command_args = AddTagCommandArgs.from_args(args)
         command_args.source = source
-        return tag_command_parser.parse_add_mp3_tag_command(command_args)
+        return tag_command_parser.parse_add_tag_command(command_args)
 
     def _get_encode_cd_commands(self, args, destination, release_model):
         commands = []

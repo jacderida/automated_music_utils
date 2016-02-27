@@ -11,7 +11,7 @@ from mock import Mock
 
 class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file__returns_single_add_mp3_tag_command(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file__returns_single_add_mp3_tag_command(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -19,13 +19,13 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, len(commands))
         self.assertIsInstance(commands[0], AddTagCommand)
         self.assertEqual('/some/path/to/song.mp3', commands[0].source)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__artist_is_specified__add_mp3_tag_command_has_artist_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__artist_is_specified__add_mp3_tag_command_has_artist_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -33,11 +33,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual('Aphex Twin', commands[0].artist)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__album_artist_is_specified__add_mp3_tag_command_has_album_artist_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__album_artist_is_specified__add_mp3_tag_command_has_album_artist_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -46,11 +46,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album_artist = 'Aphex Twin'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual('Aphex Twin', commands[0].album_artist)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__album_is_specified__add_mp3_tag_command_has_album_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__album_is_specified__add_mp3_tag_command_has_album_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -58,11 +58,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual('Druqks', commands[0].album)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__title_is_specified__add_mp3_tag_command_has_title_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__title_is_specified__add_mp3_tag_command_has_title_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -71,11 +71,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.title = 'Vordhosbn'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual('Vordhosbn', commands[0].title)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__year_is_specified__add_mp3_tag_command_has_year_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__year_is_specified__add_mp3_tag_command_has_year_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -85,11 +85,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.year = 2001
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(2001, commands[0].year)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__genre_is_specified__add_mp3_tag_command_has_genre_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__genre_is_specified__add_mp3_tag_command_has_genre_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -100,11 +100,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.genre = 'Electronic'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual('Electronic', commands[0].genre)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__comment_is_specified__add_mp3_tag_command_has_comment_correctly_specified(self, isfile_mock):
+    def test__parse_add_tag_command__comment_is_specified__add_mp3_tag_command_has_comment_correctly_specified(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -116,11 +116,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.comment = 'Warp Records (WARPCD92)'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual('Warp Records (WARPCD92)', commands[0].comment)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_no_track_number_is_specified__add_mp3_tag_command_has_track_number_set_to_1(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_no_track_number_is_specified__add_mp3_tag_command_has_track_number_set_to_1(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -129,11 +129,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.title = 'Vordhosbn'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, commands[0].track_number)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_no_track_number_is_specified__add_mp3_tag_command_has_track_total_set_to_1(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_no_track_number_is_specified__add_mp3_tag_command_has_track_total_set_to_1(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -142,12 +142,12 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.title = 'Vordhosbn'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, commands[0].track_total)
 
     @mock.patch('os.path.isfile')
     @mock.patch('amu.config.ConfigurationProvider')
-    def test__parse_add_mp3_tag_command__source_is_file_and_no_disc_number_is_specified__add_mp3_tag_command_has_disc_number_set_to_1(self, config_mock, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_no_disc_number_is_specified__add_mp3_tag_command_has_disc_number_set_to_1(self, config_mock, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -156,11 +156,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.title = 'Vordhosbn'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, commands[0].disc_number)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_no_disc_number_is_specified__add_mp3_tag_command_has_disc_total_set_to_1(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_no_disc_number_is_specified__add_mp3_tag_command_has_disc_total_set_to_1(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -169,11 +169,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.title = 'Vordhosbn'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, commands[0].disc_total)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_track_number_is_specified__add_mp3_tag_command_has_track_number_set(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_track_number_is_specified__add_mp3_tag_command_has_track_number_set(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -184,11 +184,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.track_total = 10
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(2, commands[0].track_number)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_track_total_is_specified__add_mp3_tag_command_has_track_total_set(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_track_total_is_specified__add_mp3_tag_command_has_track_total_set(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -199,11 +199,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.track_total = 10
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(10, commands[0].track_total)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_track_number_is_specified_but_track_total_is_not__command_parsing_error_is_raised(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_track_number_is_specified_but_track_total_is_not__command_parsing_error_is_raised(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -214,10 +214,10 @@ class TagCommandParserTest(unittest.TestCase):
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
         with self.assertRaisesRegexp(CommandParsingError, 'If a track number has been supplied, a track total must also be supplied.'):
-            parser.parse_add_mp3_tag_command(command_args)
+            parser.parse_add_tag_command(command_args)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_disc_number_is_specified__add_mp3_tag_command_has_disc_number_set(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_disc_number_is_specified__add_mp3_tag_command_has_disc_number_set(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -230,11 +230,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.disc_total = 1
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, commands[0].disc_number)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_disc_total_is_specified__add_mp3_tag_command_has_disc_total_set(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_disc_total_is_specified__add_mp3_tag_command_has_disc_total_set(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -247,11 +247,11 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.disc_total = 1
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(1, commands[0].disc_total)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_file_and_disc_number_is_specified_but_disc_total_is_not__command_parsing_error_is_raised(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_file_and_disc_number_is_specified_but_disc_total_is_not__command_parsing_error_is_raised(self, isfile_mock):
         isfile_mock.return_value = True
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/song.mp3'
@@ -264,11 +264,11 @@ class TagCommandParserTest(unittest.TestCase):
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
         with self.assertRaisesRegexp(CommandParsingError, 'If a disc number has been supplied, a disc total must also be supplied.'):
-            parser.parse_add_mp3_tag_command(command_args)
+            parser.parse_add_tag_command(command_args)
 
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock):
+    def test__parse_add_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
@@ -279,7 +279,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(4, len(commands))
         self.assertEqual('/some/path/to/mp3s/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/path/to/mp3s/02 - Track 2.mp3', commands[1].source)
@@ -288,7 +288,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__walk_returns_files_in_arbitrary_order__returns_4_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock):
+    def test__parse_add_tag_command__walk_returns_files_in_arbitrary_order__returns_4_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', (), ('04 - Track 4.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '01 - Track 1.mp3'))
         ]
@@ -299,7 +299,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(4, len(commands))
         self.assertEqual('/some/path/to/mp3s/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/path/to/mp3s/02 - Track 2.mp3', commands[1].source)
@@ -308,7 +308,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_track_numbers(self, isfile_mock, walk_mock):
+    def test__parse_add_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_track_numbers(self, isfile_mock, walk_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
@@ -319,7 +319,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(4, len(commands))
         self.assertEqual(1, commands[0].track_number)
         self.assertEqual(2, commands[1].track_number)
@@ -328,7 +328,7 @@ class TagCommandParserTest(unittest.TestCase):
 
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_track_totals(self, isfile_mock, walk_mock):
+    def test__parse_add_tag_command__source_is_directory_with_4_mp3s__returns_4_add_mp3_tag_commands_with_correct_track_totals(self, isfile_mock, walk_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3'))
         ]
@@ -339,7 +339,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(4, len(commands))
         self.assertEqual(4, commands[0].track_total)
         self.assertEqual(4, commands[1].track_total)
@@ -347,7 +347,7 @@ class TagCommandParserTest(unittest.TestCase):
         self.assertEqual(4, commands[3].track_total)
 
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_directory_with_track_number_override__command_parsing_error_is_raised(self, isfile_mock):
+    def test__parse_add_tag_command__source_is_directory_with_track_number_override__command_parsing_error_is_raised(self, isfile_mock):
         isfile_mock.return_value = False
         command_args = AddTagCommandArgs()
         command_args.source = '/some/path/to/mp3s'
@@ -358,12 +358,12 @@ class TagCommandParserTest(unittest.TestCase):
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
         with self.assertRaisesRegexp(CommandParsingError, 'With a directory source, a track number and total override cannot be specified.'):
-            parser.parse_add_mp3_tag_command(command_args)
+            parser.parse_add_tag_command(command_args)
 
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock, listdir_mock):
+    def test__parse_add_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
@@ -380,7 +380,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(8, len(commands))
         self.assertEqual('/some/path/to/mp3s/cd1/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/path/to/mp3s/cd1/02 - Track 2.mp3', commands[1].source)
@@ -394,7 +394,7 @@ class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory_and_walk_returns_directories_in_arbitrary_order__returns_16_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock, listdir_mock):
+    def test__parse_add_tag_command__source_is_multi_cd_directory_and_walk_returns_directories_in_arbitrary_order__returns_16_add_mp3_tag_commands_with_correct_source(self, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd4', 'cd2', 'cd3', 'cd1'), ()),
             ('/some/path/to/mp3s/cd4', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
@@ -415,7 +415,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(16, len(commands))
         self.assertEqual('/some/path/to/mp3s/cd1/01 - Track 1.mp3', commands[0].source)
         self.assertEqual('/some/path/to/mp3s/cd1/02 - Track 2.mp3', commands[1].source)
@@ -437,7 +437,7 @@ class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_numbers(self, isfile_mock, walk_mock, listdir_mock):
+    def test__parse_add_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_numbers(self, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
@@ -454,7 +454,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(8, len(commands))
         self.assertEqual(1, commands[0].track_number)
         self.assertEqual(2, commands[1].track_number)
@@ -468,7 +468,7 @@ class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_totals(self, isfile_mock, walk_mock, listdir_mock):
+    def test__parse_add_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_track_totals(self, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
@@ -485,7 +485,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(9, len(commands))
         self.assertEqual(4, commands[0].track_total)
         self.assertEqual(4, commands[1].track_total)
@@ -500,7 +500,7 @@ class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_disc_numbers(self, isfile_mock, walk_mock, listdir_mock):
+    def test__parse_add_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_disc_numbers(self, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
@@ -517,7 +517,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(8, len(commands))
         self.assertEqual(1, commands[0].disc_number)
         self.assertEqual(1, commands[1].disc_number)
@@ -531,7 +531,7 @@ class TagCommandParserTest(unittest.TestCase):
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
     @mock.patch('os.path.isfile')
-    def test__parse_add_mp3_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_disc_totals(self, isfile_mock, walk_mock, listdir_mock):
+    def test__parse_add_tag_command__source_is_multi_cd_directory__returns_8_add_mp3_tag_commands_with_correct_disc_totals(self, isfile_mock, walk_mock, listdir_mock):
         walk_mock.return_value = [
             ('/some/path/to/mp3s', ('cd1', 'cd2'), ()),
             ('/some/path/to/mp3s/cd1', (), ('01 - Track 1.mp3', '02 - Track 2.mp3', '03 - Track 3.mp3', '04 - Track 4.mp3')),
@@ -548,7 +548,7 @@ class TagCommandParserTest(unittest.TestCase):
         command_args.album = 'Druqks'
         config_mock, tagger_mock = (Mock(),)*2
         parser = TagCommandParser(config_mock, tagger_mock)
-        commands = parser.parse_add_mp3_tag_command(command_args)
+        commands = parser.parse_add_tag_command(command_args)
         self.assertEqual(8, len(commands))
         self.assertEqual(2, commands[0].disc_total)
         self.assertEqual(2, commands[1].disc_total)

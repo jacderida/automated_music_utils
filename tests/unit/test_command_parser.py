@@ -1405,7 +1405,7 @@ class CommandParserTest(unittest.TestCase):
         commands = [x for x in parser.from_args(args) if isinstance(x, MoveAudioFileCommand)]
         self.assertEqual(12, len(commands))
 
-    @mock.patch('amu.parsing.TagCommandParser.parse_add_mp3_tag_command')
+    @mock.patch('amu.parsing.TagCommandParser.parse_add_tag_command')
     def test__from_args__when_add_mp3_tag_is_specified__the_tag_command_parser_should_be_used(self, tag_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -1429,7 +1429,7 @@ class CommandParserTest(unittest.TestCase):
         tag_command_parser_mock.assert_called_once()
         self.assertEqual(1, len(commands))
 
-    @mock.patch('amu.parsing.TagCommandParser.parse_add_mp3_tag_command')
+    @mock.patch('amu.parsing.TagCommandParser.parse_add_tag_command')
     def test__from_args__when_add_mp3_tag_is_specified__the_tag_command_parser_should_be_called_with_the_correct_arguments(self, tag_command_parser_mock):
         driver = CliDriver()
         arg_parser = driver.get_argument_parser()
@@ -1460,7 +1460,7 @@ class CommandParserTest(unittest.TestCase):
         self.assertEqual(15, command_args.track_total)
 
     @mock.patch('os.getcwd')
-    @mock.patch('amu.parsing.TagCommandParser.parse_add_mp3_tag_command')
+    @mock.patch('amu.parsing.TagCommandParser.parse_add_tag_command')
     def test__from_args__when_add_mp3_tag_is_specified_with_no_source__source_should_be_the_current_working_directory(self, tag_command_parser_mock, getcwd_mock):
         getcwd_mock.return_value = '/some/current/working/directory'
         driver = CliDriver()
