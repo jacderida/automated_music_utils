@@ -21,3 +21,8 @@ class DiscogsMetadataServiceTest(unittest.TestCase):
         self.assertEqual(release.original_release.year, '1969')
         self.assertEqual(release.original_release.label, 'Liberty')
         self.assertEqual(release.original_release.catno, 'LBS 83 279 I')
+
+    def test__from_discogs_release__collapse_index_tracks_is_specified__the_original_label_details_should_be_populated(self):
+        service = DiscogsMetadataService()
+        release = service.get_release_by_id(3579489, collapse_index_tracks=True)
+        self.assertEqual(7, len(release.get_tracks()))

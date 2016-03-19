@@ -17,16 +17,16 @@ class InvalidMaskError(Exception):
         self.message = message
 
 class DiscogsMetadataService(object):
-    def get_release_by_id(self, id):
+    def get_release_by_id(self, id, collapse_index_tracks=False):
         try:
             client = discogs_client.Client('amu/0.1')
             release = client.release(id)
             release.refresh()
-            release_model = ReleaseModel.from_discogs_release(release)
+            release_model = ReleaseModel.from_discogs_release(release, collapse_index_tracks)
             if release.master != None:
                 original_release = client.release(release.master.main_release.id)
                 original_release.refresh()
-                release_model.original_release = ReleaseModel.from_discogs_release(original_release)
+                release_model.original_release = ReleaseModel.from_discogs_release(original_release, collapse_index_tracks)
             return release_model
         except HTTPError, ex:
             if ex.status_code == 404:

@@ -84,7 +84,8 @@ class CommandParser(object):
         else:
             destination = os.getcwd()
         if args.discogs_id:
-            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
+            collapse_index_tracks = True if args.collapse_index_tracks else False
+            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id), collapse_index_tracks)
             release_model.genre = self._genre_selector.select_genre([x.strip() for x in release_model.genre.split(',')])
             if not args.destination:
                 destination = self._configuration_provider.get_releases_destination_with_mask_replaced(release_model)
@@ -106,7 +107,8 @@ class CommandParser(object):
         tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.format)
         if args.discogs_id:
             commands = []
-            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id))
+            collapse_index_tracks = True if args.collapse_index_tracks else False
+            release_model = self._metadata_service.get_release_by_id(int(args.discogs_id), collapse_index_tracks)
             release_model.genre = self._genre_selector.select_genre([x.strip() for x in release_model.genre.split(',')])
             commands.extend(tag_command_parser.parse_from_release_model(source, release_model))
             move_file_parser = MoveAudioFileCommandParser(self._configuration_provider, args.format)

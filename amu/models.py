@@ -1,5 +1,5 @@
-import re
 from amu.utils import remove_number_from_duplicate_entry
+
 
 class TrackModel(object):
     def __init__(self):
@@ -135,7 +135,7 @@ Tracklist:
         return tracklist
 
     @staticmethod
-    def from_discogs_release(release):
+    def from_discogs_release(release, collapse_index_tracks=False):
         """ Converts a release from a discogs model to a simpler model
         in our domain.
 
@@ -155,7 +155,7 @@ Tracklist:
             genres.extend(release.styles)
         release_model.genre = ReleaseModel._get_genre_from_discogs_model(genres)
         ReleaseModel._get_label_data_from_discogs_model(release_model, release)
-        ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist)
+        ReleaseModel._get_tracks_from_discogs_model(release_model, release.tracklist, collapse_index_tracks)
         return release_model
 
     @staticmethod
@@ -218,7 +218,7 @@ Tracklist:
         return labels[0]['catno']
 
     @staticmethod
-    def _get_tracks_from_discogs_model(release_model, tracklist):
+    def _get_tracks_from_discogs_model(release_model, tracklist, collapse_index_tracks=False):
         """
         BEWARE!
 
@@ -236,17 +236,30 @@ Tracklist:
         At the very least, don't be afraid to change. There are tests that will let you know if you've
         broken anything.
         """
-        track_data = ReleaseModel._get_positional_track_data(release_model, tracklist)
+        track_data = ReleaseModel._get_positional_track_data(release_model, tracklist, collapse_index_tracks)
         i = 0
         for track in tracklist:
             if track.track_type == 'index':
                 index_title = track.title
-                for sub_track in track.subtracks:
-                    track_model = TrackModel.from_discogs_track(
-                        sub_track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3],
-                        title='{0}: {1}'.format(index_title, sub_track.title))
-                    i += 1
+                if collapse_index_tracks:
+                    collapsed_title = '{0}: '.format(index_title)
+                    for sub_track in track.subtracks:
+                        collapsed_title += '{0}, '.format(sub_track.title)
+                    track_model = TrackModel()
+                    track_model.track_number = track_data[i][0]
+                    track_model.track_total = track_data[i][1]
+                    track_model.disc_number = track_data[i][2]
+                    track_model.disc_total = track_data[i][3]
+                    track_model.title = collapsed_title.strip(', ')
                     release_model.add_track(track_model)
+                    i += 1
+                else:
+                    for sub_track in track.subtracks:
+                        track_model = TrackModel.from_discogs_track(
+                            sub_track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3],
+                            title='{0}: {1}'.format(index_title, sub_track.title))
+                        i += 1
+                        release_model.add_track(track_model)
             elif track.track_type == 'track' and track.position != 'Video':
                 track_model = TrackModel.from_discogs_track(
                     track, track_data[i][0], track_data[i][1], track_data[i][2], track_data[i][3])
@@ -254,28 +267,32 @@ Tracklist:
                 release_model.add_track(track_model)
 
     @staticmethod
-    def _get_positional_track_data(release_model, tracklist):
+    def _get_positional_track_data(release_model, tracklist, collapse_index_tracks):
         if 'CD' in release_model.format:
             if release_model.format_quantity == 1:
-                return ReleaseModel._get_single_disc_positional_track_data(tracklist)
+                return ReleaseModel._get_single_disc_positional_track_data(tracklist, collapse_index_tracks)
             return ReleaseModel._get_multi_disc_positional_track_data(release_model.format_quantity, tracklist)
-        return ReleaseModel._get_single_disc_positional_track_data(tracklist)
+        return ReleaseModel._get_single_disc_positional_track_data(tracklist, collapse_index_tracks)
 
     @staticmethod
-    def _get_single_disc_positional_track_data(tracklist):
+    def _get_single_disc_positional_track_data(tracklist, collapse_index_tracks):
         track_totals = []
         track_number = 1
         track_total = 0
         for track in tracklist:
             if track.track_type == 'index':
-                track_total += len(track.subtracks)
+                track_total += 1 if collapse_index_tracks else len(track.subtracks)
             elif track.track_type == 'track' and track.position != 'Video':
                 track_total += 1
         for track in tracklist:
             if track.track_type == 'index':
-                for _ in track.subtracks:
+                if collapse_index_tracks:
                     track_totals.append((track_number, track_total, 1, 1))
                     track_number += 1
+                else:
+                    for _ in track.subtracks:
+                        track_totals.append((track_number, track_total, 1, 1))
+                        track_number += 1
             elif track.track_type == 'track' and track.position != 'Video':
                 track_totals.append((track_number, track_total, 1, 1))
                 track_number += 1
