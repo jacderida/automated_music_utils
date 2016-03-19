@@ -6,6 +6,7 @@ import uuid
 from amu import utils
 from amu.config import ConfigurationError
 from mutagen import File
+from mutagen.flac import FLAC
 from mutagen.id3 import APIC, COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TPOS, TRCK
 
 class TaggerError(Exception):
@@ -254,3 +255,6 @@ class FlacTagger(object):
                 raise TaggerError('The source must not be a directory.')
         else:
             raise ValueError('A source must be set for tagging a flac.')
+        tag = FLAC(source)
+        tag['ARTIST'] = artist
+        tag.save()

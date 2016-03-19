@@ -5,6 +5,7 @@ import unittest
 import mock
 
 from amu.audio import FlacTagger, TaggerError
+from tests.helpers import get_flac_tag_data
 
 
 class FlacTaggerTest(unittest.TestCase):
@@ -34,3 +35,9 @@ class FlacTaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(TaggerError, 'The source must not be a directory.'):
             tagger = FlacTagger()
             tagger.add_tags('/some/non/existent/flac')
+
+    def test__add_tags__artist_is_set__tag_should_have_an_artist_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', artist='Aphex Twin')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['artist'], u'Aphex Twin')

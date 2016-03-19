@@ -2,6 +2,7 @@ import re
 import subprocess
 import sys
 from contextlib import contextmanager
+from mutagen.flac import FLAC
 from mutagen.id3 import APIC, ID3, ID3NoHeaderError
 from StringIO import StringIO
 
@@ -66,4 +67,17 @@ def get_id3_tag_data(path):
         tag_data['artwork'] = True
     else:
         tag_data['artwork'] = False
+    return tag_data
+
+def get_flac_tag_data(path):
+    """
+    Gets the vorbis comment tag data from a FLAC.
+
+    It's possible for this code to deal with FLACs that have no tags, which is the reason
+    for the exception handling.
+    """
+    tag_data = {}
+    tag = FLAC(path)
+    if tag.has_key('ARTIST'):
+        tag_data['artist'] = tag['ARTIST'][0]
     return tag_data
