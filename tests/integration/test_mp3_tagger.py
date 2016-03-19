@@ -3,7 +3,7 @@ import os
 import shutil
 import unittest
 from amu.audio import Mp3Tagger, TaggerError
-from amu.utils import get_id3_tag_data
+from tests.helpers import get_id3_tag_data
 from tests.helpers import get_mp3_artwork_data
 from tests.helpers import mp3_has_tags
 
