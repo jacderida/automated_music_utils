@@ -107,3 +107,15 @@ class FlacTaggerTest(unittest.TestCase):
         tagger.add_tags('tests/integration/data/test_data.flac')
         tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
         self.assertFalse(tag_data.has_key('genre'))
+
+    def test__add_tags__comment_is_set__tag_should_have_a_comment_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', comment='WARPCD92')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['comment'], u'WARPCD92')
+
+    def test__add_tags__comment_is_not_set__tag_should_not_have_a_comment_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertFalse(tag_data.has_key('comment'))

@@ -262,6 +262,7 @@ class FlacTagger(object):
         self._add_album_frame(tag, album)
         self._add_year_frame(tag, year)
         self._add_genre_frame(tag, genre)
+        self._add_comment_frame(tag, comment)
         tag.save()
 
     def _add_artist_frame(self, tag, artist):
@@ -287,3 +288,7 @@ class FlacTagger(object):
     def _add_genre_frame(self, tag, genre):
         if genre:
             tag['GENRE'] = genre
+
+    def _add_comment_frame(self, tag, comment):
+        if comment:
+            tag['DESCRIPTION'] = comment
