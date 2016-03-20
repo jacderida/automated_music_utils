@@ -259,6 +259,7 @@ class FlacTagger(object):
         self._add_artist_frame(tag, artist)
         self._add_album_artist_frame(tag, album_artist)
         self._add_title_frame(tag, title)
+        self._add_album_frame(tag, album)
         tag.save()
 
     def _add_artist_frame(self, tag, artist):
@@ -272,3 +273,7 @@ class FlacTagger(object):
     def _add_title_frame(self, tag, title):
         if title:
             tag['TITLE'] = title
+
+    def _add_album_frame(self, tag, album):
+        if album:
+            tag['ALBUM'] = album

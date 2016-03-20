@@ -71,3 +71,15 @@ class FlacTaggerTest(unittest.TestCase):
         tagger.add_tags('tests/integration/data/test_data.flac')
         tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
         self.assertFalse(tag_data.has_key('title'))
+
+    def test__add_tags__album_is_set__tag_should_have_an_album_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', album='Dark Side of the Moon')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['album'], u'Dark Side of the Moon')
+
+    def test__add_tags__album_is_not_set__tag_should_not_have_an_album_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertFalse(tag_data.has_key('album'))
