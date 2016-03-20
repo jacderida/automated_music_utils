@@ -137,3 +137,21 @@ class FlacTaggerTest(unittest.TestCase):
         tagger.add_tags('tests/integration/data/test_data.flac', track_number=5, track_total=6)
         tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
         self.assertEqual(tag_data['trackno'], u'05/06')
+
+    def test__add_tags__disc_number_is_set__tag_should_have_a_disc_number_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', disc_number=13, disc_total=14)
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['discno'], u'13/14')
+
+    def test__add_tags__disc_number_is_less_than_10__tag_should_have_a_padded_disc_number_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', disc_number=3, disc_total=14)
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['discno'], u'03/14')
+
+    def test__add_tags__disc_total_is_less_than_10__tag_should_have_a_padded_disc_total_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', disc_number=3, disc_total=4)
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['discno'], u'03/04')
