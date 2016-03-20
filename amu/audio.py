@@ -256,9 +256,13 @@ class FlacTagger(object):
         else:
             raise ValueError('A source must be set for tagging a flac.')
         tag = FLAC(source)
-        tag['ARTIST'] = artist
+        self._add_artist_frame(tag, artist)
         self._add_album_artist_frame(tag, album_artist)
         tag.save()
+
+    def _add_artist_frame(self, tag, artist):
+        if artist:
+            tag['ARTIST'] = artist
 
     def _add_album_artist_frame(self, tag, album_artist):
         if album_artist:
