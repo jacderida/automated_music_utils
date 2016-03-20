@@ -82,4 +82,6 @@ def get_flac_tag_data(path):
         tag_data['artist'] = tag['ARTIST'][0]
     if tag.has_key('ALBUMARTIST'):
         tag_data['album_artist'] = tag['ALBUMARTIST'][0]
+    if tag.has_key('TITLE'):
+        tag_data['title'] = tag['TITLE'][0]
     return tag_data
