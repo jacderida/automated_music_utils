@@ -47,3 +47,9 @@ class FlacTaggerTest(unittest.TestCase):
         tagger.add_tags('tests/integration/data/test_data.flac', album_artist='Various')
         tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
         self.assertEqual(tag_data['album_artist'], u'Various')
+
+    def test__add_tags__album_artist_is_not_set__tag_should_not_have_an_album_artist_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertFalse(tag_data.has_key('album_artist'))
