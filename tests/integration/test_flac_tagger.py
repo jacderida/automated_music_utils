@@ -95,3 +95,15 @@ class FlacTaggerTest(unittest.TestCase):
         tagger.add_tags('tests/integration/data/test_data.flac')
         tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
         self.assertFalse(tag_data.has_key('year'))
+
+    def test__add_tags__genre_is_set__tag_should_have_a_genre_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', genre='Electronic')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['genre'], u'Electronic')
+
+    def test__add_tags__genre_is_not_set__tag_should_not_have_a_genre_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac')
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertFalse(tag_data.has_key('genre'))

@@ -88,4 +88,6 @@ def get_flac_tag_data(path):
         tag_data['album'] = tag['ALBUM'][0]
     if tag.has_key('DATE'):
         tag_data['year'] = tag['DATE'][0]
+    if tag.has_key('GENRE'):
+        tag_data['genre'] = tag['GENRE'][0]
     return tag_data
