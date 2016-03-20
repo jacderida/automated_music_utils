@@ -263,6 +263,7 @@ class FlacTagger(object):
         self._add_year_frame(tag, year)
         self._add_genre_frame(tag, genre)
         self._add_comment_frame(tag, comment)
+        self._add_track_number_frame(tag, track_number, track_total)
         tag.save()
 
     def _add_artist_frame(self, tag, artist):
@@ -292,3 +293,12 @@ class FlacTagger(object):
     def _add_comment_frame(self, tag, comment):
         if comment:
             tag['DESCRIPTION'] = comment
+
+    def _add_track_number_frame(self, tag, track_number, track_total):
+        track_number_string = str(track_number)
+        track_total_string = str(track_total)
+        if track_number < 10:
+            track_number_string = '0{0}'.format(track_number)
+        if track_total < 10:
+            track_total_string = '0{0}'.format(track_total)
+        tag['TRACKNUMBER'] = '{0}/{1}'.format(track_number_string, track_total_string)

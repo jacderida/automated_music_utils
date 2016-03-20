@@ -92,4 +92,6 @@ def get_flac_tag_data(path):
         tag_data['genre'] = tag['GENRE'][0]
     if tag.has_key('DESCRIPTION'):
         tag_data['comment'] = tag['DESCRIPTION'][0]
+    if tag.has_key('TRACKNUMBER'):
+        tag_data['trackno'] = tag['TRACKNUMBER'][0]
     return tag_data
