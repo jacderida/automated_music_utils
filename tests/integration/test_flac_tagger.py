@@ -131,3 +131,9 @@ class FlacTaggerTest(unittest.TestCase):
         tagger.add_tags('tests/integration/data/test_data.flac', track_number=5, track_total=15)
         tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
         self.assertEqual(tag_data['trackno'], u'05/15')
+
+    def test__add_tags__track_total_is_less_than_10__tag_should_have_a_padded_track_total_frame(self):
+        tagger = FlacTagger()
+        tagger.add_tags('tests/integration/data/test_data.flac', track_number=5, track_total=6)
+        tag_data = get_flac_tag_data('tests/integration/data/test_data.flac')
+        self.assertEqual(tag_data['trackno'], u'05/06')
