@@ -8,7 +8,7 @@ class EncodeWavCommandTest(unittest.TestCase):
     @mock.patch('os.path.exists')
     @mock.patch('os.makedirs')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__execute__encoder_called_correctly__is_called_with_correct_arguments(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
         path_exists_mock.return_value = True
         command = EncodeWavCommand(config_mock, encoder_mock)
@@ -21,7 +21,7 @@ class EncodeWavCommandTest(unittest.TestCase):
     @mock.patch('os.path.exists')
     @mock.patch('os.makedirs')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__execute__destination_directory_does_not_exist__destination_directory_is_created(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
         path_exists_mock.return_value = False
         command = EncodeWavCommand(config_mock, encoder_mock)
@@ -34,7 +34,7 @@ class EncodeWavCommandTest(unittest.TestCase):
     @mock.patch('os.path.exists')
     @mock.patch('os.makedirs')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__execute__source_should_be_deleted_after_encoding__source_is_deleted(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
         path_exists_mock.return_value = False
         command = EncodeWavCommand(config_mock, encoder_mock)
@@ -47,7 +47,7 @@ class EncodeWavCommandTest(unittest.TestCase):
     @mock.patch('os.path.exists')
     @mock.patch('os.makedirs')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__execute__keep_source_has_been_specified__source_is_not_deleted(self, config_mock, encoder_mock, makedirs_mock, path_exists_mock, remove_mock):
         path_exists_mock.return_value = False
         command = EncodeWavCommand(config_mock, encoder_mock)
@@ -58,7 +58,7 @@ class EncodeWavCommandTest(unittest.TestCase):
         self.assertFalse(remove_mock.called)
 
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__validate__source_is_empty__throws_command_validation_exception(self, config_mock, encoder_mock):
         with self.assertRaisesRegexp(CommandValidationError, 'A source must be specified for encoding a wav'):
             command = EncodeWavCommand(config_mock, encoder_mock)
@@ -67,7 +67,7 @@ class EncodeWavCommandTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__validate__source_is_non_existent__throws_command_validation_exception(self, config_mock, encoder_mock, path_exists_mock):
         path_exists_mock.return_value = False
         with self.assertRaisesRegexp(CommandValidationError, 'The specified source does not exist.'):
@@ -78,7 +78,7 @@ class EncodeWavCommandTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__validate__destination_is_empty__throws_command_validation_exception(self, config_mock, encoder_mock, path_exists_mock):
         path_exists_mock.return_value = True
         with self.assertRaisesRegexp(CommandValidationError, 'A destination must be specified for encoding a wav'):
@@ -89,7 +89,7 @@ class EncodeWavCommandTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.isdir')
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigurationProvider')
-    @mock.patch('amu.encode.LameEncoder')
+    @mock.patch('amu.audio.LameEncoder')
     def test__validate__source_is_directory__throws_command_validation_exception(self, config_mock, encoder_mock, path_exists_mock, isdir_mock):
         path_exists_mock.return_value = True
         isdir_mock.return_value = True
