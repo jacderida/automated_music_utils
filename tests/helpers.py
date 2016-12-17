@@ -29,12 +29,8 @@ def get_mp3_artwork_data(mp3_source):
 
 def get_flac_artwork_data(flac_source):
     output = check_output(['metaflac', '--list', '--block-type=PICTURE', flac_source])
-    length_index = output.rfind('length:')
-    length_line = output[length_index:output.find('\n', length_index)]
-    length = length_line.split(':')[1].strip()
-    image_type_index = output.find('MIME type:')
-    image_type_line = output[image_type_index:output.find('\n', image_type_index)]
-    image_type = image_type_line.split(':')[1].strip()
+    length = _get_metaflac_attribute_value(output, 'length')
+    image_type = _get_metaflac_attribute_value(output, 'MIME type')
     return (image_type, int(length))
 
 def mp3_has_tags(mp3_source):
@@ -108,3 +104,8 @@ def get_flac_tag_data(path):
     if tag.has_key('DISCNUMBER'):
         tag_data['discno'] = tag['DISCNUMBER'][0]
     return tag_data
+
+def _get_metaflac_attribute_value(metaflac_output, attribute):
+    index = metaflac_output.rfind(attribute + ':')
+    line = metaflac_output[index:metaflac_output.find('\n', index)]
+    return line.split(':')[1].strip()
