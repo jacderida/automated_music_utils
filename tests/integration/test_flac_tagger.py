@@ -5,6 +5,7 @@ import unittest
 import mock
 
 from amu.audio import FlacTagger, TaggerError
+from tests.helpers import get_flac_artwork_data
 from tests.helpers import get_flac_tag_data
 
 
@@ -171,3 +172,11 @@ class FlacTaggerTest(unittest.TestCase):
         self.assertEqual(tag_data['discno'], u'01/01')
         self.assertEqual(tag_data['genre'], u'Electronic')
         self.assertEqual(tag_data['comment'], u'Nightwind Records (NW001)')
+
+    def test__apply_artwork__cover_is_jpg__artwork_should_be_applied(self):
+        tagger = FlacTagger()
+        tagger.apply_artwork('tests/integration/data/cover.jpg', 'tests/integration/data/test_data.flac')
+        artwork_data = get_flac_artwork_data('tests/integration/data/test_data.flac')
+        size = os.path.getsize('tests/integration/data/cover.jpg')
+        self.assertEqual('image/jpeg', artwork_data[0])
+        self.assertEqual(size, artwork_data[1])

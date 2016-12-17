@@ -2,6 +2,7 @@ import re
 import subprocess
 import sys
 from contextlib import contextmanager
+from subprocess import check_output
 from mutagen.flac import FLAC
 from mutagen.id3 import APIC, ID3, ID3NoHeaderError
 from StringIO import StringIO
@@ -25,6 +26,16 @@ def get_mp3_artwork_data(mp3_source):
     splits = match.groups(0)[0].split(',')
     size_string = splits[1].strip()
     return (splits[0].strip(), int(size_string[0:size_string.index(' ')]))
+
+def get_flac_artwork_data(flac_source):
+    output = check_output(['metaflac', '--list', '--block-type=PICTURE', flac_source])
+    length_index = output.rfind('length:')
+    length_line = output[length_index:output.find('\n', length_index)]
+    length = length_line.split(':')[1].strip()
+    image_type_index = output.find('MIME type:')
+    image_type_line = output[image_type_index:output.find('\n', image_type_index)]
+    image_type = image_type_line.split(':')[1].strip()
+    return (image_type, int(length))
 
 def mp3_has_tags(mp3_source):
     try:

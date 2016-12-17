@@ -6,8 +6,9 @@ import uuid
 from amu import utils
 from amu.config import ConfigurationError
 from mutagen import File
-from mutagen.flac import FLAC
-from mutagen.id3 import APIC, COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TPOS, TRCK
+from mutagen.flac import FLAC, Picture
+from mutagen.id3 import APIC, COMM, ID3, ID3NoHeaderError, PictureType, TALB, TCON, TDRC, TIT2, TPE1, TPE2, TPOS, TRCK
+from PIL import Image
 
 class TaggerError(Exception):
     def __init__(self, message):
@@ -19,6 +20,7 @@ class LameEncoder(object):
         self._config_provider = config_provider
 
     def encode(self, source, destination):
+        print 'This is a test'
         if not source:
             raise ValueError('A value must be supplied for the source')
         if not destination:
@@ -106,6 +108,7 @@ class RubyRipperCdRipper(object):
             '--file',
             temp_config_path
         ]
+        print 'This is a big line'
         print u'[rip] Running rubyripper with {0}'.format(subprocess_args)
         popen = subprocess.Popen(subprocess_args, stdout=subprocess.PIPE)
         lines_iterator = iter(popen.stdout.readline, "")
@@ -245,6 +248,26 @@ class Mp3Tagger(object):
             return tag
 
 class FlacTagger(object):
+    def apply_artwork(self, source, destination):
+        image_info = self._get_image_info(source)
+        picture = Picture()
+        with open(source, 'rb') as image:
+            picture.data = image.read()
+        picture.type = PictureType.COVER_FRONT
+        picture.mime = 'image/jpeg'
+        picture.width = image_info[0]
+        picture.height = image_info[1]
+        picture.depth = image_info[2]
+        tag = FLAC(destination)
+        tag.add_picture(picture)
+        tag.save()
+
+    def _get_image_info(self, source):
+        image = Image.open(source)
+        width, height = image.size
+        bits = image.bits
+        return (width, height, bits)
+
     def add_tags(self, source, artist='', album_artist='', album='',
                  title='', year='', genre='', comment='',
                  track_number=0, track_total=0, disc_number=0, disc_total=0):
