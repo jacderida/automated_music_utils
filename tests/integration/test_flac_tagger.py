@@ -187,3 +187,22 @@ class FlacTaggerTest(unittest.TestCase):
         artwork_data = get_flac_artwork_data('tests/integration/data/test_data.flac')
         size = os.path.getsize('tests/integration/data/cover.png')
         self.assertEqual('image/png', artwork_data[0])
+        self.assertEqual(size, artwork_data[1])
+
+    def test__apply_artwork__cover_is_jpeg__artwork_should_be_applied(self):
+        tagger = FlacTagger()
+        tagger.apply_artwork('tests/integration/data/cover.jpeg', 'tests/integration/data/test_data.flac')
+        artwork_data = get_flac_artwork_data('tests/integration/data/test_data.flac')
+        size = os.path.getsize('tests/integration/data/cover.jpeg')
+        self.assertEqual('image/jpeg', artwork_data[0])
+        self.assertEqual(size, artwork_data[1])
+
+    def test__apply_artwork__source_is_empty__raises_value_error(self):
+        with self.assertRaisesRegexp(ValueError, 'A cover art source must be supplied.'):
+            tagger = FlacTagger()
+            tagger.apply_artwork('', 'tests/integration/data/test_data.flac')
+
+    def test__apply_artwork__destination_is_empty__raises_value_error(self):
+        with self.assertRaisesRegexp(ValueError, 'A destination must be supplied to apply cover art to.'):
+            tagger = FlacTagger()
+            tagger.apply_artwork('tests/integration/data/cover.jpeg', '')

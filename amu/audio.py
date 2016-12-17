@@ -249,6 +249,10 @@ class Mp3Tagger(object):
 
 class FlacTagger(object):
     def apply_artwork(self, source, destination):
+        if not source:
+            raise ValueError('A cover art source must be supplied.')
+        if not destination:
+            raise ValueError('A destination must be supplied to apply cover art to.')
         image_info = self._get_image_info(source)
         picture = Picture()
         with open(source, 'rb') as image:
