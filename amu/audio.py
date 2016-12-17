@@ -253,11 +253,15 @@ class FlacTagger(object):
         picture = Picture()
         with open(source, 'rb') as image:
             picture.data = image.read()
+        artwork_type = os.path.splitext(source)[1][1:]
+        if artwork_type == 'jpg' or artwork_type == 'jpeg':
+            mime_type = 'image/jpeg'
+        elif artwork_type == 'png':
+            mime_type = 'image/png'
         picture.type = PictureType.COVER_FRONT
-        picture.mime = 'image/jpeg'
+        picture.mime = mime_type
         picture.width = image_info[0]
         picture.height = image_info[1]
-        picture.depth = image_info[2]
         tag = FLAC(destination)
         tag.add_picture(picture)
         tag.save()
@@ -265,8 +269,15 @@ class FlacTagger(object):
     def _get_image_info(self, source):
         image = Image.open(source)
         width, height = image.size
-        bits = image.bits
+        bits = self._get_bits(image)
         return (width, height, bits)
+
+    def _get_bits(self, image):
+        try:
+            bits = image.bits
+            return bits
+        except AttributeError:
+            return None
 
     def add_tags(self, source, artist='', album_artist='', album='',
                  title='', year='', genre='', comment='',
