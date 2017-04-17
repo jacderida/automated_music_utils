@@ -83,7 +83,7 @@ class ConfigurationProvider(object):
 
     def get_releases_destination_with_mask_replaced(self, release_model, format):
         config = self._get_config_parser()
-        release_directories = self._get_release_directories(config)
+        release_directories = self._get_release_directories(config, format)
         release_masks = self._get_release_masks(config, format)
         if len(release_directories) != len(release_masks):
             raise ConfigurationError('The release_directories and the mask releases settings must have 2 lists of the same size.')
@@ -95,8 +95,8 @@ class ConfigurationProvider(object):
     def get_mixes_destination(self):
         return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
 
-    def _get_release_directories(self, config):
-        release_directories = config.get('directories', 'release_directories')
+    def _get_release_directories(self, config, format):
+        release_directories = config.get('directories', '{0}_release_directories'.format(format))
         if not release_directories:
             raise ConfigurationError('The release_directories setting in the amu_config file must have a value.')
         return release_directories.split(',')
