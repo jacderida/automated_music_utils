@@ -387,6 +387,35 @@ class ConfigurationProviderTest(unittest.TestCase):
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_releases_destination_with_mask_replaced__target_encoding_is_flac__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        path_exists_mock.return_value = True
+        config_get_mock.side_effect = ['Electronic,Rock,Ambient', 'electronic_directory_mask@rock_directory_mask@ambient_directory_mask', '/path/to/music']
+        directory_selector_mock = Mock()
+        directory_selector_mock.select_directory.return_value = 0
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+        config_provider.get_releases_destination_with_mask_replaced(release_model, 'flac')
+        mask_call = config_get_mock.mock_calls[2]
+        self.assertEqual('directories', mask_call[1][0])
+        self.assertEqual('flac_releases_base_directory', mask_call[1][1])
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
     def test__get_releases_destination_with_mask_replaced__config_file_has_releases_mask__the_correct_config_value_is_read(self, config_get_mock, path_exists_mock):
         release_model = ReleaseModel()
         release_model.artist = 'AFX'
