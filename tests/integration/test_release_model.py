@@ -13,7 +13,7 @@ class ReleaseModelIntegrationTest(unittest.TestCase):
         discogs_release.refresh()
         release = ReleaseModel.from_discogs_release(discogs_release)
         self.assertEqual(release.discogs_id, 1303737)
-        self.assertEqual(release.artist, 'Aphex Twin')
+        self.assertEqual(release.artist, 'AphexTwin')
         self.assertEqual(release.title, 'Selected Ambient Works 85-92')
         self.assertEqual(release.label, 'Apollo')
         self.assertEqual(release.catno, 'AMB3922RM')
