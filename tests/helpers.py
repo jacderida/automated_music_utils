@@ -40,6 +40,10 @@ def mp3_has_tags(mp3_source):
     except ID3NoHeaderError:
         return False
 
+def flac_has_tags(flac_source):
+    tag = FLAC(flac_source)
+    return len(tag.keys()) > 0
+
 def get_id3_tag_data(path):
     """
     Gets the ID3 tag from an MP3.

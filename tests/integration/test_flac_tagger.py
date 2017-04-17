@@ -7,11 +7,13 @@ import mock
 from amu.audio import FlacTagger, TaggerError
 from tests.helpers import get_flac_artwork_data
 from tests.helpers import get_flac_tag_data
+from tests.helpers import flac_has_tags
 
 
 class FlacTaggerTest(unittest.TestCase):
     def setUp(self):
         shutil.copyfile('tests/integration/data/song.flac', 'tests/integration/data/test_data.flac')
+        shutil.copyfile('tests/integration/data/song_with_tags.flac', 'tests/integration/data/test_data_song_with_tags.flac')
 
     def tearDown(self):
         os.remove('tests/integration/data/test_data.flac')
@@ -206,3 +208,9 @@ class FlacTaggerTest(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, 'A destination must be supplied to apply cover art to.'):
             tagger = FlacTagger()
             tagger.apply_artwork('tests/integration/data/cover.jpeg', '')
+
+    def test__remove_tags__flac_has_tags__tags_are_removed(self):
+        self.assertTrue(flac_has_tags('tests/integration/data/test_data_song_with_tags.flac'))
+        tagger = FlacTagger()
+        tagger.remove_tags('tests/integration/data/test_data_song_with_tags.flac')
+        self.assertFalse(flac_has_tags('tests/integration/data/test_data_song_with_tags.flac'))

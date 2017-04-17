@@ -270,6 +270,10 @@ class FlacTagger(object):
         tag.add_picture(picture)
         tag.save()
 
+    def remove_tags(self, source):
+        tag = FLAC(source)
+        tag.delete()
+
     def _get_image_info(self, source):
         image = Image.open(source)
         width, height = image.size

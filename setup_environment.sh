@@ -20,5 +20,6 @@ if [[ ! -e "tests/integration/data/song.mp3" ]]; then
     curl -O http://jacderida-misc.s3.amazonaws.com/song_with_only_id3v1_tags.mp3
     curl -O http://jacderida-misc.s3.amazonaws.com/song_with_only_id3v2_tags.mp3
     curl -O http://jacderida-misc.s3.amazonaws.com/song.flac
+    curl -O http://jacderida-misc.s3.amazonaws.com/song_with_tags.flac
     cd $present_path
 fi
