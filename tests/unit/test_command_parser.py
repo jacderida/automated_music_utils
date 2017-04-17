@@ -550,7 +550,7 @@ class CommandParserTest(unittest.TestCase):
 
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
-        config_mock.get_releases_destination_with_mask_replaced.assert_called_once_with(release_model)
+        config_mock.get_releases_destination_with_mask_replaced.assert_called_once_with(release_model, 'mp3')
 
     @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_encode_commands')
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_from_encode_commands')
