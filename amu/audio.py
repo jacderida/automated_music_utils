@@ -271,6 +271,8 @@ class FlacTagger(object):
         tag.save()
 
     def remove_tags(self, source):
+        if not source:
+            raise ValueError('A source must be supplied.')
         tag = FLAC(source)
         tag.delete()
 
