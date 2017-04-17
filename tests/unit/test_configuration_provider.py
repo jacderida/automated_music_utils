@@ -441,7 +441,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         mask_call = config_get_mock.mock_calls[1]
         self.assertEqual('masks', mask_call[1][0])
-        self.assertEqual('releases', mask_call[1][1])
+        self.assertEqual('mp3_releases', mask_call[1][1])
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
