@@ -214,3 +214,8 @@ class FlacTaggerTest(unittest.TestCase):
         tagger = FlacTagger()
         tagger.remove_tags('tests/integration/data/test_data_song_with_tags.flac')
         self.assertFalse(flac_has_tags('tests/integration/data/test_data_song_with_tags.flac'))
+
+    def test__remove_tags__flac_has_no_tags__no_tags_are_added(self):
+        tagger = FlacTagger()
+        tagger.remove_tags('tests/integration/data/test_data.flac')
+        self.assertFalse(flac_has_tags('tests/integration/data/test_data.flac'))
