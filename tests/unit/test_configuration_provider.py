@@ -380,10 +380,10 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-        config_provider.get_releases_destination_with_mask_replaced(release_model)
+        config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         mask_call = config_get_mock.mock_calls[2]
         self.assertEqual('directories', mask_call[1][0])
-        self.assertEqual('releases_base_directory', mask_call[1][1])
+        self.assertEqual('mp3_releases_base_directory', mask_call[1][1])
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
@@ -409,7 +409,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-        config_provider.get_releases_destination_with_mask_replaced(release_model)
+        config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         mask_call = config_get_mock.mock_calls[1]
         self.assertEqual('masks', mask_call[1][0])
         self.assertEqual('releases', mask_call[1][1])
@@ -439,7 +439,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(mask_replacer_mock, directory_selector_mock)
-        config_provider.get_releases_destination_with_mask_replaced(release_model)
+        config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         mask_replacer_mock.replace_directory_mask.assert_called_once_with('electronic_directory_mask', release_model)
 
     @mock.patch('amu.config.os.path.exists')
@@ -466,7 +466,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-        result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+        result = config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         self.assertEqual('/path/to/music/Electronic/electronic_directory_mask', result)
 
     @mock.patch('amu.config.os.path.exists')
@@ -496,7 +496,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-        config_provider.get_releases_destination_with_mask_replaced(release_model)
+        config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         config_read_mock.assert_called_with('/home/user/.amu_config')
 
     @mock.patch('amu.config.os.path.exists')
@@ -525,7 +525,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-        result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+        result = config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         self.assertEqual('/home/user/Music/Electronic/electronic_directory_mask', result)
 
     @mock.patch('amu.config.os.path.exists')
@@ -553,7 +553,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock.select_directory.return_value = 0
         with self.assertRaisesRegexp(ConfigurationError, 'The .amu_config file does not exist in your home directory.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-            config_provider.get_releases_destination_with_mask_replaced(release_model)
+            config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
@@ -581,7 +581,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock = Mock()
         directory_selector_mock.select_directory.return_value = 0
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-        result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+        result = config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
         directory_selector_mock.select_directory.assert_called_once_with(['Electronic', 'Rock', 'Ambient'])
 
     @mock.patch('amu.config.os.path.exists')
@@ -611,7 +611,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock.select_directory.return_value = 0
         with self.assertRaisesRegexp(ConfigurationError, 'The release_directories and the mask releases settings must have 2 lists of the same size.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-            result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+            result = config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
@@ -640,7 +640,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock.select_directory.return_value = 0
         with self.assertRaisesRegexp(ConfigurationError, 'The release_directories setting in the amu_config file must have a value.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-            result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+            result = config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
 
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
@@ -669,7 +669,7 @@ class ConfigurationProviderTest(unittest.TestCase):
         directory_selector_mock.select_directory.return_value = 0
         with self.assertRaisesRegexp(ConfigurationError, 'The masks releases setting in the amu_config file must have a value.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
-            result = config_provider.get_releases_destination_with_mask_replaced(release_model)
+            result = config_provider.get_releases_destination_with_mask_replaced(release_model, 'mp3')
 
     @mock.patch('subprocess.call')
     def test__get_flac_path__flac_is_on_path__flac_returned(self, subprocess_mock):

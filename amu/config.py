@@ -81,7 +81,7 @@ class ConfigurationProvider(object):
                 config_file.write(re.sub('REPLACE_BASE_DIR', destination_path, line))
         return temp_path
 
-    def get_releases_destination_with_mask_replaced(self, release_model):
+    def get_releases_destination_with_mask_replaced(self, release_model, target_encoding):
         config = self._get_config_parser()
         release_directories = self._get_release_directories(config)
         release_masks = self._get_release_masks(config)
@@ -89,7 +89,7 @@ class ConfigurationProvider(object):
             raise ConfigurationError('The release_directories and the mask releases settings must have 2 lists of the same size.')
         index = self._directory_selector.select_directory(release_directories)
         replaced_mask = self._mask_replacer.replace_directory_mask(release_masks[index], release_model)
-        releases_base_directory = os.path.expanduser(config.get('directories', 'releases_base_directory'))
+        releases_base_directory = os.path.expanduser(config.get('directories', '{0}_releases_base_directory'.format(target_encoding)))
         return os.path.join(releases_base_directory, release_directories[index], replaced_mask)
 
     def get_mixes_destination(self):
