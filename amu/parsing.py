@@ -28,6 +28,10 @@ class CommandParser(object):
         self._mask_replacer = MaskReplacer()
         self._genre_selector = genre_selector
 
+    def get_tagger_based_on_format(self, format):
+        if format == 'mp3':
+            return Mp3Tagger()
+
     def from_args(self, args):
         commands = {
             'rip': self._get_rip_command,
@@ -103,7 +107,7 @@ class CommandParser(object):
 
     def _get_tag_command(self, args):
         source = args.source if args.source else os.getcwd()
-        tagger = self._get_tagger_based_on_format(args.format)
+        tagger = self.get_tagger_based_on_format(args.format)
         tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.format)
         if args.discogs_id:
             commands = []
@@ -169,16 +173,13 @@ class CommandParser(object):
         if track_count != release_track_count:
             raise CommandParsingError(
                 'The source has {0} tracks and the discogs release has {1}. The number of tracks on both must be the same.'.format(track_count, release_track_count))
-        tagger = self._get_tagger_based_on_format(args.encoding_to)
+        tagger = self.get_tagger_based_on_format(args.encoding_to)
         tag_command_parser = TagCommandParser(self._configuration_provider, tagger, args.encoding_to)
         if args.encoding_from == 'cd':
             return tag_command_parser.parse_from_release_model_with_empty_source(destination, release_model)
         return tag_command_parser.parse_from_release_model_with_sources(
             release_model, [x.destination for x in commands])
 
-    def _get_tagger_based_on_format(self, format):
-        if format == 'mp3':
-            return Mp3Tagger()
 
     def _get_add_artwork_commands(self, encode_commands):
         artwork_command_parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())

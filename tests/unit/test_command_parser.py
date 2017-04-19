@@ -4,6 +4,7 @@ import os
 import unittest
 import uuid
 from amu import utils
+from amu.audio import Mp3Tagger
 from amu.clidriver import CliDriver
 from amu.commands import AddArtworkCommand, AddTagCommand, DecodeAudioCommand, EncodeWavCommand, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
 from amu.models import ReleaseModel
@@ -1980,3 +1981,9 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
         metadata_mock.get_release_by_id.assert_called_once_with(451034, True)
+
+    def test__get_tagger_based_on_format__mp3_format_is_used__it_should_return_the_mp3tagger(self):
+        config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
+        result = parser.get_tagger_based_on_format('mp3')
+        self.assertIsInstance(result, Mp3Tagger)
