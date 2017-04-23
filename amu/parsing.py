@@ -167,7 +167,7 @@ class CommandParser(object):
             raise CommandParsingError('The source directory has no wavs to encode')
         if release_model:
             commands.extend(self._get_release_tag_commands(args, encode_commands, destination, release_model))
-            commands.extend(self._get_add_artwork_commands(encode_commands))
+            commands.extend(self._get_add_artwork_commands(encode_commands, args.encoding_to))
             move_file_parser = MoveAudioFileCommandParser(self._configuration_provider, args.encoding_to)
             commands.extend(move_file_parser.parse_from_encode_commands(encode_commands, release_model))
         return commands
@@ -192,8 +192,8 @@ class CommandParser(object):
             release_model, [x.destination for x in commands])
 
 
-    def _get_add_artwork_commands(self, encode_commands):
-        artwork_command_parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
+    def _get_add_artwork_commands(self, encode_commands, target_encoding):
+        artwork_command_parser = ArtworkCommandParser(self._configuration_provider, self.get_tagger_based_on_format(target_encoding))
         return artwork_command_parser.parse_from_encode_commands(encode_commands)
 
 class EncodeCommandParser(object):

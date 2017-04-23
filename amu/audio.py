@@ -123,7 +123,6 @@ class Mp3Tagger(object):
     def add_tags(self, source, artist='', album_artist='', album='',
                  title='', year='', genre='', comment='',
                  track_number=0, track_total=0, disc_number=0, disc_total=0):
-        print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(source, artist, album, title, str(year), genre)
         if source:
             if not os.path.exists(source):
                 raise TaggerError('The source {0} does not exist.'.format(source))
@@ -207,7 +206,6 @@ class Mp3Tagger(object):
         elif artwork_type == 'png':
             mime_type = 'image/png'
         tag = self._get_tag(destination)
-        print u'[artwork] Adding {0} to {1}'.format(source, destination)
         tag.add(APIC(encoding=3, mime=mime_type, type=3, desc=u'cover', data=open(source).read()))
         tag.save()
 

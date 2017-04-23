@@ -1,7 +1,8 @@
+"""
+Houses all the commands in the application.
+"""
 import os
 import shutil
-from mutagen import File
-from mutagen.id3 import COMM, ID3, ID3NoHeaderError, TALB, TCON, TDRC, TIT2, TPE1, TPOS, TRCK
 from amu.audio import LameEncoder, RubyRipperCdRipper
 
 class CommandValidationError(Exception):
@@ -261,6 +262,8 @@ class AddTagCommand(Command):
             raise CommandValidationError('The track number cannot be greater than the track total.')
 
     def execute(self):
+        print u'[tag] Tagging {0} with {1}, {2}, {3}, {4}, {5}.'.format(
+            self.source, self.artist, self.album, self.title, str(self.year), self.genre)
         self._tagger.add_tags(
             self.source, self.artist, self.album_artist, self.album,
             self.title, self.year, self.genre, self.comment,
@@ -393,4 +396,5 @@ class AddArtworkCommand(Command):
             raise CommandValidationError('A valid destination must be supplied for the add artwork command.')
 
     def execute(self):
+        print u'[artwork] Adding {0} to {1}'.format(self.source, self.destination)
         self._tagger.apply_artwork(self.source, self.destination)
