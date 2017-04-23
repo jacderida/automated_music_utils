@@ -97,8 +97,9 @@ class ConfigurationProvider(object):
         use_genre = config_parser.get('tagging', 'use_genre').lower()
         if use_genre in ['true', 'yes']:
             return True
-        elif use_genre in ['false']:
+        elif use_genre in ['false', 'no']:
             return False
+        raise ConfigurationError('blah')
 
     def get_mixes_destination(self):
         return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
