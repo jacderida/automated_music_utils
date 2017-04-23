@@ -1039,7 +1039,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.exists')
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_mixes_destination__config_file_has_use_genre_setting__the_correct_config_value_is_read(self, config_get_mock, expanduser_mock, path_exists_mock):
+    def test__use_genre__config_file_has_use_genre_setting__the_correct_config_value_is_read(self, config_get_mock, expanduser_mock, path_exists_mock):
         config_get_mock.return_value = 'True'
         directory_selector_mock = Mock()
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
@@ -1052,7 +1052,7 @@ class ConfigurationProviderTest(unittest.TestCase):
     @mock.patch('amu.config.os.path.expanduser')
     @mock.patch('amu.config.ConfigParser.ConfigParser.read')
     @mock.patch('amu.config.ConfigParser.ConfigParser.get')
-    def test__get_mixes_destination__config_file_has_use_genre_setting__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
+    def test__use_genre__config_file_has_use_genre_setting__the_correct_config_file_should_be_read(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
         expanduser_mock.return_value = '/home/user/'
         path_exists_mock.return_value = True
         config_get_mock.return_value = 'True'
@@ -1060,3 +1060,40 @@ class ConfigurationProviderTest(unittest.TestCase):
         config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
         config_provider.use_genre()
         config_read_mock.assert_called_with('/home/user/.amu_config')
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__use_genre__config_file_has_true_genre_setting__true_should_be_returned(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = 'true'
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+        self.assertTrue(config_provider.use_genre())
+
+    @mock.patch('amu.config.os.path.exists')
+    @mock.patch('amu.config.os.path.expanduser')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__use_genre__config_file_has_false_genre_setting__false_should_be_returned(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
+        expanduser_mock.return_value = '/home/user/'
+        path_exists_mock.return_value = True
+        config_get_mock.return_value = 'false'
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+        self.assertFalse(config_provider.use_genre())
+
+    #@mock.patch('amu.config.os.path.exists')
+    #@mock.patch('amu.config.os.path.expanduser')
+    #@mock.patch('amu.config.ConfigParser.ConfigParser.read')
+    #@mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    #def test__use_genre__config_file_has_non_boolean_use_genre_setting__it_should_raise_a_configuration_error(self, config_get_mock, config_read_mock, expanduser_mock, path_exists_mock):
+        #with self.assertRaisesRegexp(ConfigurationError, 'A true or false value must be used for the use_genre setting.'):
+            #expanduser_mock.return_value = '/home/user/'
+            #path_exists_mock.return_value = True
+            #config_get_mock.return_value = 'blah'
+            #directory_selector_mock = Mock()
+            #config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+            #config_provider.use_genre()
