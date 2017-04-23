@@ -71,7 +71,7 @@ class CommandParser(object):
             else:
                 destination = os.getcwd().decode('utf-8')
             parser = ArtworkCommandParser(self._configuration_provider, self.get_tagger_based_on_format(args.type))
-            return parser.parse_add_artwork_command(source, destination)
+            return parser.parse_add_artwork_command(source, destination, args.type)
 
     def _get_decode_command(self, args):
         source = args.source if args.source else os.getcwd()
@@ -571,7 +571,7 @@ class ArtworkCommandParser(object):
         self._configuration_provider = configuration_provider
         self._tagger = tagger
 
-    def parse_add_artwork_command(self, source, destination):
+    def parse_add_artwork_command(self, source, destination, format):
         cover = self._get_cover_path(source)
         if os.path.isdir(destination):
             commands = []
@@ -580,7 +580,7 @@ class ArtworkCommandParser(object):
                 if directory_len > 0:
                     commands.extend(self._get_multi_cd_commands(root, directories, cover))
                 else:
-                    commands.extend(self._get_single_cd_commands(files, cover, destination))
+                    commands.extend(self._get_single_cd_commands(files, cover, destination, format))
                 break
             return commands
         return [self._get_add_artwork_command(source, destination)]
@@ -612,9 +612,9 @@ class ArtworkCommandParser(object):
                 commands.append(self._get_add_artwork_command(cover, os.path.join(full_destination_directory, audio_file)))
         return commands
 
-    def _get_single_cd_commands(self, files, cover, destination):
+    def _get_single_cd_commands(self, files, cover, destination, format):
         commands = []
-        audio_files = [f for f in files if f.endswith('.mp3')]
+        audio_files = [f for f in files if f.endswith('.{0}'.format(format))]
         for audio_file in audio_files:
             commands.append(self._get_add_artwork_command(cover, os.path.join(destination, audio_file)))
         return commands

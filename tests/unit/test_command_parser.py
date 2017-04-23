@@ -1751,7 +1751,7 @@ class CommandParserTest(unittest.TestCase):
         config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
-        artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination/audio.mp3')
+        artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination/audio.mp3', 'mp3')
 
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_add_artwork_command')
     @mock.patch('os.getcwd')
@@ -1768,7 +1768,7 @@ class CommandParserTest(unittest.TestCase):
         config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
-        artwork_parser_mock.assert_called_once_with('/some/source', '/some/destination/audio.mp3')
+        artwork_parser_mock.assert_called_once_with('/some/source', '/some/destination/audio.mp3', 'mp3')
 
     @mock.patch('amu.parsing.ArtworkCommandParser.parse_add_artwork_command')
     @mock.patch('os.getcwd')
@@ -1785,7 +1785,7 @@ class CommandParserTest(unittest.TestCase):
         config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         parser.from_args(args)
-        artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination')
+        artwork_parser_mock.assert_called_once_with('/some/source/cover.jpg', '/some/destination', 'mp3')
 
     @mock.patch('amu.parsing.DecodeCommandParser.parse_decode_command')
     def test__from_args__when_a_decode_command_is_specified__it_should_return_a_decode_audio_command(self, decode_parser_mock):
