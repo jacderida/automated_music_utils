@@ -61,7 +61,7 @@ class CommandParser(object):
         return parser.parse_mix_command(mix_args)
 
     def _get_artwork_command(self, args):
-        if args.action == 'add' and args.type == 'mp3':
+        if args.action == 'add':
             if args.source:
                 source = args.source
             else:
@@ -70,7 +70,7 @@ class CommandParser(object):
                 destination = args.destination
             else:
                 destination = os.getcwd().decode('utf-8')
-            parser = ArtworkCommandParser(self._configuration_provider, Mp3Tagger())
+            parser = ArtworkCommandParser(self._configuration_provider, self.get_tagger_based_on_format(args.type))
             return parser.parse_add_artwork_command(source, destination)
 
     def _get_decode_command(self, args):
@@ -571,7 +571,7 @@ class ArtworkCommandParser(object):
         self._configuration_provider = configuration_provider
         self._tagger = tagger
 
-    def parse_add_artwork_command(self, source, destination):
+    def parse_add_artwork_command(self, source, destination, format):
         cover = self._get_cover_path(source)
         if os.path.isdir(destination):
             commands = []
