@@ -20,7 +20,6 @@ class LameEncoder(object):
         self._config_provider = config_provider
 
     def encode(self, source, destination):
-        print 'This is a test'
         if not source:
             raise ValueError('A value must be supplied for the source')
         if not destination:

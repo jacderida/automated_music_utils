@@ -1035,3 +1035,13 @@ class ConfigurationProviderTest(unittest.TestCase):
         with self.assertRaisesRegexp(ConfigurationError, 'The path specified for mixes_directory in the .amu_config file is incorrect. Please provide a valid path for mixes_directory.'):
             config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
             config_provider.get_mixes_destination()
+
+    @mock.patch('amu.config.ConfigParser.ConfigParser.get')
+    def test__get_mixes_destination__config_file_has_use_genre_setting__the_correct_config_value_is_read(self, config_get_mock):
+        config_get_mock.return_value = 'True'
+        directory_selector_mock = Mock()
+        config_provider = ConfigurationProvider(MaskReplacer(), directory_selector_mock)
+        config_provider.use_genre()
+        mask_call = config_get_mock.mock_calls[0]
+        self.assertEqual('tagging', mask_call[1][0])
+        self.assertEqual('use_genre', mask_call[1][1])

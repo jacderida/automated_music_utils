@@ -92,6 +92,11 @@ class ConfigurationProvider(object):
         releases_base_directory = os.path.expanduser(config.get('directories', '{0}_releases_base_directory'.format(format)))
         return os.path.join(releases_base_directory, release_directories[index], replaced_mask)
 
+    def use_genre(self):
+        config_parser = self._get_config_parser()
+        use_genre = config_parser.get('tagging', 'use_genre')
+        return bool(use_genre)
+
     def get_mixes_destination(self):
         return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
 
