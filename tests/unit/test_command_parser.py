@@ -1742,6 +1742,55 @@ class CommandParserTest(unittest.TestCase):
         parser.from_args(args)
         genre_selector_mock.select_genre.assert_called_once_with(['Electronic', 'Acid'])
 
+    @mock.patch('amu.parsing.MoveAudioFileCommandParser.parse_from_release_model')
+    @mock.patch('amu.parsing.TagCommandParser.parse_from_release_model')
+    def test__from_args__when_add_mp3_tag_is_specified_with_a_discogs_id_and_use_genre_is_false__it_should_not_use_the_genre_selector(self, tag_command_parser_mock, move_file_command_parser_mock):
+        driver = CliDriver()
+        arg_parser = driver.get_argument_parser()
+        args = arg_parser.parse_args([
+            'tag',
+            'add',
+            'mp3',
+            '--source=/some/source',
+            '--discogs-id=451034',
+        ])
+        release_model = ReleaseModel()
+        release_model.artist = 'AFX'
+        release_model.title = 'Analord 08'
+        release_model.label = 'Rephlex'
+        release_model.catno = 'ANALORD 08'
+        release_model.format = 'Vinyl'
+        release_model.format_quantity = 1
+        release_model.country = 'UK'
+        release_model.year = '2005'
+        release_model.genre = 'Electronic, Acid'
+        release_model.style = 'Breakbeat, House, Acid, Electro'
+        release_model.add_track_directly(None, 'PWSteal.Ldpinch.D', 1, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Berbew.Q', 2, 4, 1, 1)
+        release_model.add_track_directly(None, 'W32.Deadcode.A', 3, 4, 1, 1)
+        release_model.add_track_directly(None, 'Backdoor.Spyboter.A', 4, 4, 1, 1)
+
+        config_mock, cd_ripper_mock, metadata_mock, tagger_mock, genre_selector_mock = (Mock(),)*5
+        metadata_mock.get_release_by_id.return_value = release_model
+        genre_selector_mock.select_genre.return_value = 'Electronic'
+        tag_command_parser_mock.return_value = [
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock),
+            AddTagCommand(config_mock, tagger_mock)
+        ]
+        move_file_command_parser_mock.return_value = [
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock),
+            MoveAudioFileCommand(config_mock)
+        ]
+        config_mock.use_genre.return_value = False
+
+        parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
+        parser.from_args(args)
+        self.assertEqual(0, genre_selector_mock.select_genre.call_count)
+
     @mock.patch('amu.parsing.TagCommandParser.parse_remove_tag_command')
     def test__from_args__when_remove_mp3_tag_is_specified__the_tag_command_parser_should_be_used(self, tag_command_parser_mock):
         driver = CliDriver()
