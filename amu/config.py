@@ -94,7 +94,7 @@ class ConfigurationProvider(object):
 
     def use_genre(self):
         config_parser = self._get_config_parser()
-        use_genre = config_parser.get('tagging', 'use_genre')
+        use_genre = config_parser.get('tagging', 'use_genre').lower()
         if use_genre in ['true']:
             return True
         elif use_genre in ['false']:
