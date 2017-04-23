@@ -2,6 +2,7 @@ import os
 import tempfile
 import uuid
 from amu import utils
+from amu.audio import FlacTagger
 from amu.audio import Mp3Tagger
 from amu.audio import LameEncoder
 from amu.audio import FlacEncoder
@@ -31,6 +32,8 @@ class CommandParser(object):
     def get_tagger_based_on_format(self, format):
         if format == 'mp3':
             return Mp3Tagger()
+        if format == 'flac':
+            return FlacTagger()
 
     def from_args(self, args):
         commands = {

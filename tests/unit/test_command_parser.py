@@ -4,6 +4,7 @@ import os
 import unittest
 import uuid
 from amu import utils
+from amu.audio import FlacTagger
 from amu.audio import Mp3Tagger
 from amu.clidriver import CliDriver
 from amu.commands import AddArtworkCommand, AddTagCommand, DecodeAudioCommand, EncodeWavCommand, FetchReleaseCommand, MoveAudioFileCommand, RemoveTagCommand, RipCdCommand
@@ -1987,3 +1988,9 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         result = parser.get_tagger_based_on_format('mp3')
         self.assertIsInstance(result, Mp3Tagger)
+
+    def test__get_tagger_based_on_format__flac_format_is_used__it_should_return_the_flac_tagger(self):
+        config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
+        parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
+        result = parser.get_tagger_based_on_format('flac')
+        self.assertIsInstance(result, FlacTagger)
