@@ -107,3 +107,8 @@ class DirectorySelectorTest(unittest.TestCase):
             ])
             output = out.getvalue().strip()
             self.assertIn('Please enter a value between 1 and 9.', output)
+
+    def test__select_directory__a_single_directory_is_used__it_should_return_the_single_directory(self):
+        selector = DirectorySelector()
+        selected = selector.select_directory(['Ambient -- Drone -- Experimental'])
+        self.assertEqual(0, selected)

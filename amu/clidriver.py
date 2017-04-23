@@ -110,6 +110,8 @@ class CliDriver(object):
 
 class DirectorySelector(object):
     def select_directory(self, directories):
+        if len(directories) == 1:
+            return 0
         count = 1
         print 'Select the directory for the release:'
         for directory in directories:
