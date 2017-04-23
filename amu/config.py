@@ -99,7 +99,7 @@ class ConfigurationProvider(object):
             return True
         elif use_genre in ['false', 'no']:
             return False
-        raise ConfigurationError('blah')
+        raise ConfigurationError('A true/false or yes/no value must be used for the use_genre setting.')
 
     def get_mixes_destination(self):
         return os.path.expanduser(self._get_verified_path_from_config_file('directories', 'mixes_directory', 'mixes_directory'))
