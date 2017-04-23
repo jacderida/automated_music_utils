@@ -1994,3 +1994,9 @@ class CommandParserTest(unittest.TestCase):
         parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
         result = parser.get_tagger_based_on_format('flac')
         self.assertIsInstance(result, FlacTagger)
+
+    def test__get_tagger_based_on_format__format_is_empty__it_should_raise_a_value_error(self):
+        with self.assertRaisesRegexp(ValueError, 'A value must be supplied for the format.'):
+            config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
+            parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
+            parser.get_tagger_based_on_format('')

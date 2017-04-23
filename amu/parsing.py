@@ -30,6 +30,8 @@ class CommandParser(object):
         self._genre_selector = genre_selector
 
     def get_tagger_based_on_format(self, format):
+        if not format:
+            raise ValueError('A value must be supplied for the format.')
         if format == 'mp3':
             return Mp3Tagger()
         if format == 'flac':
