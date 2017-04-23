@@ -571,7 +571,7 @@ class ArtworkCommandParser(object):
         self._configuration_provider = configuration_provider
         self._tagger = tagger
 
-    def parse_add_artwork_command(self, source, destination, format):
+    def parse_add_artwork_command(self, source, destination):
         cover = self._get_cover_path(source)
         if os.path.isdir(destination):
             commands = []
