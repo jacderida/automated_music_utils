@@ -578,7 +578,7 @@ class ArtworkCommandParser(object):
             for root, directories, files in os.walk(destination):
                 directory_len = len(directories)
                 if directory_len > 0:
-                    commands.extend(self._get_multi_cd_commands(root, directories, cover))
+                    commands.extend(self._get_multi_cd_commands(root, directories, cover, format))
                 else:
                     commands.extend(self._get_single_cd_commands(files, cover, destination, format))
                 break
@@ -603,11 +603,11 @@ class ArtworkCommandParser(object):
             commands.append(command)
         return commands
 
-    def _get_multi_cd_commands(self, root, directories, cover):
+    def _get_multi_cd_commands(self, root, directories, cover, format):
         commands = []
         for directory in directories:
             full_destination_directory = os.path.join(root, directory)
-            audio_files = [f for f in os.listdir(full_destination_directory) if f.endswith('.mp3')]
+            audio_files = [f for f in os.listdir(full_destination_directory) if f.endswith('.{0}'.format(format))]
             for audio_file in audio_files:
                 commands.append(self._get_add_artwork_command(cover, os.path.join(full_destination_directory, audio_file)))
         return commands

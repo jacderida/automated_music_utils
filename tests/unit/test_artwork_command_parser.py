@@ -141,6 +141,28 @@ class ArtworkCommandParserTest(unittest.TestCase):
     @mock.patch('os.path.isdir')
     @mock.patch('os.listdir')
     @mock.patch('os.walk')
+    def test__parse_add_artwork_command__destination_is_multi_cd_and_format_is_flac__destination_should_be_set_correctly_on_commands(self, walk_mock, listdir_mock, isdir_mock):
+        source = '/some/source'
+        destination = '/some/destination'
+        config_mock, tagger_mock = (Mock(),)*2
+        isdir_mock.side_effect = [True, True]
+        walk_mock.return_value = [
+            ('/some/source', ('cd1', 'cd2'), ()),
+            ('/some/source/cd1', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac')),
+            ('/some/source/cd2', (), ('01 - Track 1.flac', '02 - Track 2.flac', '03 - Track 3.flac'))
+        ]
+        listdir_mock.side_effect = [
+            ['01 - Track 01.flac', '02 - Track 02.flac', '03 - Track 03.flac', 'cover.jpg'],
+            ['01 - Track 01.flac', '02 - Track 02.flac', '03 - Track 03.flac'],
+            ['01 - Track 01.flac', '02 - Track 02.flac', '03 - Track 03.flac']
+        ]
+        parser = ArtworkCommandParser(config_mock, tagger_mock)
+        commands = parser.parse_add_artwork_command(source, destination, 'flac')
+        self.assertEqual(6, len(commands))
+
+    @mock.patch('os.path.isdir')
+    @mock.patch('os.listdir')
+    @mock.patch('os.walk')
     def test__parse_add_artwork_command__destination_is_multi_cd__source_should_be_set_correctly_on_commands(self, walk_mock, listdir_mock, isdir_mock):
         source = '/some/source'
         destination = '/some/source'
