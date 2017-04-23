@@ -18,6 +18,11 @@ from amu.metadata import MaskReplacer
 from amu.metadata import replace_forbidden_characters
 
 
+class CommandParsingError(Exception):
+    def __init__(self, message):
+        super(CommandParsingError, self).__init__(message)
+        self.message = message
+
 class CommandParser(object):
     """ Responsible for parsing the string based command from the command line
         into a command object that can be executed.
@@ -36,6 +41,7 @@ class CommandParser(object):
             return Mp3Tagger()
         if format == 'flac':
             return FlacTagger()
+        raise CommandParsingError('The {0} format is unsupported.'.format(format))
 
     def from_args(self, args):
         commands = {
@@ -833,8 +839,3 @@ class AddTagCommandArgs(object):
         if (s[0] == s[-1]) and s.startswith(("'", '"')):
             return s[1:-1]
         return s
-
-class CommandParsingError(Exception):
-    def __init__(self, message):
-        super(CommandParsingError, self).__init__(message)
-        self.message = message

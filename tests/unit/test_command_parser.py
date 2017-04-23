@@ -2000,3 +2000,9 @@ class CommandParserTest(unittest.TestCase):
             config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
             parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
             parser.get_tagger_based_on_format('')
+
+    def test__get_tagger_based_on_format__format_is_unsupported__it_should_raise_a_command_parsing_error(self):
+        with self.assertRaisesRegexp(CommandParsingError, 'The ogg format is unsupported.'):
+            config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock = (Mock(),)*4
+            parser = CommandParser(config_mock, cd_ripper_mock, metadata_mock, genre_selector_mock)
+            parser.get_tagger_based_on_format('ogg')
