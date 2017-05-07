@@ -8,10 +8,6 @@ from amu.metadata import MaskReplacer
 from amu.parsing import CommandParser
 
 
-def main():
-    driver = CliDriver()
-    return driver.main()
-
 class CliDriver(object):
     def get_argument_parser(self):
         """ Gets the standard argument parser. This is public because it will
@@ -96,17 +92,22 @@ class CliDriver(object):
 
     def main(self):
         """ The main entry point for the CLI driver """
-        config_provider = ConfigurationProvider(MaskReplacer(), DirectorySelector())
-        parser = CommandParser(
-            config_provider,
-            RubyRipperCdRipper(config_provider),
-            DiscogsMetadataService(),
-            GenreSelector())
-        commands = parser.from_args(self._get_arguments())
-        for command in commands:
-            command.validate()
-            command.execute()
-        return 0
+        try:
+            config_provider = ConfigurationProvider(MaskReplacer(), DirectorySelector())
+            parser = CommandParser(
+                config_provider,
+                RubyRipperCdRipper(config_provider),
+                DiscogsMetadataService(),
+                GenreSelector())
+            commands = parser.from_args(self._get_arguments())
+            for command in commands:
+                command.validate()
+                command.execute()
+            return 0
+        except Exception as ex:
+            # This will be replaced with proper logging output.
+            sys.stderr.write('{0}\n'.format(ex.message))
+            return 255
 
 class DirectorySelector(object):
     def select_directory(self, directories):
@@ -153,10 +154,14 @@ class GenreSelector(object):
                     continue
                 return genres[numeric_selection - 1]
             except ValueError:
-                return selection
+                    return selection
 
     def _get_input(self):
         return raw_input()
+
+def main():
+    driver = CliDriver()
+    return driver.main()
 
 if __name__ == '__main__':
     sys.exit(main())
