@@ -341,22 +341,24 @@ Tracklist:
         """
         track_totals_per_disc = []
         track_total = 1
-        disc_number = 1
+        current_disc_number = 1
+        start_discogs_disc_number = ReleaseModel._get_initial_discogs_disc_number(tracklist)
         for track in tracklist:
             if track.track_type == 'index':
                 for subtrack in track.subtracks:
                     if '-' in subtrack.position or '.' in subtrack.position:
                         discogs_disc_number = ReleaseModel._get_disc_number_from_position(subtrack.position)
-                        if discogs_disc_number != disc_number:
-                            disc_number += 1
+                        if discogs_disc_number != start_discogs_disc_number:
+                            current_disc_number += 1
                             track_totals_per_disc.append(track_total - 1)
                             track_total = 1
                         track_total += 1
             elif track.track_type == 'track' and track.position != 'Video':
                 if '-' in track.position or '.' in track.position:
                     discogs_disc_number = ReleaseModel._get_disc_number_from_position(track.position)
-                    if discogs_disc_number != disc_number:
-                        disc_number += 1
+                    if discogs_disc_number != start_discogs_disc_number:
+                        start_discogs_disc_number = discogs_disc_number
+                        current_disc_number += 1
                         track_totals_per_disc.append(track_total - 1)
                         track_total = 1
                     track_total += 1
@@ -364,13 +366,21 @@ Tracklist:
         return track_totals_per_disc
 
     @staticmethod
+    def _get_initial_discogs_disc_number(tracklist):
+        track = tracklist[0]
+        if track.track_type == 'index':
+            return ReleaseModel._get_disc_number_from_position(track.subtracks[0].position)
+        elif track.track_type == 'track' and track.position != 'Video':
+            return ReleaseModel._get_disc_number_from_position(track.position)
+
+    @staticmethod
     def _get_disc_number_from_position(position):
         split = position.split('-')
         if len(split) > 1:
-            return int(split[0])
+            return split[0]
         split = position.split('.')
         if len(split) > 1:
-            return int(split[0])
+            return split[0]
 
     @property
     def discogs_id(self):

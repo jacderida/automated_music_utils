@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import sys
+import traceback
 from amu.audio import LameEncoder, RubyRipperCdRipper
 from amu.config import ConfigurationProvider
 from amu.metadata import DiscogsMetadataService
@@ -107,6 +108,7 @@ class CliDriver(object):
         except Exception as ex:
             # This will be replaced with proper logging output.
             sys.stderr.write('{0}\n'.format(ex.message))
+            sys.stderr.write('{0}\n'.format(traceback.format_exc()))
             return 255
 
 class DirectorySelector(object):
