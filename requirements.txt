@@ -4,7 +4,7 @@ nose==1.3.4
 xunitmerge==1.0.3
 rednose==0.4.1
 mutagen
-Pillow==2.9.0
+Pillow==9.0.1
 git+https://github.com/jacderida/discogs_client.git@add_subtracks
 git+https://github.com/Ciantic/pytagger.git
 coverage==4.5.1
